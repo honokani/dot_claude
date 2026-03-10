@@ -1,0 +1,17 @@
+# 認証・機密
+.credentials.json
+mcp-needs-auth-cache.json
+
+# 自動生成・巨大
+history.jsonl
+projects/
+file-history/
+cache/
+debug/
+plugins/
+shell-snapshots/
+backups/
+ide/
+workspace_for_claude/
+delivered_by_user/
+.claude/
