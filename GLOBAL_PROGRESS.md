@@ -29,3 +29,4 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] 変更管理にメモ化ルール追加、設計判断に仕様式全項実装ルール追加
 - [x] workspace_for_claude簡素化（venv/Rust言及削除）、Skills・tipsの重複記述整理
 - [x] GLOBAL_DECISIONS.mdにPhaseカラム導入、全エントリにPhase割り当て
+- [x] Phase番号にセマンティックバージョニング準拠ルールを明文化（初期構想完成=1.0.0）
