@@ -35,10 +35,10 @@
 - twada的TDDを意識
 - デバッグでは推測修正より先にログ出力で事実確認。
 
-## 開発管理
-DESIGN.md・PROGRESS.md・DECISIONS.mdの3ファイルを「開発管理」と呼ぶ。
+## pj管理
+DESIGN.md・PROGRESS.md・DECISIONS.mdの3ファイルを「pj管理」と呼ぶ。
 - セッション開始時に読み込み、なければ初期化、あれば照合して更新
-- 「開発管理の更新。」= 未反映の変更があれば3ファイルを更新せよ
+- 「pj管理の更新。」= 未反映の変更があれば3ファイルを更新せよ
 
 ### DESIGN.md
 - ポールスター（北極星）。プロジェクトの「あるべき姿」と「なぜそう作るか」を示す
@@ -63,10 +63,18 @@ DESIGN.md・PROGRESS.md・DECISIONS.mdの3ファイルを「開発管理」と�
 - PROGRESS.mdの決定ログとの棲み分け: PROGRESS=何をしたか、DECISIONS=なぜそうしたか
 
 ## ~/.claude の変更管理
-- DESIGN.md不要（CLAUDE.md自体が設計書）
+- **GLOBAL_DESIGN.md**: ~/.claudeシステム自体の設計思想（情報アーキテクチャ、フック方針等）
 - **GLOBAL_PROGRESS.md**: 設定変更ログ（Phase別チェックリスト形式）
 - **GLOBAL_DECISIONS.md**: 設定・運用の判断根拠ログ（DECISIONS.md同一フォーマット）
 - ~/.claude 作業時・CLAUDE.md変更時に更新
+
+## latest_cache（セッション間コンテキスト引き継ぎ）
+- セッション開始時、`$(pwd)/.claude/pjcache_marker_*` を探す
+- あれば: IDを抽出し `~/.claude/project_info/latest_cache_{id}.log` を確認
+  - 鮮度判定: latest_cacheの更新日 ≥ max(DESIGN.md, DECISIONS.md, PROGRESS.mdの更新日) なら読む。そうでなければ読まない
+  - 読んでも読まなくても `~/.claude/project_info/old/` に移動し、マーカーを削除する
+- なければ: 何もしない（正常）
+- 内容指針・設計思想は `GLOBAL_DESIGN.md` を参照
 
 ## tips記録
 - `~/.claude/tips/*.md`: プロジェクト横断の技術知見

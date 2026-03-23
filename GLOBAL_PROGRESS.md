@@ -30,3 +30,29 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] workspace_for_claude簡素化（venv/Rust言及削除）、Skills・tipsの重複記述整理
 - [x] GLOBAL_DECISIONS.mdにPhaseカラム導入、全エントリにPhase割り当て
 - [x] Phase番号にセマンティックバージョニング準拠ルールを明文化（初期構想完成=1.0.0）
+
+## Phase: 0.0.4.フック導入 (2026-03-21〜23)
+- [x] PreCompactフック導入 — compact前にlatest_cache生成 + マーカー配置
+- [x] PostCompactフック導入 — compact summaryをlatest_cacheに追記
+- [x] SessionStartフック導入 — マーカー探索→鮮度判定→コンテキスト注入→old/移動
+- [x] GLOBAL_DESIGN.md新設 — ~/.claudeシステムの設計思想（情報アーキテクチャ、フック方針）
+- [x] CLAUDE.mdにlatest_cache操作手順追加
+- [x] CLAUDE.md「~/.claudeの変更管理」からGLOBAL_DESIGN.md参照に変更
+- [x] 旧compact-snapshots方式を廃止、project_info方式に移行
+- [x] マーカー配置先を `$(pwd)/.claude/pjcache_marker_{id}` に決定（.gitignore追加不要）
+- [x] latest_cache鮮度判定ロジック実装 — max(DESIGN/DECISIONS/PROGRESS更新日) vs cache更新日
+- [x] `set -e`下でのls失敗問題を修正（`|| true`ガード）
+- [x] テストスイート作成 — `scripts/test/hooks/test_compact_hooks.sh`（6ケース21アサーション、全パス）
+- [x] GLOBAL_DESIGN.mdに「ファイル管理の境界原則」追加 — .gitignoreを本体/ユーザーの境界線として明文化
+- [x] 「開発管理」→「pj管理」リネーム — 全5ファイル22箇所一括置換
+- [x] TEMPLATE_PROGRESS.md新設 — pj管理3ファイルのテンプレート完備
+- [ ] セッション保存/復元パターン検討 — 失敗情報必須の構造化フォーマット
+- [ ] ツール呼び出しカウント→compact提案フック検討
+- [ ] /learnコマンド検討 — セッションからパターン半自動抽出→skills/learned/
+- [ ] フック重要度モード検討 — minimal/standard/strict切り替え
+
+### 調査メモ: everything-claude-code (affaan-m) からのいいとこ取り候補
+- 出典: https://github.com/affaan-m/everything-claude-code
+- 9割はフレームワーク別ボイラープレート。有用なのはフック層に集中
+- 採用候補5件を上記チェックリストに反映済み
+- スキップ: 言語別エージェント28種、116スキル大半、エンタープライズ系フック、"instinct"システム（過剰設計）
