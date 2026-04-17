@@ -36,23 +36,24 @@
 - デバッグでは推測修正より先にログ出力で事実確認。
 
 ## pj管理
-DESIGN.md・PROGRESS.md・DECISIONS.mdの3ファイルを「pj管理」と呼ぶ。
+VISION.md・PROGRESS.md・DECISIONS.mdの3ファイルを「pj管理」と呼ぶ。
 - セッション開始時に読み込み、なければ初期化、あれば照合して更新
 - 「pj管理の更新。」= 未反映の変更があれば3ファイルを更新せよ
 
-### DESIGN.md
+### VISION.md
 - ポールスター（北極星）。プロジェクトの「あるべき姿」と「なぜそう作るか」を示す
-- テンプレート: `~/.claude/TEMPLATE_DESIGN.md`
+- テンプレート: `~/.claude/TEMPLATE_VISION.md`
 - **書くもの**: Why（存在理由）、設計思想・不変条件、コードに散在して一覧性がないもの（キーバインド表等）
 - **書かないもの**: ファイル構成、API仕様、座標・数値、実装手順（→PROGRESS.md）、判断経緯（→DECISIONS.md）— コードが正
 - 機能追加・設計判断の変更時に更新（低頻度）
 - **設計思想の3層構造**: 全体指針 / 機能横断ルール / 機能別指針（必要時のみ追加）
 - **ルールタグ**: 各ルールに `[philosophy]` または `[tested]` を付与
-  - `[philosophy]`: テストで縛れない思想。DESIGN.mdが正
-  - `[tested]`: テストで検証する制約。DESIGN.mdにはWhyのみ書き、詳細はテストコードが正
+  - `[philosophy]`: テストで縛れない思想。VISION.mdが正
+  - `[tested]`: テストで検証する制約。VISION.mdにはWhyのみ書き、詳細はテストコードが正
 
 ### PROGRESS.md
 - チェックリスト形式の実装進捗。ステップごとに更新（高頻度）
+- テンプレート: `~/.claude/TEMPLATE_PROGRESS.md`
 - テスト累計数、決定ログ（「何をしたか」の実行記録）も維持
 - **Phase番号はセマンティックバージョニング準拠**（初期構想完成=1.0.0）
 
@@ -63,7 +64,7 @@ DESIGN.md・PROGRESS.md・DECISIONS.mdの3ファイルを「pj管理」と呼ぶ
 - PROGRESS.mdの決定ログとの棲み分け: PROGRESS=何をしたか、DECISIONS=なぜそうしたか
 
 ## ~/.claude の変更管理
-- **GLOBAL_DESIGN.md**: ~/.claudeシステム自体の設計思想（情報アーキテクチャ、フック方針等）
+- **GLOBAL_VISION.md**: ~/.claudeシステム自体の設計思想（情報アーキテクチャ、フック方針等）
 - **GLOBAL_PROGRESS.md**: 設定変更ログ（Phase別チェックリスト形式）
 - **GLOBAL_DECISIONS.md**: 設定・運用の判断根拠ログ（DECISIONS.md同一フォーマット）
 - ~/.claude 作業時・CLAUDE.md変更時に更新
@@ -71,10 +72,10 @@ DESIGN.md・PROGRESS.md・DECISIONS.mdの3ファイルを「pj管理」と呼ぶ
 ## latest_cache（セッション間コンテキスト引き継ぎ）
 - セッション開始時、`$(pwd)/.claude/pjcache_marker_*` を探す
 - あれば: IDを抽出し `~/.claude/project_info/latest_cache_{id}.log` を確認
-  - 鮮度判定: latest_cacheの更新日 ≥ max(DESIGN.md, DECISIONS.md, PROGRESS.mdの更新日) なら読む。そうでなければ読まない
-  - 読んでも読まなくても `~/.claude/project_info/old/` に移動し、マーカーを削除する
+  - 鮮度判定: latest_cacheの更新日 ≥ max(VISION.md, DECISIONS.md, PROGRESS.mdの更新日) なら読む。そうでなければ読まない
+  - 読んでも読まなくても `~/.claude/project_info/old/{プロジェクト名}/` に移動し、マーカーを削除する
 - なければ: 何もしない（正常）
-- 内容指針・設計思想は `GLOBAL_DESIGN.md` を参照
+- 内容指針・設計思想は `GLOBAL_VISION.md` を参照
 
 ## tips記録
 - `~/.claude/tips/*.md`: プロジェクト横断の技術知見
