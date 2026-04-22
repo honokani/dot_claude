@@ -37,3 +37,6 @@ __pycache__/
 # シンボリックリンクの実体（別管理）
 skills/recall/
 tools/session-viewer
+
+# プロジェクト寄り（~/.claude/では共通化しない）
+plans/

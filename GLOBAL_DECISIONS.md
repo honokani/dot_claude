@@ -55,3 +55,4 @@
 | 0.1.1.link_claude.sh冪等性対応 | 運用 | _bkの衝突対処 | 連番サフィックス（_bk, _bk1, _bk2...） | 上書き / スキップ | データ損失防止とバックアップ履歴保持の両立。複数回実行時も安全 |
 | 0.1.1.link_claude.sh冪等性対応 | 運用 | symlink既存時の挙動 | readlink比較で一致ならスキップ | 常にrm→再作成 | 冪等性確保、エラー時の原因切り分けが容易、Claude Code実行中の不要なrmを回避 |
 | 0.1.1.link_claude.sh冪等性対応 | 運用 | ln実行オプション | ln -sn（no-dereference） | ln -s | 既存ディレクトリ先への副作用リンク作成を防止（skills/skillsケース） |
+| 0.1.2.plans対象外化 | 管理境界 | plans/の位置づけ | git対象外、~/.claude/配下の実ディレクトリとして維持 | dot_claudeで共通管理 | 計画はプロジェクト固有でdot_claude横断性を損なう。~/.claude/では実ディレクトリ化し、dot_claude側は削除+ignoreで再発防止 |

@@ -101,3 +101,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] ~/.claude/skills/skills 誤リンク削除（初回実行の副作用クリーンアップ）
 - [ ] Claude Code 終了後に link_claude.sh 手動実行で skills/ リンク化完了（ユーザー側作業）
 - [ ] 動作確認後、~/.claude/*_bk（CLAUDE.md_bk, GLOBAL_*_bk, plans_bk, scripts_bk, settings.json_bk, skills_bk, TEMPLATE_*_bk, tips_bk）を削除
+
+## Phase: 0.1.2.plans対象外化 (2026-04-22)
+- [x] ~/.claude/plans シンボリックリンクを削除、dot_claude/plans/ 内容を ~/.claude/plans/ にcpで実ディレクトリ復元
+- [x] dot_claude から plans/ を git rm -r（リポジトリからも実体からも削除）
+- [x] .gitignore に plans/ 追加（プロジェクト寄りカテゴリ新設）
