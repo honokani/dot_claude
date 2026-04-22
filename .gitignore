@@ -15,3 +15,25 @@ ide/
 workspace_for_claude/
 delivered_by_user/
 .claude/
+
+# セッション・自動生成（追加）
+paste-cache/
+sessions/
+session-env/
+project_info/
+tasks/
+telemetry/
+
+# Skill別の大きな参考資料・キャッシュ
+skills/*/reference/
+skills/*/__pycache__/
+skills/recall/
+
+# バイナリ・キャッシュ全般
+*.pptx
+*.pdf
+*.pyc
+__pycache__/
+
+# シンボリックリンクの実体（別管理）
+tools/session-viewer

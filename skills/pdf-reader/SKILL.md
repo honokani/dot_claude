@@ -32,6 +32,24 @@ Windows環境でPDFのテキストを抽出するスキル。
 ~/.claude/workspace_for_claude/.venv/Scripts/python ~/.claude/skills/pdf-reader/scripts/read_pdf.py "PDFファイルのパス" --pages "1,3,7"
 ```
 
+### PDF → PNG変換
+
+全ページ:
+```bash
+~/.claude/workspace_for_claude/.venv/Scripts/python ~/.claude/skills/pdf-reader/scripts/pdf_to_png.py "PDFファイルのパス" --output "出力ディレクトリ"
+```
+
+ページ指定 + DPI指定:
+```bash
+~/.claude/workspace_for_claude/.venv/Scripts/python ~/.claude/skills/pdf-reader/scripts/pdf_to_png.py "PDFファイルのパス" --pages "1-5,10,22-23" --output "出力ディレクトリ" --dpi 200
+```
+
+オプション:
+- `--pages` / `-p`: ページ指定（省略時は全ページ）
+- `--output` / `-o`: 出力先ディレクトリ（省略時はPDFと同じ場所）
+- `--dpi`: 解像度（デフォルト200）
+- `--prefix`: ファイル名プレフィックス（デフォルトはPDFファイル名）
+
 ## 注意事項
 
 - スクリプト内で `sys.stdout.reconfigure(encoding='utf-8')` を行っている（cp932エラー回避）
