@@ -76,3 +76,19 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
   - [x] scripts/hooks/session-start.sh のロジック書換（VISION.md mtime参照に変更、コメントも追従）
   - [x] scripts/test/hooks/test_compact_hooks.sh のテストデータ書換
 - [ ] 既存6プロジェクトのDESIGN.md → VISION.md改名（pj_vibecoding, pj_zenech, pj-task-control-hub, 他3件）
+
+## Phase: 0.0.6.管理対象整理 (2026-04-22)
+- [x] 未追跡skill/tips/plansをgit管理化（blog-crawler, mermaid-to-svg, slide-writing, pdf-reader/scripts/pdf_to_png.py, tips/*.md, plans/, TEMPLATE_PROGRESS.md）
+- [x] .gitignore拡張
+  - セッション自動生成物: paste-cache/, sessions/, session-env/, project_info/, tasks/, telemetry/
+  - Skill別参考資料・キャッシュ: skills/*/reference/, skills/*/__pycache__/
+  - バイナリ・キャッシュ: *.pptx, *.pdf, *.pyc, __pycache__/
+  - シンボリックリンク実体: skills/recall/（session-viewer参照）, tools/session-viewer
+
+## Phase: 0.1.0.dot_claude単独化 (2026-04-22)
+- [x] ~/.claude/.git を /c/git_clone/dot_claude/.git に履歴保持でclone（ローカルclone → remote切替push）
+- [x] GitHub honokani/dot_claude (private) に初回push
+- [x] link_claude.sh 新設（dotfilesのlink_dotfiles.shと同系統。dot_claude配下のトップレベル項目を~/.claude/に個別リンク）
+- [x] .gitattributes 追加（LF強制、dotfilesと同規約）
+- [x] CLAUDE_candidate.md / CLAUDE_study.md 削除（別案件用のため配置不要）
+- [x] ~/.claude/.git は保険として凍結（今後commit/pushしない、現役リポジトリは /c/git_clone/dot_claude/ に一本化）

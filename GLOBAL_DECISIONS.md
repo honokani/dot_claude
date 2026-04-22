@@ -46,3 +46,8 @@
 | 0.0.4.フック導入 | 運用 | latest_cacheの位置づけ | resumeもcontinueもしなかった場合のフォールバック | セッション間引き継ぎの主要手段 | `--continue`が主、latest_cacheは副。セッション保存/復元パターン検討は不要化 |
 | 0.0.5.命名整理 | pj管理 | 設計思想ファイル名 | VISION.md | DESIGN.md維持 | "Design"がUI/UX文脈の"Design System"（カラー・タイポ・コンポーネント等のスタイルガイド）を強く連想させ、設計思想ファイルとして混同を招く。"VISION"は「あるべき姿/Why」と直結し、命名と内容が一致する。命名一貫性のためTEMPLATE_DESIGN→TEMPLATE_VISION、GLOBAL_DESIGN→GLOBAL_VISIONも改名。グローバル~/.claudeおよび全6プロジェクトに波及 |
 | 0.0.5.命名整理 | フック | session-start.sh鮮度判定 | VISION.mdのみ参照（互換なし） | DESIGN.md/VISION.mdフォールバック | 完全切替方針。全プロジェクトを同タイミングで改名するため互換期間不要 |
+| 0.0.6.管理対象整理 | 管理境界 | skills/recall分類 | .gitignoreのシンボリックリンク実体セクション | キャッシュ系セクション | session-viewer依存のシンボリックリンクであり、キャッシュではない |
+| 0.1.0.dot_claude単独化 | 管理境界 | リポジトリ分離方針 | 独立リポジトリ+dotfiles連携 | dotfilesサブモジュール / ~/.claude完結 | ライフサイクル違い（dotfiles年次・dot_claude週次）、必須性違い（Claude Code環境のみ）、既存のpyenv初期化パターンに整合 |
+| 0.1.0.dot_claude単独化 | 管理境界 | 履歴保持方法 | git clone(ローカルパス) → remote切替push | filter-repo / 新規init | 全履歴保持しつつ1コマンドで完結、submodule不要 |
+| 0.1.0.dot_claude単独化 | 管理境界 | リンク配置方式 | ~/.claude/配下の個別項目リンク | ~/.claude/丸ごとリンク | Claude Codeが~/.claude/直下に自動生成（history.jsonl等）するため、dotfiles作業ツリーを汚染しない構成が必要 |
+| 0.1.0.dot_claude単独化 | 管理境界 | ~/.claude/.gitの扱い | 保険として凍結（削除しない、commit/pushもしない） | rm -rf削除 | 履歴スナップショットを保険として保持。現役リポジトリは~/git_clone/dot_claude/に一本化 |

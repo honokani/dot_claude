@@ -27,7 +27,6 @@ telemetry/
 # Skill別の大きな参考資料・キャッシュ
 skills/*/reference/
 skills/*/__pycache__/
-skills/recall/
 
 # バイナリ・キャッシュ全般
 *.pptx
@@ -36,4 +35,5 @@ skills/recall/
 __pycache__/
 
 # シンボリックリンクの実体（別管理）
+skills/recall/
 tools/session-viewer

@@ -1,0 +1,35 @@
+# 改行コードの自動変換設定
+# すべてのテキストファイルをLFに統一
+
+# デフォルト設定
+* text=auto eol=lf
+
+# シェルスクリプト
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+
+# 設定ファイル
+.gitignore text eol=lf
+.gitattributes text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+
+# ドキュメント
+*.md text eol=lf
+*.txt text eol=lf
+README* text eol=lf
+
+# ソースコード
+*.py text eol=lf
+
+# Windows固有
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# バイナリ
+*.tar binary
+*.gz binary
+*.zip binary
+*.pdf binary
+*.pptx binary
