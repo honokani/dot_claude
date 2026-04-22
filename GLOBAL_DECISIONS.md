@@ -51,3 +51,7 @@
 | 0.1.0.dot_claude単独化 | 管理境界 | 履歴保持方法 | git clone(ローカルパス) → remote切替push | filter-repo / 新規init | 全履歴保持しつつ1コマンドで完結、submodule不要 |
 | 0.1.0.dot_claude単独化 | 管理境界 | リンク配置方式 | ~/.claude/配下の個別項目リンク | ~/.claude/丸ごとリンク | Claude Codeが~/.claude/直下に自動生成（history.jsonl等）するため、dotfiles作業ツリーを汚染しない構成が必要 |
 | 0.1.0.dot_claude単独化 | 管理境界 | ~/.claude/.gitの扱い | 保険として凍結（削除しない、commit/pushもしない） | rm -rf削除 | 履歴スナップショットを保険として保持。現役リポジトリは~/git_clone/dot_claude/に一本化 |
+| 0.1.1.link_claude.sh冪等性対応 | 運用 | skills/のPermission denied対処 | Claude Code終了後に手動再実行 | 個別skill単位でリンク / rm -rf強行 | 自プロセスが~/.claude/skills/のハンドルを保持しているため。ハンドル解放後の単純再実行が最も安全で、構造変更不要 |
+| 0.1.1.link_claude.sh冪等性対応 | 運用 | _bkの衝突対処 | 連番サフィックス（_bk, _bk1, _bk2...） | 上書き / スキップ | データ損失防止とバックアップ履歴保持の両立。複数回実行時も安全 |
+| 0.1.1.link_claude.sh冪等性対応 | 運用 | symlink既存時の挙動 | readlink比較で一致ならスキップ | 常にrm→再作成 | 冪等性確保、エラー時の原因切り分けが容易、Claude Code実行中の不要なrmを回避 |
+| 0.1.1.link_claude.sh冪等性対応 | 運用 | ln実行オプション | ln -sn（no-dereference） | ln -s | 既存ディレクトリ先への副作用リンク作成を防止（skills/skillsケース） |

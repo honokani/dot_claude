@@ -92,3 +92,12 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] .gitattributes 追加（LF強制、dotfilesと同規約）
 - [x] CLAUDE_candidate.md / CLAUDE_study.md 削除（別案件用のため配置不要）
 - [x] ~/.claude/.git は保険として凍結（今後commit/pushしない、現役リポジトリは /c/git_clone/dot_claude/ に一本化）
+
+## Phase: 0.1.1.link_claude.sh冪等性対応 (2026-04-22)
+- [x] readlink で既存symlinkを検査、正しければスキップ（冪等）
+- [x] _bk 連番対応（_bk, _bk1, _bk2...）で既存バックアップ保護
+- [x] ln -sn で既存ディレクトリへの副作用リンク作成を防止（skills/skills誤リンク対策）
+- [x] mv/ln 失敗時に ERROR 出力 + return 1、exit statusで伝播
+- [x] ~/.claude/skills/skills 誤リンク削除（初回実行の副作用クリーンアップ）
+- [ ] Claude Code 終了後に link_claude.sh 手動実行で skills/ リンク化完了（ユーザー側作業）
+- [ ] 動作確認後、~/.claude/*_bk（CLAUDE.md_bk, GLOBAL_*_bk, plans_bk, scripts_bk, settings.json_bk, skills_bk, TEMPLATE_*_bk, tips_bk）を削除
