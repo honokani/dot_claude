@@ -142,6 +142,11 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.6.同期運用ルールの明文化 (2026-04-23)
+- [x] CLAUDE.md に「複数環境ファイルの同期運用」セクション追加（編集前pull / 編集後push / auto-pushは失敗防止ネット）
+- [x] memory に feedback_multi_env_sync.md 追加（将来セッションで手動push省略を防ぐ）
+- [x] GLOBAL_DECISIONS.md に運用方針の判断を記録
+
 ## Phase: 0.2.5.tips命名規則整備 (2026-04-23)
 - [x] tips/README.md 新設（`<主題>_<細目>_<環境>.md` 形式、`_`/`-` 使い分け明記）
 - [x] CLAUDE.md tips記録セクションに README 参照を追加

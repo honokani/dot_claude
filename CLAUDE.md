@@ -68,6 +68,12 @@ VISION.md・PROGRESS.md・DECISIONS.mdの3ファイルを「pj管理」と呼ぶ
 - **GLOBAL_DECISIONS.md**: 設定・運用の判断根拠ログ（DECISIONS.md同一フォーマット）
 - ~/.claude 作業時・CLAUDE.md変更時に更新
 
+## 複数環境ファイルの同期運用
+- GitHubで複数環境にわたって管理されるファイル（dot_claude, dotfiles 等）を扱う際:
+  - **編集前に `git pull`**（最新の他環境変更を取り込む）
+  - **編集後に `git push`**（他環境へ即時反映）
+- SessionEnd hookの auto-push は**失敗防止ネット**。毎回のpushルールに頼って省略しない
+
 ## latest_cache（セッション間コンテキスト引き継ぎ）
 - セッション開始時、`$(pwd)/.claude/pjcache_marker_*` を探す
 - あれば: IDを抽出し `~/.claude/project_info/latest_cache_{id}.log` を確認
