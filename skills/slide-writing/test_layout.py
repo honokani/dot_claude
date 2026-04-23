@@ -102,6 +102,51 @@ def add_headline(slide, text):
     return size
 
 
+def add_toc(slide, sections, *,
+            left=LEFT, top=None, body_w=BODY_W,
+            num_w=Emu(900000),
+            row_h=Emu(280000),
+            desc_h=Emu(220000),
+            desc_offset=Emu(290000),
+            row_step=Emu(620000),
+            num_pt=18,
+            title_pt=16,
+            desc_pt=11,
+            num_color=ACCENT,
+            title_color=BLACK,
+            desc_color=BLACK):
+    """目次スライドのセクション一覧を配置する.
+
+    目次スライドにはヘッドラインとセパレータを置かない
+    （タイトル一覧自体がメッセージのため）。タイトル直下から
+    セクション一覧を開始する。
+
+    Args:
+        slide: 配置先スライド
+        sections: [(num_str, title_str, desc_str), ...] のリスト
+        left, top, body_w: 配置領域。top=None なら TITLE_TOP+TITLE_H+Emu(150000) を起点
+        num_w: セクション番号の列幅
+        row_h, desc_h, desc_offset, row_step: 各行・説明文の幅と段位置
+        num_pt, title_pt, desc_pt: フォントサイズ（pt）
+        num_color, title_color, desc_color: 色
+
+    Returns:
+        最終行の Y 終端（次の要素の起点に使える）
+    """
+    if top is None:
+        top = TITLE_TOP + TITLE_H + Emu(150000)
+    y = top
+    for num, title, desc in sections:
+        add_textbox(slide, left, y, num_w, row_h,
+                    num, num_pt, bold=True, color=num_color)
+        add_textbox(slide, left + num_w, y, body_w - num_w, row_h,
+                    title, title_pt, bold=True, color=title_color)
+        add_textbox(slide, left + num_w, y + desc_offset, body_w - num_w, desc_h,
+                    desc, desc_pt, color=desc_color)
+        y += row_step
+    return y
+
+
 def set_cell_border(cell, color=BLACK, width=Pt(0.5)):
     """セルの4辺に罫線を設定する."""
     from pptx.oxml.ns import qn
