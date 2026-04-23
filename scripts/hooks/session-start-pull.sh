@@ -2,7 +2,14 @@
 # SessionStart hook: dot_claude の remote 変更を pull で取り込む（Phase 0.2.2）
 # 設計: auto_manage/flow_diagram.md SessionStart フロー / plan.md Phase 0.2.2
 
-REPO="$HOME/git_clone/dot_claude"
+# dot_claude repo を ~/.claude/CLAUDE.md symlink から動的解決（OS/配置非依存）
+REPO=""
+if [ -L "$HOME/.claude/CLAUDE.md" ]; then
+    target=$(readlink -f "$HOME/.claude/CLAUDE.md" 2>/dev/null || readlink "$HOME/.claude/CLAUDE.md")
+    [ -n "$target" ] && REPO=$(dirname "$target")
+fi
+[ -z "$REPO" ] && REPO="$HOME/git_clone/dot_claude"  # fallback
+
 [ -d "$REPO/.git" ] || exit 0
 cd "$REPO" || exit 0
 

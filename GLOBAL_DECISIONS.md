@@ -75,3 +75,4 @@
 | 0.2.2.SessionStart pull 同期 | 運用 | スクリプト分割 | session-start-pull.sh + session-start-cache.sh の2本 | 単一scriptに統合 | pullとcacheは責務が異なる。分割して単独改修可能にし、片方の設定削除が他方に影響しないようにする。既存session-start.sh は cache処理なのでrenameで意図を明示 |
 | 0.2.2.SessionStart pull 同期 | 運用 | hook実行順序 | pull → cache | cache → pull | pullでCLAUDE.md等が更新された後にcache鮮度判定する方が正しい。現状cacheはプロジェクトローカルでdot_claudeと独立だが、将来cacheがdot_claude依存になっても破綻しない順序にしておく |
 | 0.2.2.SessionStart pull 同期 | 運用 | pull失敗時の起動挙動 | stdout警告のみ、exit 0で起動継続 | exit 1で起動ブロック | pull失敗は手動解決すべき事象だが、そのためにClaude Code起動自体を止めると不便。context内にWARN出力して気づけるようにする |
+| 0.2.2+0.2.3.hook改善 | 運用 | REPOパス解決方式 | ~/.claude/CLAUDE.md symlink から readlink で動的解決 | $HOME/git_clone/dot_claude ハードコード | Windowsでは /c/git_clone/... に配置されるなど環境でパスが異なる。symlink経由なら link_claude.sh がリンクを張った時点で自動的に正しいパスが得られ、hook script は OS/配置に依存しない |

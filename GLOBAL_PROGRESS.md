@@ -141,6 +141,11 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] scripts/hooks/session-start-pull.sh 新設（git pull --rebase --autostash、up-to-date時無音、更新取込時/失敗時はstdout通知）
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [ ] 運用検証: 次セッション以降で pull が発火、remote変更を自動取込、conflict時はwarning表示されることを確認
+
+### 補足修正: hook script の REPO パス解決 (2026-04-23)
+- [x] 問題発覚: `$HOME/git_clone/dot_claude` ハードコードが Windows環境（実体 `/c/git_clone/dot_claude`）で存在せず、hook が silent に exit 0 していた
+- [x] session-start-pull.sh / session-end-push.sh: `$HOME/.claude/CLAUDE.md` symlink から readlink で dot_claude repo を動的解決（OS/配置非依存化）
+- [x] 動作確認: session-end-push.sh 直接実行で ahead=1 検出 → `71c7a9c`（Phase 0.2.2）を hook 経由で auto-push 成功
 - [ ] Phase 0.2.1: gitleaks pre-commit フック実装（カスタムruleはローカル保管）
 - [ ] Phase 0.2.2: SessionStart pull 同期フック（conflict時stdout警告）
 - [ ] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）
