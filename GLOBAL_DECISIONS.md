@@ -56,3 +56,8 @@
 | 0.1.1.link_claude.sh冪等性対応 | 運用 | symlink既存時の挙動 | readlink比較で一致ならスキップ | 常にrm→再作成 | 冪等性確保、エラー時の原因切り分けが容易、Claude Code実行中の不要なrmを回避 |
 | 0.1.1.link_claude.sh冪等性対応 | 運用 | ln実行オプション | ln -sn（no-dereference） | ln -s | 既存ディレクトリ先への副作用リンク作成を防止（skills/skillsケース） |
 | 0.1.2.plans対象外化 | 管理境界 | plans/の位置づけ | git対象外、~/.claude/配下の実ディレクトリとして維持 | dot_claudeで共通管理 | 計画はプロジェクト固有でdot_claude横断性を損なう。~/.claude/では実ディレクトリ化し、dot_claude側は削除+ignoreで再発防止 |
+| 0.2.0.自動管理基盤設計 | 運用 | pull実行タイミング | SessionStart hook同期実行 | バックグラウンド / shell起動時 | セッション開始前に確実にCLAUDE.md等を最新化する必要。通常数百msで完了、体感差なし。conflict時のみstdout警告で報告 |
+| 0.2.0.自動管理基盤設計 | 運用 | 機微情報チェックツール | gitleaks | 自作grep / GitHub Secret Scanning | パターン網羅性とカスタマイズ性を両立。TOMLでrule追加可能。OSS・継続メンテナンス。自作は網羅性で劣る、GH Secret Scanningは事後検知 |
+| 0.2.0.自動管理基盤設計 | 運用 | カスタムruleの保管 | ~/.claude/gitleaks/（git管理外） | dot_claude内（git管理） | 取引先名リスト自体が機微情報。dot_claudeが公開されても漏れない設計。公開可能な汎用ruleはdot_claude/.gitleaks.toml に分離 |
+| 0.2.0.自動管理基盤設計 | 運用 | 設計の配置場所 | dot_claude/auto_manage/ ディレクトリ | 単一 plan.md / GLOBAL_PROGRESSへ散在記述 | 設計・計画・フロー図・回収手順を分離し、Phase進行と無関係に参照可能に。README.mdで目次化 |
+| 0.2.0.自動管理基盤設計 | ドキュメント | フロー記述の方針 | mermaid図 + PFD精神の箇条書き併記 | mermaidのみ / 箇条書きのみ | mermaidは俯瞰性、PFD精神の箇条書き（タスクとオブジェクト分離）は入出力の明示性に強み。両方併記で読み手の理解経路を選択可能に |

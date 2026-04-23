@@ -106,3 +106,13 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] ~/.claude/plans シンボリックリンクを削除、dot_claude/plans/ 内容を ~/.claude/plans/ にcpで実ディレクトリ復元
 - [x] dot_claude から plans/ を git rm -r（リポジトリからも実体からも削除）
 - [x] .gitignore に plans/ 追加（プロジェクト寄りカテゴリ新設）
+
+## Phase: 0.2.0.自動管理基盤設計 (2026-04-23)
+- [x] auto_manage/ フォルダ新設（dot_claude同期・セキュリティ自動化の設計置き場）
+- [x] 設計ドキュメント作成（README.md / plan.md / flow_diagram.md / recovery.md）
+- [x] flow_diagram.md にPFD精神の箇条書きフローを併記（タスクとオブジェクトの分離）
+- [x] GLOBAL_DECISIONS.md に自動管理の方針記録
+- [ ] Phase 0.2.1: gitleaks pre-commit フック実装（カスタムruleはローカル保管）
+- [ ] Phase 0.2.2: SessionStart pull 同期フック（conflict時stdout警告）
+- [ ] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）
+- [ ] Phase 0.2.4: dotfiles連携（initialize_ubuntu.2.shにdot_claude clone+link+gitleaks追加）
