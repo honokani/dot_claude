@@ -134,13 +134,13 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.3.SessionEnd auto-push（実験） (2026-04-23)
 - [x] scripts/hooks/session-end-push.sh 新設（ahead検出 → git push、失敗時 stdout 警告）
 - [x] settings.json SessionEnd hook 登録（timeout 30）
-- [ ] 運用検証: セッション終了時に未push commit が自動 push される動作を次セッション以降で確認
+- [x] 運用検証完了（2026-04-23）: /exit 時に SessionEnd hook 発火、ahead=2 検出 → `git push` で `7e2026d` + `ec7705f` を一括push成功。GitHub web UI でも反映確認済み
 
 ## Phase: 0.2.2.SessionStart pull 同期 (2026-04-23)
 - [x] scripts/hooks/session-start.sh → session-start-cache.sh にrename（latest_cache処理であることを名前で明示）
 - [x] scripts/hooks/session-start-pull.sh 新設（git pull --rebase --autostash、up-to-date時無音、更新取込時/失敗時はstdout通知）
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
-- [ ] 運用検証: 次セッション以降で pull が発火、remote変更を自動取込、conflict時はwarning表示されることを確認
+- [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
 ### 補足修正: hook script の REPO パス解決 (2026-04-23)
 - [x] 問題発覚: `$HOME/git_clone/dot_claude` ハードコードが Windows環境（実体 `/c/git_clone/dot_claude`）で存在せず、hook が silent に exit 0 していた
