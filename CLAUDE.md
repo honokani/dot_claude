@@ -53,6 +53,8 @@ VISION.md・PROGRESS.md・DECISIONS.mdの3ファイルを「pj管理」と呼ぶ
 ### PROGRESS.md
 - チェックリスト形式の実装進捗。ステップごとに更新（高頻度）
 - テンプレート: `~/.claude/TEMPLATE_PROGRESS.md`
+- **記録対象**: 事前に予定したPhase/タスクの進捗、および既存挙動を変える/破壊する改修（Phase未割当でも雑な1行で記録）
+- **対象外**: typo修正・即興の小変更（gitで追える）
 - テスト累計数、決定ログ（「何をしたか」の実行記録）も維持
 - **Phase番号はセマンティックバージョニング準拠**（初期構想完成=1.0.0）
 
@@ -60,12 +62,14 @@ VISION.md・PROGRESS.md・DECISIONS.mdの3ファイルを「pj管理」と呼ぶ
 - 「なぜAではなくBか」の判断根拠ログ。コードからは読めない設計判断を記録
 - テンプレート: `~/.claude/TEMPLATE_DECISIONS.md`
 - 判断発生時に追記（中頻度）
+- **記録対象**: A/B選択肢があり選んだ根拠 / 一見疑問に思われそうな実装の理由
+- **対象外**: 一意に決まる作業、typo修正
 - PROGRESS.mdの決定ログとの棲み分け: PROGRESS=何をしたか、DECISIONS=なぜそうしたか
 
 ## ~/.claude の変更管理
 - **GLOBAL_VISION.md**: ~/.claudeシステム自体の設計思想（情報アーキテクチャ、フック方針等）
-- **GLOBAL_PROGRESS.md**: 設定変更ログ（Phase別チェックリスト形式）
-- **GLOBAL_DECISIONS.md**: 設定・運用の判断根拠ログ（DECISIONS.md同一フォーマット）
+- **GLOBAL_PROGRESS.md**: 設定変更ログ（Phase別チェックリスト形式、記録基準は pj管理 の PROGRESS.md と同一）
+- **GLOBAL_DECISIONS.md**: 設定・運用の判断根拠ログ（記録基準は pj管理 の DECISIONS.md と同一）
 - ~/.claude 作業時・CLAUDE.md変更時に更新
 
 ## 複数環境ファイルの同期運用

@@ -142,6 +142,15 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.11.PROGRESS/DECISIONS 記録基準の明文化 (2026-04-24)
+- [x] CLAUDE.md pj管理セクションに PROGRESS.md / DECISIONS.md の記録対象/対象外を追記:
+  - PROGRESS 対象: 事前予定の進捗 + 既存挙動を変える/破壊する改修
+  - PROGRESS 対象外: typo・即興の小変更（gitで追える）
+  - DECISIONS 対象: A/B根拠 + 疑問に思われそうな実装の理由
+  - DECISIONS 対象外: 一意に決まる作業・typo
+- [x] ~/.claude の変更管理セクションを「pj管理と同一基準」の参照形式に更新
+- 背景: 他プロジェクトで skills/slide-writing 改修時に「記録すべきか？」で混乱した経験を受けて明文化
+
 ## Phase: 0.2.10.`~/.claude/.git`凍結方針を終了・削除 (2026-04-23)
 - [x] ~/.claude/.git を削除（Phase 0.1.0 の凍結方針を終了）
 - 経緯:

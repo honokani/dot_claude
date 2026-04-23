@@ -86,3 +86,5 @@
 | 0.2.9.テンプレ整備 | ドキュメント | SKILL.md共通形式の決定 | 既存3 skillのfrontmatter形式を TEMPLATE_SKILL.md として正規化 | 形式自由 / pfd の簡易形式を許容 | Claude Codeはfrontmatterベースで skill を認識、pfdだけ欠けていたので統一。現フォーマットがベストかは未検証、将来レビュー余地ありとしてテンプレ末尾にコメント残す |
 | 0.2.9.テンプレ整備 | 命名 | rust tips の `_` 使い分け | rename で `-` 連結に統一（const-design / effect-system / how-to-debug） | 現状維持 | tips/README.md 規則に厳密適用。rust_egui / serde / windows は1単語or環境なので変更不要 |
 | 0.2.10.凍結終了 | 管理境界 | ~/.claude/.gitの扱い | 削除（Phase 0.1.0 の凍結方針を終了） | 凍結維持 | 独自履歴ゼロ・working diff 39件の偽差分で保険として機能していない。最終commit `5b48644` は dot_claude 側にも保持済。現役リポジトリ /c/git_clone/dot_claude/.git に一本化 |
+| 0.2.11.記録基準明文化 | pj管理 | PROGRESS/DECISIONS の記録対象 | 事前予定+挙動変更 / A/B根拠+疑問実装の理由 に絞る | 全変更を記録 / 主観判断 | 「予定外×迷ってない×小変更」を対象外にすると、PROGRESSは引き継ぎ意図、DECISIONSは判断根拠に集中でき、git logで追える情報との重複を避けられる。既存挙動の破壊・読者が疑問に思う実装だけ例外として許容 |
+| 0.2.11.記録基準明文化 | pj管理 | GLOBAL側の記述スタイル | pj管理ルールへの参照（「pj管理と同一基準」と書くだけ） | GLOBAL側にも全ルール複写 | 複写は乖離の原因。pj管理側を単一情報源として参照するのが保守性高い |
