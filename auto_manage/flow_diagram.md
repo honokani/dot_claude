@@ -67,62 +67,62 @@ flowchart LR
 
 ## PFD 精神を踏襲した箇条書きフロー
 
-タスク（動作）とオブジェクト（入出力データ）を分離して記述。タスク間は必ずオブジェクトを介して接続する（PFD の原則）。
+### 記法
+- `◯` = オブジェクト（ファイル・環境変数・stdout・終了コード等の実体）
+- `[ ]` = タスク（関数）
+- **`◯ → [ ] → ◯` の交互連鎖**（タスク直結禁止）
+- オブジェクトは抽象名でなく**具体名**で書く（詳細は SKILL.md「オブジェクトの具体性」）
 
 ### SessionStart 同期フロー
 
 ```
-【タスク】Claude Code 起動
-  └→ 出力オブジェクト: SessionStart イベント
+◯ $CLAUDE_SESSION_ID / $CLAUDE_PROJECT_DIR
+  → [ session-start-pull.sh ]
+  → ◯ git pull 終了コード
 
-【タスク】session-start-pull.sh 実行
-  ├← 入力: SessionStart イベント
-  ├← 入力: remote HEAD（git fetch で取得）
-  ├← 入力: local HEAD
-  └→ 出力: pull 結果 {success | conflict | error}
-
-分岐:
-  - success       → 【タスク】context 読込
-                      ├← 入力: 最新 CLAUDE.md, GLOBAL_*.md（symlink経由で最新）
-                      └→ 出力: Claude コンテキスト
-  - conflict/error → 【タスク】stdout 警告
-                      └→ 出力: 警告メッセージ
-                      └→ 次アクション: recovery.md「1. pull conflict」へ誘導
+├─ 0   → ◯ 最新版 CLAUDE.md / GLOBAL_*.md (symlink先)
+│        → [ Claude Code context 読込 ]
+│        → ◯ セッション context
+│
+└─ 非0 → ◯ git status 出力 (conflict詳細)
+         → [ hook stdout 出力 ]
+         → ◯ 警告テキスト
+         → recovery.md「1. pull conflict」
 ```
 
 ### commit 〜 push フロー
 
 ```
-【タスク】ユーザーが管理ファイル編集
-  └→ 出力: 編集済みファイル
+◯ working tree の編集済みファイル
+  → [ git add ]
+  → ◯ staged diff
+  → [ pre-commit hook: gitleaks protect --staged ]
+     補助入力:
+       ◯ dot_claude/.gitleaks.toml (汎用)
+       ◯ ~/.claude/gitleaks/rules.toml (ローカル)
+  → ◯ gitleaks 終了コード + 検出レポート
 
-【タスク】git add + commit
-  ├← 入力: 編集済みファイル
-  └→ 出力: staging 差分
-
-【タスク】pre-commit hook（gitleaks scan）
-  ├← 入力: staging 差分
-  ├← 入力: dot_claude/.gitleaks.toml（汎用ルール: API key等）
-  ├← 入力: ~/.claude/gitleaks/rules.toml（ローカルルール: 取引先名等）
-  └→ 出力: 判定 {pass | fail}
-
-分岐:
-  - pass → commit 成立（commit オブジェクト生成）
-  - fail → commit 中断
-          → 次アクション: recovery.md「3. gitleaks検出」へ誘導
-
-【タスク】SessionEnd/PreCompact hook（git status 検査）
-  ├← 入力: git status --branch 出力
-  └→ 出力: ahead 判定 {N > 0 | N == 0}
-
-分岐:
-  - ahead > 0  → stdout 警告「push してね」
-                → ユーザーアクション: git push
-  - ahead == 0 → 無音終了
+├─ 0   → [ git commit ]
+│        → ◯ local HEAD の新 commit
+│        → [ SessionEnd hook: git status --branch ]
+│        → ◯ "ahead N" または "up-to-date"
+│
+│        ├─ N>0 → ◯ 警告テキスト
+│        │        → [ hook stdout 出力 ]
+│        │        → ◯ 警告 in context
+│        │        → [ ユーザー: git push ]
+│        │        → ◯ remote HEAD (更新済)
+│        │
+│        └─ N=0 → ◯ 無変更 → 無音終了
+│
+└─ 非0 → ◯ 検出情報 (ファイル・行・パターンID)
+         → [ commit 中断 (hook exit 1) ]
+         → ◯ staged diff そのまま残存
+         → recovery.md「3. gitleaks検出」
 ```
 
 ### 読み取り方
-- `【タスク】` = 動作（プロセス、関数、スクリプト）
-- `入力 / 出力` = オブジェクト（ファイル・データ・判定結果）
-- タスク同士は直接つながらず、必ずオブジェクトを受け渡して接続される
-- 分岐は判定オブジェクトの値で分かれ、先のタスク（または回収フロー）へ接続する
+- **タスク = 関数**: 入力 ◯ を読み、出力 ◯ を生成する
+- **オブジェクト = 実体**: 後続タスクが何に触れるか確定する名前
+- **合成可能性**: 前タスクの出力 ◯ が次タスクの入力 ◯ と一致するか目視確認できる
+- **補助入力**: 設定ファイル等は該当タスク配下に列挙、主フローの視認性を保つ

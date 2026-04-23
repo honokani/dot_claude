@@ -112,6 +112,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] 設計ドキュメント作成（README.md / plan.md / flow_diagram.md / recovery.md）
 - [x] flow_diagram.md にPFD精神の箇条書きフローを併記（タスクとオブジェクトの分離）
 - [x] GLOBAL_DECISIONS.md に自動管理の方針記録
+- [x] skills/pfd/SKILL.md に「設計思想（Why）」「オブジェクトの具体性」節を追加（関数的composability原則を明記、抽象名vs実体名の対比表）
+- [x] flow_diagram.md のPFD箇条書きを関数的フロー（◯=オブジェクト実体 → [ ]=タスク関数 → ◯ の交互連鎖）で全面書き直し
 - [ ] Phase 0.2.1: gitleaks pre-commit フック実装（カスタムruleはローカル保管）
 - [ ] Phase 0.2.2: SessionStart pull 同期フック（conflict時stdout警告）
 - [ ] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）
