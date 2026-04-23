@@ -94,6 +94,7 @@ VISION.md・PROGRESS.md・DECISIONS.mdの3ファイルを「pj管理」と呼ぶ
 ## Skills
 - 配置先: `~/.claude/skills/<skill-name>/SKILL.md`
 - 繰り返しワークフロー（3ステップ以上）はSkill化を検討
+- 新規Skill作成時のテンプレート: `~/.claude/TEMPLATE_SKILL.md`（frontmatter + 標準セクション）
 
 ## 割り込み作業とブランチ管理
 - 割り込み発生時は git worktree を使う（stash禁止: 識別ミスリスク）

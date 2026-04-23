@@ -142,6 +142,20 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.9.rust tips rename + TEMPLATE_SKILL新設 (2026-04-23)
+
+### tips命名規則適用（rust系）
+- [x] rust_const_design.md → rust_const-design.md（const-design を1細目化）
+- [x] rust_effect_system.md → rust_effect-system.md（effect-system を1細目化）
+- [x] rust_howtodebug.md → rust_how-to-debug.md（単語連結を - で分離）
+- 確認のみ変更不要: rust_egui.md / rust_serde.md / rust_windows.md
+
+### SKILL.md フォーマット統一
+- [x] TEMPLATE_SKILL.md 新設（frontmatter + 標準セクション、既存3 skillの共通形式を踏襲）
+- [x] skills/pfd/SKILL.md に frontmatter追加（name, description, metadata）
+- [x] CLAUDE.md Skills セクションに TEMPLATE_SKILL.md 参照を追加
+- 今後の余地: 現フォーマットがベストか未検証。必要時レビューで改訂可能
+
 ## Phase: 0.2.8.blog-crawler削除 (2026-04-23)
 - [x] skills/blog-crawler/ を git と working tree から完全削除
 - [x] 理由: 使用実績なし + WebFetchによるブログクロールは公開リポジトリで配布するには行儀が悪い（スクレイピング負荷・規約リスク）

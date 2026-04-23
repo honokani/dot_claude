@@ -1,3 +1,11 @@
+---
+name: pfd
+description: 「フローを描いて」「ProcessFlowDiagramで」「PFDで」と指示された場合に、drawio/mermaid/箇条書きいずれかの形式でPFD準拠のフロー図を生成する。タスク＝関数、オブジェクト＝入出力の関数的composabilityを確保
+metadata:
+  author: honokani
+  version: 1.1.0
+---
+
 # ProcessFlowDiagram (PFD) 描画スキル
 
 「フローを描いて」「ProcessFlowDiagramで」「PFDで」と指示された場合は本スキルに従う。出力形式は **drawio / mermaid / 箇条書き** のいずれか（ユーザー指示または文脈で判断）。形式が異なっても**PFD精神（タスク＝関数、オブジェクト＝入出力、交互連鎖、具体性）は共通**。
