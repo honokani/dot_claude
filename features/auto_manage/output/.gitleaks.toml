@@ -1,0 +1,18 @@
+title = "dot_claude baseline rules"
+
+# gitleaks デフォルトルール（API key/token/PEM等 広範な検出）を継承
+[extend]
+useDefault = true
+
+# 公開可能な汎用追加ルールがあればここに書く
+# （取引先名・社内コードネーム等はローカル ~/.claude/gitleaks/rules.toml に置く）
+
+[allowlist]
+description = "ドキュメント内のパターン説明・例示を誤検出させない"
+paths = [
+    '''features/auto_manage/output/\.githooks/.*''',
+    '''features/auto_manage/recovery\.md''',
+    '''features/auto_manage/flow_diagram\.md''',
+    '''features/auto_manage/plan\.md''',
+    '''skills/pfd/SKILL\.md''',
+]

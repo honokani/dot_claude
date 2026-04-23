@@ -15,8 +15,8 @@
 
 ## Phase 分け
 
-### Phase 0.2.0.自動管理基盤設計（本作業）
-- auto_manage/ フォルダ設置
+### Phase 0.2.0.自動管理基盤設計（完了）
+- features/auto_manage/ 配下に設計+output集約（Phase 0.2.7 で再編済み）
 - 設計・計画ドキュメント作成（README/plan/flow_diagram/recovery）
 - GLOBAL_PROGRESS.md / GLOBAL_DECISIONS.md に方針記録
 

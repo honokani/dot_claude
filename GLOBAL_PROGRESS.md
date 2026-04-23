@@ -142,6 +142,20 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.7.機能単位ディレクトリ化（features/auto_manage/再編） (2026-04-23)
+- [x] auto_manage/ を features/auto_manage/ に git mv
+- [x] 実装実体を features/auto_manage/output/ 配下に集約:
+  - .githooks/pre-commit
+  - .gitleaks.toml
+  - scripts/hooks/session-start-pull.sh
+  - scripts/hooks/session-end-push.sh
+- [x] dot_claude本体から output 内実体へ relative symlink を張る（機能の物理完結 + 既存パスへの後方互換）
+- [x] パス参照を一括更新:
+  - .gitleaks.toml allowlist: `auto_manage/*` → `features/auto_manage/*`
+  - hook scripts (pre-commit, session-start-pull.sh, session-end-push.sh) コメント・エラーメッセージ
+  - flow_diagram.md: `../skills/pfd/SKILL.md` → `../../skills/pfd/SKILL.md`（階層変化）
+  - plan.md 自己参照更新
+
 ## Phase: 0.2.6.同期運用ルールの明文化 (2026-04-23)
 - [x] CLAUDE.md に「複数環境ファイルの同期運用」セクション追加（編集前pull / 編集後push / auto-pushは失敗防止ネット）
 - [x] memory に feedback_multi_env_sync.md 追加（将来セッションで手動push省略を防ぐ）
