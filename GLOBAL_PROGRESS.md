@@ -142,6 +142,14 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.10.`~/.claude/.git`凍結方針を終了・削除 (2026-04-23)
+- [x] ~/.claude/.git を削除（Phase 0.1.0 の凍結方針を終了）
+- 経緯:
+  - Phase 0.1.0 で「保険として凍結・削除しない」と決定
+  - その後 Phase 0.2.x で symlink化・features/ 再編を実施、~/.claude/.git 側には一切反映されず整合性が崩れ状態（working diff 39件の偽差分）
+  - 最終commit `5b48644`（Phase 0.0.6）は dot_claude 側にも保持済で独自履歴ゼロ
+- 現役リポジトリを /c/git_clone/dot_claude/.git に一本化
+
 ## Phase: 0.2.9.rust tips rename + TEMPLATE_SKILL新設 (2026-04-23)
 
 ### tips命名規則適用（rust系）

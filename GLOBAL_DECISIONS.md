@@ -85,3 +85,4 @@
 | 0.2.8.blog-crawler削除 | Skills | blog-crawlerの取り扱い | gitとローカル両方から完全削除 | .gitignoreでローカル残す / 現状維持 | 使用実績なし、かつはてなブログへの自動クロールは公開リポジトリで配布するには行儀が悪い（スクレイピング負荷・robots.txt/規約遵守の観点）。必要時は個別プライベートリポジトリで別途実装 |
 | 0.2.9.テンプレ整備 | ドキュメント | SKILL.md共通形式の決定 | 既存3 skillのfrontmatter形式を TEMPLATE_SKILL.md として正規化 | 形式自由 / pfd の簡易形式を許容 | Claude Codeはfrontmatterベースで skill を認識、pfdだけ欠けていたので統一。現フォーマットがベストかは未検証、将来レビュー余地ありとしてテンプレ末尾にコメント残す |
 | 0.2.9.テンプレ整備 | 命名 | rust tips の `_` 使い分け | rename で `-` 連結に統一（const-design / effect-system / how-to-debug） | 現状維持 | tips/README.md 規則に厳密適用。rust_egui / serde / windows は1単語or環境なので変更不要 |
+| 0.2.10.凍結終了 | 管理境界 | ~/.claude/.gitの扱い | 削除（Phase 0.1.0 の凍結方針を終了） | 凍結維持 | 独自履歴ゼロ・working diff 39件の偽差分で保険として機能していない。最終commit `5b48644` は dot_claude 側にも保持済。現役リポジトリ /c/git_clone/dot_claude/.git に一本化 |
