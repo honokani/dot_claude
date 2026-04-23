@@ -13,16 +13,21 @@ fi
 [ -d "$REPO/.git" ] || exit 0
 cd "$REPO" || exit 0
 
+# pull 前の HEAD を記録（表記ゆれに依存しない判定用）
+before=$(git rev-parse HEAD 2>/dev/null || echo "")
+
 # 同期 pull（rebase + autostash でローカル変更があっても邪魔しない）
 pull_output=$(git pull --rebase --autostash 2>&1)
 pull_status=$?
 
+after=$(git rev-parse HEAD 2>/dev/null || echo "")
+
 if [ $pull_status -eq 0 ]; then
-    # 成功時: up-to-date なら無音、更新あれば通知
-    if echo "$pull_output" | grep -q "Already up to date"; then
+    # HEAD 変化なし → 更新取込なし、無音
+    if [ "$before" = "$after" ]; then
         exit 0
     fi
-    echo "INFO: dot_claude: pull 成功、remote の更新を取り込みました"
+    echo "INFO: dot_claude: pull 成功、remote の更新を取り込みました（$before → $after）"
     echo "$pull_output" | tail -5
 else
     echo "WARN: dot_claude: pull 失敗（conflict/reject/detached 等）"
