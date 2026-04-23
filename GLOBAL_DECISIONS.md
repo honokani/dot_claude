@@ -76,3 +76,6 @@
 | 0.2.2.SessionStart pull 同期 | 運用 | hook実行順序 | pull → cache | cache → pull | pullでCLAUDE.md等が更新された後にcache鮮度判定する方が正しい。現状cacheはプロジェクトローカルでdot_claudeと独立だが、将来cacheがdot_claude依存になっても破綻しない順序にしておく |
 | 0.2.2.SessionStart pull 同期 | 運用 | pull失敗時の起動挙動 | stdout警告のみ、exit 0で起動継続 | exit 1で起動ブロック | pull失敗は手動解決すべき事象だが、そのためにClaude Code起動自体を止めると不便。context内にWARN出力して気づけるようにする |
 | 0.2.2+0.2.3.hook改善 | 運用 | REPOパス解決方式 | ~/.claude/CLAUDE.md symlink から readlink で動的解決 | $HOME/git_clone/dot_claude ハードコード | Windowsでは /c/git_clone/... に配置されるなど環境でパスが異なる。symlink経由なら link_claude.sh がリンクを張った時点で自動的に正しいパスが得られ、hook script は OS/配置に依存しない |
+| 0.2.5.tips命名規則整備 | ドキュメント | 命名規則の配置先 | tips/README.md（tips直下） | CLAUDE.mdに直書き | CLAUDE.mdは最小維持方針。詳細規則は対象ディレクトリ直下に置く方が発見しやすく、CLAUDE.mdからは参照リンクのみ |
+| 0.2.5.tips命名規則整備 | ドキュメント | 区切り文字の使い分け | 要素区切り `_` / 単語内連結 `-` | 全て `_` / 全て `-` | `windows-terminal`（1主題：Windows Terminalアプリ） vs `windows_terminal`（2要素：環境+話題）を一目で区別可能 |
+| 0.2.5.tips命名規則整備 | ドキュメント | 要素順序 | 主題_細目_環境（環境は末尾、省略可） | 環境_主題_細目 / 任意 | 検索軸となる主題を先頭、付帯情報の環境を末尾に。環境非依存tipsは環境省略で短くなる |

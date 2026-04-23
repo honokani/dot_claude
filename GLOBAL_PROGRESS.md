@@ -142,6 +142,15 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.5.tips命名規則整備 (2026-04-23)
+- [x] tips/README.md 新設（`<主題>_<細目>_<環境>.md` 形式、`_`/`-` 使い分け明記）
+- [x] CLAUDE.md tips記録セクションに README 参照を追加
+- [x] 既存tips のrename（参照箇所は Grep で事前確認、ゼロ件のため影響なし）:
+  - python_windows_http_server.md → python_http-server_windows.md（環境を末尾に統一）
+  - windows_terminal_emoji_font_fallback.md → windows-terminal_emoji-font-fallback.md（Windows Terminal を固有名詞として `-` 連結）
+- [x] tips/ssh_non-interactive-path.md を git 追跡開始（`_` → `-` リネーム + add）
+- [ ] rust_*.md 系も命名規則適合か後日レビュー（rust_howtodebug.md は `rust_how-to-debug.md` 相当）
+
 ### 補足修正: hook script の REPO パス解決 (2026-04-23)
 - [x] 問題発覚: `$HOME/git_clone/dot_claude` ハードコードが Windows環境（実体 `/c/git_clone/dot_claude`）で存在せず、hook が silent に exit 0 していた
 - [x] session-start-pull.sh / session-end-push.sh: `$HOME/.claude/CLAUDE.md` symlink から readlink で dot_claude repo を動的解決（OS/配置非依存化）

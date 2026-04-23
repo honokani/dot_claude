@@ -78,6 +78,7 @@ VISION.md・PROGRESS.md・DECISIONS.mdの3ファイルを「pj管理」と呼ぶ
 
 ## tips記録
 - `~/.claude/tips/*.md`: プロジェクト横断の技術知見
+- 命名規則: `~/.claude/tips/README.md` 参照（`<主題>_<細目>_<環境>.md`、`_`=要素区切り/`-`=単語内連結）
 - 関連技術を扱うとき自由に参照。躓いたら追記or作成
 - セッション中の知見をtipsに記録せよ
 
