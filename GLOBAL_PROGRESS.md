@@ -120,6 +120,21 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] SKILL.md を形式中立に拡張（drawio/mermaid/箇条書き 3形式をサポート、使用要素表に記法列追加、mermaid実装メモ追加）
 - [x] 「フローを描いて」= PFD 前提のルールを冒頭に明記
 - [x] flow_diagram.md を PFD 準拠の mermaid 版に置換（オブジェクト=丸、タスク=四角、色分け、交互連鎖、補助入力を点線）
+
+## Phase: 0.2.1.gitleaks pre-commit (2026-04-23)
+- [x] gitleaks 8.30.1 を scoop で導入（`scoop install gitleaks`）
+- [x] dot_claude/.githooks/pre-commit 新設（gitleaks git --staged、検出時 exit 1）
+- [x] dot_claude/.gitleaks.toml 新設（デフォルトルール extend + ドキュメント内例示を allowlist で除外）
+- [x] ~/.claude/gitleaks/README.md 新設（ローカルルール配置ガイド、git対象外）
+- [x] .gitignore に gitleaks/ 追加
+- [x] link_claude.sh に core.hooksPath 設定を追加
+- [x] 動作確認: 高エントロピー文字列（ghp_*, AKIA*）および RSA PRIVATE KEY で commit ブロックを確認
+- [ ] ~/.claude/gitleaks/rules.toml 配置（必要時にユーザー自身が作成）
+
+## Phase: 0.2.3.SessionEnd auto-push（実験） (2026-04-23)
+- [x] scripts/hooks/session-end-push.sh 新設（ahead検出 → git push、失敗時 stdout 警告）
+- [x] settings.json SessionEnd hook 登録（timeout 30）
+- [ ] 運用検証: セッション終了時に未push commit が自動 push される動作を次セッション以降で確認
 - [ ] Phase 0.2.1: gitleaks pre-commit フック実装（カスタムruleはローカル保管）
 - [ ] Phase 0.2.2: SessionStart pull 同期フック（conflict時stdout警告）
 - [ ] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）

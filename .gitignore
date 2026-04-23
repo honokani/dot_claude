@@ -40,3 +40,6 @@ tools/session-viewer
 
 # プロジェクト寄り（~/.claude/では共通化しない）
 plans/
+
+# ローカル専用（gitleaks カスタムルール等、公開禁止）
+gitleaks/

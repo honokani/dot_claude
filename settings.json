@@ -21,6 +21,17 @@
           }
         ]
       }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/scripts/hooks/session-end-push.sh\"",
+            "timeout": 30
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {
@@ -29,5 +40,17 @@
   "effortLevel": "high",
   "env": {
     "CLAUDE_CODE_EFFORT_LEVEL": "max"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Edit(*)",
+      "Write(*)",
+      "MultiEdit(*)"
+    ],
+    "deny": [
+      "Bash(rm *)",
+      "Bash(rm)"
+    ]
   }
 }

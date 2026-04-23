@@ -71,5 +71,14 @@ link_dotfile() {
             ret=1
         fi
     done
+
+    # git hooks を dot_claude/.githooks/ に向ける（pre-commit で gitleaks 実行）
+    if git -C "$PTH_D_BASE" config core.hooksPath .githooks; then
+        echo "INFO: git config core.hooksPath .githooks (dot_claude)"
+    else
+        echo "WARN: Failed to set core.hooksPath for dot_claude"
+        ret=1
+    fi
+
     exit $ret
 }

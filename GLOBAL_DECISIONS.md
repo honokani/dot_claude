@@ -67,3 +67,8 @@
 | 0.2.0.自動管理基盤設計 | ドキュメント | ファイル配置図の配置先 | plan.md に集約 | flow_diagram.mdに同居 | 静的関係（どのファイルがどこにあるか）は設計ドキュメント（plan.md）側に置き、flow_diagram.mdは動的フロー（入出力の連鎖）のみに絞る |
 | 0.2.0.自動管理基盤設計 | ドキュメント | PFDスキルの適用範囲 | 「フローを描いて」指示は全てPFD前提（drawio/mermaid/箇条書き問わず） | 形式ごとに別スキル / 明示指示時のみPFD | ユーザー原典: 「今後『フローを描いて』でpdf以外を指すことは有りません」。素のフローチャートを廃し、PFD精神（タスク=関数、入出力=オブジェクト）を常時適用する |
 | 0.2.0.自動管理基盤設計 | ドキュメント | flow_diagram.mdの表現形式 | PFD準拠のmermaid | 箇条書き / drawio | mermaidは名称付き・色分け・視覚明瞭で可読性が高い一方、箇条書きは簡潔だがノード参照が弱い。drawioはSKILL.md例示用として残す |
+| 0.2.1.gitleaks pre-commit | セキュリティ | gitleaks実行形態 | core.hooksPath経由のpre-commit hook | husky / manual実行 | hooksPathなら link_claude.sh で clone直後に設定でき、global install不要。他マシンへの展開が容易 |
+| 0.2.1.gitleaks pre-commit | セキュリティ | ルール階層 | 汎用rule(dot_claude/.gitleaks.toml) + ローカル(~/.claude/gitleaks/rules.toml) の2段 | 単一ファイル / dot_claude内にローカルrule混在 | 取引先名リスト自体が機微情報なので git管理外に置く必要。gitleaks は --config が1つだけなので hook 内で2回実行する方式で両立 |
+| 0.2.1.gitleaks pre-commit | セキュリティ | allowlistの適用 | dot_claude/.gitleaks.toml paths でドキュメント内例示を除外 | ドキュメントから例示削除 / allowlist無し | 記法説明にパターン例が必要、毎回手動修正は非現実的。allowlist で pre-commit 誤検知回避 |
+| 0.2.3.SessionEnd auto-push | 運用 | auto-push発火タイミング | SessionEnd hook | SessionStart / PreCompact | セッション終了時のみ push することで、作業中の未完成 commit の誤push を避ける（作業途中なら commit 自体していないはず） |
+| 0.2.3.SessionEnd auto-push | 運用 | 低エントロピー文字列の扱い | gitleaks デフォルトの entropy判定を受け入れる | 全文字列を検出する強化rule作成 | gitleaks の entropy判定は誤検知抑制目的。実運用の本物キーは高エントロピーで検出される。整然パターン（順列文字列・公式example）はテスト用で、本番混入は想定外 |

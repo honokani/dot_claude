@@ -1,0 +1,38 @@
+#!/bin/bash
+# pre-commit: gitleaks で機微情報を検出し、検出時は commit をブロック
+# 設計: auto_manage/flow_diagram.md の commit〜push フロー参照
+
+# gitleaks が無ければ警告してスキップ（互換性優先、commit は継続）
+if ! command -v gitleaks >/dev/null 2>&1; then
+    echo "WARN: gitleaks 未インストール。機微情報スキャンをスキップします。"
+    echo "      scoop install gitleaks (Win) / brew install gitleaks (Mac) / GitHub Releases (Linux)"
+    exit 0
+fi
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT" || exit 0
+
+LOCAL_RULES="$HOME/.claude/gitleaks/rules.toml"
+
+# 1回目: dot_claude/.gitleaks.toml（汎用ルール+デフォルト自動読込）
+gitleaks git --staged --no-banner 2>&1
+status_main=$?
+
+# 2回目: ローカルルール（取引先名等、存在する場合のみ）
+status_local=0
+if [ -f "$LOCAL_RULES" ]; then
+    gitleaks git --staged --no-banner --config "$LOCAL_RULES" 2>&1
+    status_local=$?
+fi
+
+if [ "$status_main" -ne 0 ] || [ "$status_local" -ne 0 ]; then
+    echo ""
+    echo "ERROR: gitleaks が機微情報を検出しました。commit を中断します。"
+    echo "対応:"
+    echo "  - 該当箇所を修正（環境変数化、伏字化、gitignore 追加 等）"
+    echo "  - 誤検知なら allowlist を追加（dot_claude/.gitleaks.toml または ~/.claude/gitleaks/rules.toml）"
+    echo "  - 詳細は auto_manage/recovery.md「3. gitleaks検出」を参照"
+    exit 1
+fi
+
+exit 0
