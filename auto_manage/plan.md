@@ -58,3 +58,25 @@
 ### 全体
 - 複数マシン同時編集での GLOBAL_PROGRESS.md / GLOBAL_DECISIONS.md の conflict 多発リスク
   - 対策: pj管理ファイルは書き込み直前に必ず pull するルールを CLAUDE.md に追記
+
+## ファイル配置（静的な関係）
+
+```mermaid
+flowchart LR
+    subgraph dot_claude repo
+        A[dot_claude/.githooks/pre-commit]
+        B[dot_claude/.gitleaks.toml<br/>汎用ルール: API key等]
+        C[dot_claude/scripts/hooks/<br/>session-start-pull.sh 等]
+        D[dot_claude/settings.json]
+    end
+    subgraph local only
+        E[~/.claude/gitleaks/rules.toml<br/>取引先名等 gitignore対象]
+    end
+    subgraph external
+        F[gitleaks バイナリ<br/>各OSに別途インストール]
+    end
+    A -.呼出.-> F
+    F -.--config.-> B
+    F -.--config.-> E
+    D -.hook登録.-> C
+```
