@@ -1,5 +1,21 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/scripts/hooks/session-start-pull.sh\"",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/scripts/hooks/session-start-cache.sh\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
     "PreCompact": [
       {
         "hooks": [

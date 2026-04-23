@@ -72,3 +72,6 @@
 | 0.2.1.gitleaks pre-commit | セキュリティ | allowlistの適用 | dot_claude/.gitleaks.toml paths でドキュメント内例示を除外 | ドキュメントから例示削除 / allowlist無し | 記法説明にパターン例が必要、毎回手動修正は非現実的。allowlist で pre-commit 誤検知回避 |
 | 0.2.3.SessionEnd auto-push | 運用 | auto-push発火タイミング | SessionEnd hook | SessionStart / PreCompact | セッション終了時のみ push することで、作業中の未完成 commit の誤push を避ける（作業途中なら commit 自体していないはず） |
 | 0.2.3.SessionEnd auto-push | 運用 | 低エントロピー文字列の扱い | gitleaks デフォルトの entropy判定を受け入れる | 全文字列を検出する強化rule作成 | gitleaks の entropy判定は誤検知抑制目的。実運用の本物キーは高エントロピーで検出される。整然パターン（順列文字列・公式example）はテスト用で、本番混入は想定外 |
+| 0.2.2.SessionStart pull 同期 | 運用 | スクリプト分割 | session-start-pull.sh + session-start-cache.sh の2本 | 単一scriptに統合 | pullとcacheは責務が異なる。分割して単独改修可能にし、片方の設定削除が他方に影響しないようにする。既存session-start.sh は cache処理なのでrenameで意図を明示 |
+| 0.2.2.SessionStart pull 同期 | 運用 | hook実行順序 | pull → cache | cache → pull | pullでCLAUDE.md等が更新された後にcache鮮度判定する方が正しい。現状cacheはプロジェクトローカルでdot_claudeと独立だが、将来cacheがdot_claude依存になっても破綻しない順序にしておく |
+| 0.2.2.SessionStart pull 同期 | 運用 | pull失敗時の起動挙動 | stdout警告のみ、exit 0で起動継続 | exit 1で起動ブロック | pull失敗は手動解決すべき事象だが、そのためにClaude Code起動自体を止めると不便。context内にWARN出力して気づけるようにする |

@@ -135,6 +135,12 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] scripts/hooks/session-end-push.sh 新設（ahead検出 → git push、失敗時 stdout 警告）
 - [x] settings.json SessionEnd hook 登録（timeout 30）
 - [ ] 運用検証: セッション終了時に未push commit が自動 push される動作を次セッション以降で確認
+
+## Phase: 0.2.2.SessionStart pull 同期 (2026-04-23)
+- [x] scripts/hooks/session-start.sh → session-start-cache.sh にrename（latest_cache処理であることを名前で明示）
+- [x] scripts/hooks/session-start-pull.sh 新設（git pull --rebase --autostash、up-to-date時無音、更新取込時/失敗時はstdout通知）
+- [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
+- [ ] 運用検証: 次セッション以降で pull が発火、remote変更を自動取込、conflict時はwarning表示されることを確認
 - [ ] Phase 0.2.1: gitleaks pre-commit フック実装（カスタムruleはローカル保管）
 - [ ] Phase 0.2.2: SessionStart pull 同期フック（conflict時stdout警告）
 - [ ] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）
