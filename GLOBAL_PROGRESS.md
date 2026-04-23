@@ -142,6 +142,11 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.8.blog-crawler削除 (2026-04-23)
+- [x] skills/blog-crawler/ を git と working tree から完全削除
+- [x] 理由: 使用実績なし + WebFetchによるブログクロールは公開リポジトリで配布するには行儀が悪い（スクレイピング負荷・規約リスク）
+- 注: Phase 0.0.6 履歴記述（git管理化した時の列挙）は事実として残置
+
 ## Phase: 0.2.7.機能単位ディレクトリ化（features/auto_manage/再編） (2026-04-23)
 - [x] auto_manage/ を features/auto_manage/ に git mv
 - [x] 実装実体を features/auto_manage/output/ 配下に集約:

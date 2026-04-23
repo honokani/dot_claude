@@ -82,3 +82,4 @@
 | 0.2.6.同期運用ルール明文化 | 運用 | pull/push の実行タイミング | 編集前pull / 編集後pushを毎回手動実行 | SessionEnd auto-pushに任せる | ユーザー原典「毎回pushして。コレはルール」「自動pushはあくまで失敗防止ネット」。複数環境編集で手動pushが遅れると他環境conflictの種。auto-pushは取りこぼし救済の保険であり第一選択ではない |
 | 0.2.7.機能単位ディレクトリ化 | 管理境界 | 機能単位のディレクトリ構造 | features/<name>/ に設計+output集約、本体から symlink | 本体直下に実装 + auto_manage に設計のみ | ユーザー指摘「features は機能本体の意味。設計資料だけ置くと意味不一致」。機能ごとの物理完結（削除時ディレクトリごと）と命名の意味一貫性を両立。symlink運用は link_claude.sh で既に確立されたパターンで新規コスト低い |
 | 0.2.7.機能単位ディレクトリ化 | 管理境界 | symlinkの配置方向 | 本体 → features/auto_manage/output/ への relative symlink | features側にダミー / 本体直接配置継続 | 実体は機能ディレクトリに集約（机能の所属が明確）、本体には後方互換のsymlink（settings.json や core.hooksPath の既存パスを変更せずに済む） |
+| 0.2.8.blog-crawler削除 | Skills | blog-crawlerの取り扱い | gitとローカル両方から完全削除 | .gitignoreでローカル残す / 現状維持 | 使用実績なし、かつはてなブログへの自動クロールは公開リポジトリで配布するには行儀が悪い（スクレイピング負荷・robots.txt/規約遵守の観点）。必要時は個別プライベートリポジトリで別途実装 |
