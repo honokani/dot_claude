@@ -71,6 +71,21 @@ def add_separator(slide):
     line.line.width = Pt(0.5)
 
 
+def add_background(slide, image_path=None):
+    """スライド全体に背景画像を敷く（z-order最背面に押し下げ）.
+    image_path=None または存在しない場合は何もしない（従来動作を維持）.
+    背景画像のサイズはスライド全体（SLIDE_W × SLIDE_H）に伸縮."""
+    import os
+    if not image_path or not os.path.isfile(image_path):
+        return None
+    pic = slide.shapes.add_picture(image_path, 0, 0, SLIDE_W, SLIDE_H)
+    # 最背面へ移動: spTree の最初のシェイプ位置（nvGrpSpPr/grpSpPr の直後）に挿入
+    spTree = pic._element.getparent()
+    spTree.remove(pic._element)
+    spTree.insert(2, pic._element)
+    return pic
+
+
 def add_title(slide, text):
     """全スライド共通位置にタイトルを配置."""
     add_textbox(slide, LEFT, TITLE_TOP, BODY_W, TITLE_H,

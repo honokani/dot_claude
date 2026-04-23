@@ -17,7 +17,8 @@ pptxスライドを段階的に作成するスキル。Google Slidesでの利用
 - 出力形式: pptx
 - 利用環境: Google Slides（pptxをインポート）
 - python-pptx を使用してプログラマティックに生成
-- **基本フォーマットの生成器（test_layout.py）が同ディレクトリに存在する。スライド生成時はこのコードのヘルパー関数群（add_title, add_headline, add_separator, add_table等）をそのまま使用すること。自前で再実装しない。**
+- **基本フォーマットの生成器（test_layout.py）が同ディレクトリに存在する。スライド生成時はこのコードのヘルパー関数群（add_title, add_headline, add_separator, add_table, add_background 等）をそのまま使用すること。自前で再実装しない。**
+- **背景画像はオプション**。`add_background(slide, image_path)` を呼ぶと指定画像をスライド全体に敷いて最背面に押し下げる。`image_path` が `None` または存在しない場合は何もしない（従来通りの白背景）。プロジェクトごとに使う・使わないを判断する。
 
 ## 作成手順（3フェーズ）
 
