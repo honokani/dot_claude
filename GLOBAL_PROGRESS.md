@@ -117,6 +117,9 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] flow_diagram.md を PFDフロー箇条書き専用ファイルに整理（素のmermaid削除、記法解説はSKILL.mdに一元化）
 - [x] ファイル配置図を plan.md に移動（静的関係は設計ドキュメント側に集約）
 - [x] README.md の構成説明を更新
+- [x] SKILL.md を形式中立に拡張（drawio/mermaid/箇条書き 3形式をサポート、使用要素表に記法列追加、mermaid実装メモ追加）
+- [x] 「フローを描いて」= PFD 前提のルールを冒頭に明記
+- [x] flow_diagram.md を PFD 準拠の mermaid 版に置換（オブジェクト=丸、タスク=四角、色分け、交互連鎖、補助入力を点線）
 - [ ] Phase 0.2.1: gitleaks pre-commit フック実装（カスタムruleはローカル保管）
 - [ ] Phase 0.2.2: SessionStart pull 同期フック（conflict時stdout警告）
 - [ ] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）
