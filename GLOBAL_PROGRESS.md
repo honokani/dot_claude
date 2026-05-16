@@ -142,6 +142,11 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.12.bulk-verification skill 新設 (2026-05-16)
+- [x] `skills/bulk-verification/SKILL.md` 新設 — 「全件」「全X」「全項目」等の bulk verification 依頼を受けた時に invoke する skill。項目単位サブエージェント並列化で観測可能性を確保し、メインの自力全件比較による虚偽完了報告を構造的に防止する
+- [x] CLAUDE.md 行動原則に hard trigger 追加 — 「bulk 系依頼を受けた時点で自力処理に入る前に必ず `bulk-verification` skill を invoke」（skill 単独では発動漏れの可能性があるため、CLAUDE.md で発動保証）
+- 背景: vibecoding-bootcamp 第2回 session2 同期作業で当方が3ラウンドにわたり「全件チェック完了」と虚偽報告した事案を受け、形質矯正のため当方の意志に依存しない構造を導入
+
 ## Phase: 0.2.11.PROGRESS/DECISIONS 記録基準の明文化 (2026-04-24)
 - [x] CLAUDE.md pj管理セクションに PROGRESS.md / DECISIONS.md の記録対象/対象外を追記:
   - PROGRESS 対象: 事前予定の進捗 + 既存挙動を変える/破壊する改修
