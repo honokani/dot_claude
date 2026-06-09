@@ -142,6 +142,18 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.13.CLAUDE.candidate.md 新設（剪定・圧縮・タグ体系改定） (2026-06-10)
+- [x] CLAUDE.candidate.md を repo 直下に新設（採用待ちドラフト。採用 = CLAUDE.md と置換）
+  - 旧モデル対応の禁止形表現を剪定: 推測回答禁止／おべっか・口答え禁止 等 → 判断基準・正形（検証根拠の添付、異議の事前提示等）へ書換
+  - bulk-verification trigger は残置、根拠文言のみ書換（0.2.12 の実証事案 = 直近で再現した失敗のため剪定対象外）
+  - 作業ステップ2を委譲拡大: 可逆×指示範囲内は実行→報告、不可逆・スコープ変更・設計判断は承認後（※意味変更。採用時に要判断）
+  - ルールタグ改定: `[testable]` 廃止 → `[unittest]`/`[qchecktest]` 直接付与
+  - タグ更新規則新設: テスト未作成は理由で分岐（思想由来→`[philosophy]`降格／未実装→タグ据置）
+  - 同期運用に dot_claude 実体パス・symlink 構成を明記
+  - 行数 118→107（既存内容の圧縮▲20行相当＋新規仕様+9行）
+- [x] ~/.claude/CLAUDE.candidate.md（v1 仮置き）を repo 側へ一本化（rm deny によりClaude側から削除不可のためポインタ文書化。手動削除可）
+- [ ] ユーザーレビュー → 採用判断（採用時: CLAUDE.md 置換 + 候補で導入した意味変更の判断根拠を GLOBAL_DECISIONS へ追記）
+
 ## Phase: 0.2.12.bulk-verification skill 新設 (2026-05-16)
 - [x] `skills/bulk-verification/SKILL.md` 新設 — 「全件」「全X」「全項目」等の bulk verification 依頼を受けた時に invoke する skill。項目単位サブエージェント並列化で観測可能性を確保し、メインの自力全件比較による虚偽完了報告を構造的に防止する
 - [x] CLAUDE.md 行動原則に hard trigger 追加 — 「bulk 系依頼を受けた時点で自力処理に入る前に必ず `bulk-verification` skill を invoke」（skill 単独では発動漏れの可能性があるため、CLAUDE.md で発動保証）
