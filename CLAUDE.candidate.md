@@ -75,15 +75,14 @@ VISION.md・PROGRESS.md・DECISIONS.md の3ファイル。セッション開始�
 - SessionEnd hookのauto-pushは失敗防止ネット。毎回のpushを省略しない
 
 ## latest_cache（セッション間コンテキスト引き継ぎ）
-- セッション開始時 `$(pwd)/.claude/pjcache_marker_*` を探す。なければ何もしない（正常）
-- あれば: IDから `~/.claude/project_info/latest_cache_{id}.log` を確認
-  - latest_cache更新日 ≥ max(pj管理3ファイル更新日) なら読む。古ければ読まない
-  - どちらでも `~/.claude/project_info/old/{プロジェクト名}/` へ移動しマーカー削除
+- SessionStart hook（session-start-cache.sh）が全自動処理: マーカー探索→鮮度判定→注入→old/移動。Claude側の手動確認は不要
+- セッション冒頭に「=== Previous session context (latest_cache) ===」ブロックがあれば、前セッションからの引き継ぎとして扱う
 - 設計思想は `GLOBAL_VISION.md` 参照
 
 ## tips記録
 - `~/.claude/tips/*.md`: プロジェクト横断の技術知見。命名: `<主題>_<細目>_<環境>.md`（詳細は `tips/README.md`）
-- 関連技術を扱うとき参照。躓いたら追記or作成。セッション中の知見を記録せよ
+- 参照トリガー: 環境・ツール系の躓き（コマンド構文エラー・PATH・文字コード・改行等）が起きたら、修正を試みる前に `tips/` を主題語でgrep（既知の罠の再踏みが実際に多い）
+- 躓きを解決したら追記or作成。セッション中の知見を記録せよ
 
 ## workspace_for_claude
 - `~/.claude/workspace_for_claude/`: Claudeの作業用。自由に使ってよい
@@ -100,8 +99,3 @@ VISION.md・PROGRESS.md・DECISIONS.md の3ファイル。セッション開始�
   ## Phase: feature-A [中断]
   中断理由 / 再開条件 / 再開起点 / 未決定事項
   ```
-
-## トピックマーカー
-- 形式: `[カテゴリ.トピック]`（例: `[guard.pen_blocked]`）
-- 制御の追加・変更・削除時、マーカー付きで影響範囲を発言。後から検索したい議論・決定にも付与
-- 判断根拠はDECISIONS.mdへ。過去参照はDECISIONS.mdの大分類/小分類で検索

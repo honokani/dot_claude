@@ -142,6 +142,17 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.14.運用棚卸し: latest_cache/tips/トピックマーカー (2026-06-10)
+- [x] latest_cache 実態調査 → **正常稼働を確認**（old/ に7プロジェクト分の消費実績、直近 2026-06-10 07:34 reflect_color）。「動いていない感」の正体は hook 全自動化による不可視性
+  - session-start-cache.sh が探索→鮮度判定→注入→old/移動まで全自動実施しており、CLAUDE.md の手動手順は完全二重（Claude側は常に空振り）だった
+  - CLAUDE.candidate.md の手動手順を削除し「hook全自動＋注入ブロックの扱い」へ置換（6行→3行）
+- [x] tips 実態調査 → 生産側は稼働、**参照側が死亡**と判定
+  - 実証: 本セッションで Claude が tips 記載済みの罠（BashツールへのPowerShell構文入力）を tips 未参照のまま再踏み（tips/bash_powershell-invocation_windows.md に解決策が既存）
+  - CLAUDE.candidate.md に参照トリガー行を追加（環境・ツール系の躓き時、修正前に tips/ をgrep）
+  - 未追跡だった tips/bash_powershell-invocation_windows.md（5/19作成、3週間同期ネット外）を git 追跡開始
+- [x] トピックマーカー → **剪定**（候補版から削除。0.2.13剪定プロトコルの適用第1号）
+  - 根拠: GLOBAL_DECISIONSに導入判断の記録なし／現行pj・GLOBALのDECISIONSに使用実績なし／検索目的はDECISIONS.mdの大分類/小分類列で代替済み／ユーザー証言「運用されていない古い取り決め」
+
 ## Phase: 0.2.13.CLAUDE.candidate.md 新設（剪定・圧縮・タグ体系改定） (2026-06-10)
 - [x] CLAUDE.candidate.md を repo 直下に新設（採用待ちドラフト。採用 = CLAUDE.md と置換）
   - 旧モデル対応の禁止形表現を剪定: 推測回答禁止／おべっか・口答え禁止 等 → 判断基準・正形（検証根拠の添付、異議の事前提示等）へ書換
