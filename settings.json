@@ -1,4 +1,20 @@
 {
+  "env": {
+    "CLAUDE_CODE_EFFORT_LEVEL": "max"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Edit(*)",
+      "Write(*)",
+      "MultiEdit(*)"
+    ],
+    "deny": [
+      "Bash(rm *)",
+      "Bash(rm)"
+    ]
+  },
+  "model": "fable",
   "hooks": {
     "SessionStart": [
       {
@@ -53,20 +69,5 @@
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true
   },
-  "effortLevel": "high",
-  "env": {
-    "CLAUDE_CODE_EFFORT_LEVEL": "max"
-  },
-  "permissions": {
-    "allow": [
-      "Bash(*)",
-      "Edit(*)",
-      "Write(*)",
-      "MultiEdit(*)"
-    ],
-    "deny": [
-      "Bash(rm *)",
-      "Bash(rm)"
-    ]
-  }
+  "effortLevel": "high"
 }
