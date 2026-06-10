@@ -17,6 +17,14 @@
 - ビューワは先に停止してから sync
 - または `uv run python -m module_name` で直接実行（ビルド不要）
 
+## パス形式問題（Bashツール経由）
+
+Claude CodeのBashツールはbash（MSYS2）だが、`uv run python` が起動するのはWindowsネイティブPython。
+コード内の文字列リテラルとしてMSYS2形式パス（`/c/Users/...`）を書くと `FileNotFoundError` になる。
+
+- Pythonコード内に埋め込むパスはWindows形式（`C:/Users/...`）で書く
+- コマンドライン引数ならMSYS2が自動変換することもあるが、`-c` スクリプト内のリテラルは変換されない
+
 ## PATH問題
 
 uv管理のPythonからはシステムのPATHにあるコマンド（`claude` 等）が見えない場合がある。

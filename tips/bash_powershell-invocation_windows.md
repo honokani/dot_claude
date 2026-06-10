@@ -1,5 +1,11 @@
 # bash から PowerShell を呼ぶときの `$` 展開トラップ
 
+## 前提: Bashツールの実体はbash
+
+Claude Codeの環境情報に「Shell: PowerShell」と表示されていても、**Bashツールはbash（MSYS2）で動く**。
+`Get-ChildItem` 等のコマンドレットを直接投げると `command not found` (exit 127)。
+PowerShellを使いたい場合は下記の通り `powershell -Command`/`-File` 経由で呼ぶ。
+
 ## 症状
 
 Claude Code (Windows) の Bash ツールで `powershell -Command "..."` を叩くと、PowerShell スクリプト内の `$_` や `$env:TEMP` などが **bash 側で先に展開されて空文字列になり**、PowerShell パーサがエラーを返す。
