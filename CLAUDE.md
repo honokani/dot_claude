@@ -80,10 +80,11 @@ VISION.md・PROGRESS.md・DECISIONS.md の3ファイル。セッション開始�
 - セッション冒頭に「=== Previous session context (latest_cache) ===」ブロックがあれば、前セッションからの引き継ぎとして扱う
 - 設計思想は `GLOBAL_VISION.md` 参照
 
-## tips記録
-- `~/.claude/tips/*.md`: プロジェクト横断の技術知見。命名: `<主題>_<細目>_<環境>.md`（詳細は `tips/README.md`）
-- 参照トリガー: 環境・ツール系の躓き（コマンド構文エラー・PATH・文字コード・改行等）が起きたら、修正を試みる前に `tips/` を主題語でgrep（既知の罠の再踏みが実際に多い）
-- 躓きを解決したら追記or作成。セッション中の知見を記録せよ
+## traps/tips記録
+- `~/.claude/traps/*.md`: エラーとして観測できる躓きの解決知見。命名: `<主題>_<細目>_<環境>.md`、ファイル名の主題語=hook照合キー（詳細は `traps/README.md`）
+- 配信: Bash失敗時にhookが [traps-hint] ポインタを自動注入。注入されたら修正前に該当ファイルをRead
+- エラー系の躓きを解決したら traps へ追記or作成。頻出の罠はCLAUDE.md無条件ルールへ昇格し、詳細をtrapsに残す
+- `~/.claude/tips/*.md`: 非エラー知見（設計パターン・作業ノウハウ）。新規追加は保留中（扱い検討中）
 
 ## workspace_for_claude
 - `~/.claude/workspace_for_claude/`: Claudeの作業用。自由に使ってよい

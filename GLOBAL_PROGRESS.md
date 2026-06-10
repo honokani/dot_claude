@@ -142,6 +142,15 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.17.traps/tips分離 (2026-06-10)
+- [x] traps/ 新設＋エラー系7本を移植（bash_powershell-invocation_windows, python_uv_windows, python_http-server_windows, ssh_non-interactive-path, rust_windows, rust_serde, rust_perf-patterns※未追跡だったため内容確認のうえ追跡開始）。~/.claude/traps symlink 作成
+- [x] hook rename: post-bash-tips-pointer.sh → post-bash-traps-pointer.sh（向き先 traps/、[traps-hint]）。settings.json 参照更新
+- [x] 照合強化: シグネチャ追加（panicked at / error[E番号] / cannot borrow / os error / アクセスが拒否 / Command timed out）／単語境界→部分一致（serde_json 等の連結識別子対応）／cargo・rustc→rust エイリアス／見出しのファイル名重複除去
+- [x] ユニットテスト10ケースGreen（旧6 + cargo panic / exe lock / timeout / serde E0277）
+- [x] traps/README.md 新設（記録基準=エラー観測可能性、ファイル名=照合キー）
+- [x] CLAUDE.md tips記録節 → traps/tips 分離構成へ改訂（自発grepトリガー行は hook注入応答へ置換）
+- [x] tips残留8本=非エラー知見（rust_egui・rust_const-design・rust_effect-system・rust_how-to-debug・windows-terminal_emoji-font-fallback・large_document_management・machine-learning_*・math_textbook_authoring）。扱い検討は継続
+
 ## Phase: 0.2.16.tips参照のハーネス層昇格 (2026-06-10)
 - [x] scripts/hooks/post-bash-tips-pointer.sh 新設 — Bash失敗時、環境系エラーシグネチャ該当ならtipsポインタ（ファイル名+見出しのみ、数十トークン）を additionalContext 注入。本文はClaudeがRead判断（段階的開示）
 - [x] settings.json に PostToolUse / PostToolUseFailure（matcher: Bash, timeout 10）両登録 — 成功/失敗イベントは排他のため二重注入なし

@@ -22,7 +22,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.claude/scripts/hooks/post-bash-tips-pointer.sh\"",
+            "command": "bash \"$HOME/.claude/scripts/hooks/post-bash-traps-pointer.sh\"",
             "timeout": 10
           }
         ]
@@ -34,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.claude/scripts/hooks/post-bash-tips-pointer.sh\"",
+            "command": "bash \"$HOME/.claude/scripts/hooks/post-bash-traps-pointer.sh\"",
             "timeout": 10
           }
         ]
