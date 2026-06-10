@@ -163,7 +163,10 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
   - 同期運用に dot_claude 実体パス・symlink 構成を明記
   - 行数 118→107（既存内容の圧縮▲20行相当＋新規仕様+9行）
 - [x] ~/.claude/CLAUDE.candidate.md（v1 仮置き）を repo 側へ一本化（rm deny によりClaude側から削除不可のためポインタ文書化。手動削除可）
-- [ ] ユーザーレビュー → 採用判断（採用時: CLAUDE.md 置換 + 候補で導入した意味変更の判断根拠を GLOBAL_DECISIONS へ追記）
+- [x] ユーザーレビュー → 採用（2026-06-10）: CLAUDE.md を候補版（0.2.14反映後・100行）で置換、CLAUDE.candidate.md 削除
+  - 採用前に滞留変更を確定コミット（CLAUDE.md改稿・テンプレ整形・settings.json。候補の基底を履歴に固定）
+  - TEMPLATE_VISION.md のタグ表記を新体系へ整合（[tested]→[unittest]/[qchecktest]、qcheck例を1行追加）
+  - 意味変更3点の判断根拠を GLOBAL_DECISIONS へ追記（表現方針／委譲境界／検証の位置づけ）
 
 ## Phase: 0.2.12.bulk-verification skill 新設 (2026-05-16)
 - [x] `skills/bulk-verification/SKILL.md` 新設 — 「全件」「全X」「全項目」等の bulk verification 依頼を受けた時に invoke する skill。項目単位サブエージェント並列化で観測可能性を確保し、メインの自力全件比較による虚偽完了報告を構造的に防止する
