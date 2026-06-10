@@ -142,6 +142,11 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.15.シェル構文をbash固定 (2026-06-10)
+- [x] CLAUDE.md コーディングスタイルに追加: シェルは常にbash/POSIX構文、PowerShell必須時のみ `powershell -File` 経由（ユーザー決定: git bash/zshが全環境に存在）
+  - 背景: 新CLAUDE.md初回セッション冒頭で環境表記（Shell: PowerShell）由来の躓き3件（PowerShell構文→exit 127／python直打ち／MSYS2パス形式）。うち1件はtips既知の罠の再踏みで、0.2.14で仕込んだtips参照トリガーは不発（観測1回目）
+- [x] tips 2件に知見追記（bash_powershell-invocation_windows.md「実体はbash」前提節／python_uv_windows.md パス形式節）— `76cd923`
+
 ## Phase: 0.2.14.運用棚卸し: latest_cache/tips/トピックマーカー (2026-06-10)
 - [x] latest_cache 実態調査 → **正常稼働を確認**（old/ に7プロジェクト分の消費実績、直近 2026-06-10 07:34 reflect_color）。「動いていない感」の正体は hook 全自動化による不可視性
   - session-start-cache.sh が探索→鮮度判定→注入→old/移動まで全自動実施しており、CLAUDE.md の手動手順は完全二重（Claude側は常に空振り）だった

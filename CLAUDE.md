@@ -31,7 +31,8 @@
   - 例外: 「返す」コスト >> 「書き換える」コスト → in-place更新（&mut直接操作）優先（例: ピクセルバッファ Vec<[f32;4]> の毎フレーム生成、メモ化キャッシュ）
 - Pythonでも純粋関数優先・グローバル状態回避・パイプライン合成
 - 繰り返し取得しうる処理はメモ化（API呼び出し・展開結果・計算結果。コードでも作業でも）
-- Bashでのpython実行は `uv run python`（`python` 直打ち禁止、`pyenv` 操作禁止）
+- シェルコマンドは常にbash/POSIX構文（全環境にgit bash or zshあり。環境表記がPowerShellでもBashツールの実体はbash）。PowerShell必須の操作のみ `powershell -File` 経由
+- Bashでのpython実行は `uv run python`（`python` 直打ち禁止、`pyenv` 操作禁止）。コード内に埋め込むパスはWindows形式（MSYS2形式 `/c/...` 不可）
 - twada的TDDを意識
 - デバッグは推測修正より先にログ出力で事実確認
 
