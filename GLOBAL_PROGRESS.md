@@ -142,6 +142,12 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
 - [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
 
+## Phase: 0.2.16.tips参照のハーネス層昇格 (2026-06-10)
+- [x] scripts/hooks/post-bash-tips-pointer.sh 新設 — Bash失敗時、環境系エラーシグネチャ該当ならtipsポインタ（ファイル名+見出しのみ、数十トークン）を additionalContext 注入。本文はClaudeがRead判断（段階的開示）
+- [x] settings.json に PostToolUse / PostToolUseFailure（matcher: Bash, timeout 10）両登録 — 成功/失敗イベントは排他のため二重注入なし
+- [x] ユニットテスト6ケースGreen: 成功時無音／exit 127→bashポインタ／FileNotFoundError→python_uvポインタ／pytest失敗（作業系）無音／文字列tool_response対応／tool_response欠落無音
+- [ ] 実地検証（次セッション以降）: 環境系エラー時に [tips-hint] が実際に注入されるか／注入後に修正前Readが起きるか／PostToolUseFailure側の additionalContext サポート（公式docs未明記）
+
 ## Phase: 0.2.15.シェル構文をbash固定 (2026-06-10)
 - [x] CLAUDE.md コーディングスタイルに追加: シェルは常にbash/POSIX構文、PowerShell必須時のみ `powershell -File` 経由（ユーザー決定: git bash/zshが全環境に存在）
   - 背景: 新CLAUDE.md初回セッション冒頭で環境表記（Shell: PowerShell）由来の躓き3件（PowerShell構文→exit 127／python直打ち／MSYS2パス形式）。うち1件はtips既知の罠の再踏みで、0.2.14で仕込んだtips参照トリガーは不発（観測1回目）
