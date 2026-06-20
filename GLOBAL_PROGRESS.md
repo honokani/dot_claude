@@ -193,6 +193,12 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] CLAUDE.md 行動原則に hard trigger 追加 — 「bulk 系依頼を受けた時点で自力処理に入る前に必ず `bulk-verification` skill を invoke」（skill 単独では発動漏れの可能性があるため、CLAUDE.md で発動保証）
 - 背景: vibecoding-bootcamp 第2回 session2 同期作業で当方が3ラウンドにわたり「全件チェック完了」と虚偽報告した事案を受け、形質矯正のため当方の意志に依存しない構造を導入
 
+## Phase: 0.2.19.tips参照仕組みの保留判断 (2026-04-24)
+- [x] 当面: 「貯めるだけ」モード（tips 追記は行う、参照仕組みは未実装）
+- [x] 候補B（キーワード hook 注入）を将来検討候補として残す
+- 保留理由: キーワード選択が難しい
+- 不採用: A=hook注入でコンテキスト肥大 / C・D=Claude任せで漏れ
+
 ## Phase: 0.2.18.削除系コマンドの多層防御 (2026-04-24)
 - [x] permission deny を Bash削除系で拡張: rmdir, unlink, find -delete, xargs rm, shred 等
 - [x] PreToolUse hook 新設（features/auto_manage/output/scripts/hooks/pre-tool-block-delete.sh）:
