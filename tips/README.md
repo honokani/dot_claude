@@ -36,6 +36,7 @@
 | `ssh_non-interactive-path.md` | ssh | non-interactive-path | (省略) |
 | `math_textbook_authoring.md` | math | textbook, authoring | (省略) |
 | `large_document_management.md` | document | large_management | (省略) |
+| `rust_perf-patterns.md` | rust | perf-patterns | (環境非依存) |
 
 ## 追加ルール
 
