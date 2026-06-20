@@ -93,6 +93,9 @@ VISION.md・PROGRESS.md・DECISIONS.md の3ファイル。セッション開始�
 - 繰り返しワークフロー（3ステップ以上）はSkill化を検討。テンプレート: `~/.claude/TEMPLATE_SKILL.md`
 
 ## 割り込み作業とブランチ管理
+- 主作業もmaster直でなく**短命フィーチャーブランチ**で隔離。master=常に動くトランク。リスク/実験的変更を直接masterでやらない（壊れたコミットがmasterを汚し reset --hard 等の汚い後始末を招いた実績あり）
+  - 手順: masterから `feature/<機能>-<要旨>` を切る→作業→**動作確認後にmasterへmerge**（壊れたら破棄/やり直しがmasterに波及しない）。基本は逐次1本（PROGRESS/DECISIONS等は全機能共有で並行ブランチは衝突）
+  - 例外: typo・即興の小修正はmaster直で可
 - 割り込みは git worktree（stash禁止: 識別ミスリスク）。Agent (`isolation: "worktree"`) で自動化可
 - 手順: WIPコミット → `git worktree add` → 完了後 `git worktree remove` → 必要に応じmerge/rebase → `git reset HEAD~1` で再開
 - 割り込みが現タスクの前提と判明 → 現ブランチを割り込みブランチ上にrebase（develop経由不要）

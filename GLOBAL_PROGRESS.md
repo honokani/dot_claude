@@ -287,3 +287,6 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [ ] Phase 0.2.2: SessionStart pull 同期フック（conflict時stdout警告）
 - [ ] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）
 - [ ] Phase 0.2.4: dotfiles連携（initialize_ubuntu.2.shにdot_claude clone+link+gitleaks追加）
+
+## Phase: 0.2.19.主作業のフィーチャーブランチ運用を明文化 (2026-06-20)
+- [x] 「割り込み作業とブランチ管理」に主作業ルールを追記 — master直でなく短命フィーチャーブランチで隔離、master=動くトランク、確認後merge、逐次1本。契機=reflect_colorでスポイト実験をmaster直で進め壊れ、reset --hardでの汚い後始末を招いた事故
