@@ -193,6 +193,16 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] CLAUDE.md 行動原則に hard trigger 追加 — 「bulk 系依頼を受けた時点で自力処理に入る前に必ず `bulk-verification` skill を invoke」（skill 単独では発動漏れの可能性があるため、CLAUDE.md で発動保証）
 - 背景: vibecoding-bootcamp 第2回 session2 同期作業で当方が3ラウンドにわたり「全件チェック完了」と虚偽報告した事案を受け、形質矯正のため当方の意志に依存しない構造を導入
 
+## Phase: 0.2.12.削除系コマンドの多層防御 (2026-04-24)
+- [x] permission deny を Bash削除系で拡張: rmdir, unlink, find -delete, xargs rm, shred 等
+- [x] PreToolUse hook 新設（features/auto_manage/output/scripts/hooks/pre-tool-block-delete.sh）:
+  - bash/powershell 問わず tool_input.command を regex検査して削除系を exit 1 でブロック
+  - 直接系: rm/rmdir/unlink/del/erase/Remove-Item/rd/ri/shred
+  - 間接系: find -delete / xargs rm
+- [x] settings.json PreToolUse hook 登録（matcher: "Bash|PowerShell", timeout 5）
+- [x] features/auto_manage/output/scripts/hooks/ に実体配置、本体は symlink
+- 背景: permission rule の PowerShell syntax は公式ドキュメント未確認、Bash deny だけでは Remove-Item 等で迂回されうる。claude-code-guide agent で確認した結果に基づき多層防御
+
 ## Phase: 0.2.11.PROGRESS/DECISIONS 記録基準の明文化 (2026-04-24)
 - [x] CLAUDE.md pj管理セクションに PROGRESS.md / DECISIONS.md の記録対象/対象外を追記:
   - PROGRESS 対象: 事前予定の進捗 + 既存挙動を変える/破壊する改修

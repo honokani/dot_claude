@@ -1,0 +1,1 @@
+../../features/auto_manage/output/scripts/hooks/pre-tool-block-delete.sh
