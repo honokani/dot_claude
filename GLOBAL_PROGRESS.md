@@ -193,6 +193,12 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] CLAUDE.md 行動原則に hard trigger 追加 — 「bulk 系依頼を受けた時点で自力処理に入る前に必ず `bulk-verification` skill を invoke」（skill 単独では発動漏れの可能性があるため、CLAUDE.md で発動保証）
 - 背景: vibecoding-bootcamp 第2回 session2 同期作業で当方が3ラウンドにわたり「全件チェック完了」と虚偽報告した事案を受け、形質矯正のため当方の意志に依存しない構造を導入
 
+## Phase: 0.2.20.git stash 系を deny に追加 (2026-04-24)
+- [x] settings.json deny に `Bash(git stash *)` / `Bash(git stash)` を追加
+- 背景: CLAUDE.md「割り込みは git worktree（stash禁止: 識別ミスリスク）」と
+  既に明記されていたが permission rule 未反映だった、ハーネス層で強制
+  ブロックする形に揃える
+
 ## Phase: 0.2.19.tips参照仕組みの保留判断 (2026-04-24)
 - [x] 当面: 「貯めるだけ」モード（tips 追記は行う、参照仕組みは未実装）
 - [x] 候補B（キーワード hook 注入）を将来検討候補として残す

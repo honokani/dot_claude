@@ -18,7 +18,9 @@
       "Bash(find * -delete)",
       "Bash(xargs rm *)",
       "Bash(xargs unlink *)",
-      "Bash(shred *)"
+      "Bash(shred *)",
+      "Bash(git stash *)",
+      "Bash(git stash)"
     ]
   },
   "model": "opus",
