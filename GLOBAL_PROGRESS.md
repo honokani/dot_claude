@@ -42,7 +42,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] マーカー配置先を `$(pwd)/.claude/pjcache_marker_{id}` に決定（.gitignore追加不要）
 - [x] latest_cache鮮度判定ロジック実装 — max(VISION/DECISIONS/PROGRESS更新日) vs cache更新日
 - [x] `set -e`下でのls失敗問題を修正（`|| true`ガード）
-- [x] テストスイート作成 — `scripts/test/hooks/test_compact_hooks.sh`（6ケース21アサーション、全パス）
+- [x] テストスイート作成 — `scripts/test/hooks/test_compact_hooks.sh`(6ケース21アサーション、全パス)
 - [x] GLOBAL_VISION.mdに「ファイル管理の境界原則」追加 — .gitignoreを本体/ユーザーの境界線として明文化
 - [x] 「開発管理」→「pj管理」リネーム — 全5ファイル22箇所一括置換
 - [x] TEMPLATE_PROGRESS.md新設 — pj管理3ファイルのテンプレート完備
@@ -131,144 +131,16 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] 動作確認: 高エントロピー文字列（ghp_*, AKIA*）および RSA PRIVATE KEY で commit ブロックを確認
 - [ ] ~/.claude/gitleaks/rules.toml 配置（必要時にユーザー自身が作成）
 
+## Phase: 0.2.2.SessionStart pull 同期 (2026-04-23)
+- [x] scripts/hooks/session-start.sh → session-start-cache.sh にrename（latest_cache処理であることを名前で明示）
+- [x] scripts/hooks/session-start-pull.sh 新設(git pull --rebase --autostash、up-to-date時無音、更新取込時/失敗時はstdout通知)
+- [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
+- [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
+
 ## Phase: 0.2.3.SessionEnd auto-push（実験） (2026-04-23)
 - [x] scripts/hooks/session-end-push.sh 新設（ahead検出 → git push、失敗時 stdout 警告）
 - [x] settings.json SessionEnd hook 登録（timeout 30）
 - [x] 運用検証完了（2026-04-23）: /exit 時に SessionEnd hook 発火、ahead=2 検出 → `git push` で `7e2026d` + `ec7705f` を一括push成功。GitHub web UI でも反映確認済み
-
-## Phase: 0.2.2.SessionStart pull 同期 (2026-04-23)
-- [x] scripts/hooks/session-start.sh → session-start-cache.sh にrename（latest_cache処理であることを名前で明示）
-- [x] scripts/hooks/session-start-pull.sh 新設（git pull --rebase --autostash、up-to-date時無音、更新取込時/失敗時はstdout通知）
-- [x] settings.json SessionStart hook 登録（pull → cache の順で実行、timeout 30）
-- [x] 運用検証完了（2026-04-23）: 新セッション起動時に session-start-pull.sh が発火、HEAD変化なしで無音終了することを確認（grep文言依存バグはHEAD比較に置換して修正済み）
-
-## Phase: 0.2.17.traps/tips分離 (2026-06-10)
-- [x] traps/ 新設＋エラー系7本を移植（bash_powershell-invocation_windows, python_uv_windows, python_http-server_windows, ssh_non-interactive-path, rust_windows, rust_serde, rust_perf-patterns※未追跡だったため内容確認のうえ追跡開始）。~/.claude/traps symlink 作成
-- [x] hook rename: post-bash-tips-pointer.sh → post-bash-traps-pointer.sh（向き先 traps/、[traps-hint]）。settings.json 参照更新
-- [x] 照合強化: シグネチャ追加（panicked at / error[E番号] / cannot borrow / os error / アクセスが拒否 / Command timed out）／単語境界→部分一致（serde_json 等の連結識別子対応）／cargo・rustc→rust エイリアス／見出しのファイル名重複除去
-- [x] ユニットテスト10ケースGreen（旧6 + cargo panic / exe lock / timeout / serde E0277）
-- [x] traps/README.md 新設（記録基準=エラー観測可能性、ファイル名=照合キー）
-- [x] CLAUDE.md tips記録節 → traps/tips 分離構成へ改訂（自発grepトリガー行は hook注入応答へ置換）
-- [x] tips残留8本=非エラー知見（rust_egui・rust_const-design・rust_effect-system・rust_how-to-debug・windows-terminal_emoji-font-fallback・large_document_management・machine-learning_*・math_textbook_authoring）。扱い検討は継続
-
-## Phase: 0.2.16.tips参照のハーネス層昇格 (2026-06-10)
-- [x] scripts/hooks/post-bash-tips-pointer.sh 新設 — Bash失敗時、環境系エラーシグネチャ該当ならtipsポインタ（ファイル名+見出しのみ、数十トークン）を additionalContext 注入。本文はClaudeがRead判断（段階的開示）
-- [x] settings.json に PostToolUse / PostToolUseFailure（matcher: Bash, timeout 10）両登録 — 成功/失敗イベントは排他のため二重注入なし
-- [x] ユニットテスト6ケースGreen: 成功時無音／exit 127→bashポインタ／FileNotFoundError→python_uvポインタ／pytest失敗（作業系）無音／文字列tool_response対応／tool_response欠落無音
-- [ ] 実地検証（次セッション以降）: 環境系エラー時に [tips-hint] が実際に注入されるか／注入後に修正前Readが起きるか／PostToolUseFailure側の additionalContext サポート（公式docs未明記）
-
-## Phase: 0.2.15.シェル構文をbash固定 (2026-06-10)
-- [x] CLAUDE.md コーディングスタイルに追加: シェルは常にbash/POSIX構文、PowerShell必須時のみ `powershell -File` 経由（ユーザー決定: git bash/zshが全環境に存在）
-  - 背景: 新CLAUDE.md初回セッション冒頭で環境表記（Shell: PowerShell）由来の躓き3件（PowerShell構文→exit 127／python直打ち／MSYS2パス形式）。うち1件はtips既知の罠の再踏みで、0.2.14で仕込んだtips参照トリガーは不発（観測1回目）
-- [x] tips 2件に知見追記（bash_powershell-invocation_windows.md「実体はbash」前提節／python_uv_windows.md パス形式節）— `76cd923`
-
-## Phase: 0.2.14.運用棚卸し: latest_cache/tips/トピックマーカー (2026-06-10)
-- [x] latest_cache 実態調査 → **正常稼働を確認**（old/ に7プロジェクト分の消費実績、直近 2026-06-10 07:34 reflect_color）。「動いていない感」の正体は hook 全自動化による不可視性
-  - session-start-cache.sh が探索→鮮度判定→注入→old/移動まで全自動実施しており、CLAUDE.md の手動手順は完全二重（Claude側は常に空振り）だった
-  - CLAUDE.candidate.md の手動手順を削除し「hook全自動＋注入ブロックの扱い」へ置換（6行→3行）
-- [x] tips 実態調査 → 生産側は稼働、**参照側が死亡**と判定
-  - 実証: 本セッションで Claude が tips 記載済みの罠（BashツールへのPowerShell構文入力）を tips 未参照のまま再踏み（tips/bash_powershell-invocation_windows.md に解決策が既存）
-  - CLAUDE.candidate.md に参照トリガー行を追加（環境・ツール系の躓き時、修正前に tips/ をgrep）
-  - 未追跡だった tips/bash_powershell-invocation_windows.md（5/19作成、3週間同期ネット外）を git 追跡開始
-- [x] トピックマーカー → **剪定**（候補版から削除。0.2.13剪定プロトコルの適用第1号）
-  - 根拠: GLOBAL_DECISIONSに導入判断の記録なし／現行pj・GLOBALのDECISIONSに使用実績なし／検索目的はDECISIONS.mdの大分類/小分類列で代替済み／ユーザー証言「運用されていない古い取り決め」
-
-## Phase: 0.2.13.CLAUDE.candidate.md 新設（剪定・圧縮・タグ体系改定） (2026-06-10)
-- [x] CLAUDE.candidate.md を repo 直下に新設（採用待ちドラフト。採用 = CLAUDE.md と置換）
-  - 旧モデル対応の禁止形表現を剪定: 推測回答禁止／おべっか・口答え禁止 等 → 判断基準・正形（検証根拠の添付、異議の事前提示等）へ書換
-  - bulk-verification trigger は残置、根拠文言のみ書換（0.2.12 の実証事案 = 直近で再現した失敗のため剪定対象外）
-  - 作業ステップ2を委譲拡大: 可逆×指示範囲内は実行→報告、不可逆・スコープ変更・設計判断は承認後（※意味変更。採用時に要判断）
-  - ルールタグ改定: `[testable]` 廃止 → `[unittest]`/`[qchecktest]` 直接付与
-  - タグ更新規則新設: テスト未作成は理由で分岐（思想由来→`[philosophy]`降格／未実装→タグ据置）
-  - 同期運用に dot_claude 実体パス・symlink 構成を明記
-  - 行数 118→107（既存内容の圧縮▲20行相当＋新規仕様+9行）
-- [x] ~/.claude/CLAUDE.candidate.md（v1 仮置き）を repo 側へ一本化（rm deny によりClaude側から削除不可のためポインタ文書化。手動削除可）
-- [x] ユーザーレビュー → 採用（2026-06-10）: CLAUDE.md を候補版（0.2.14反映後・100行）で置換、CLAUDE.candidate.md 削除
-  - 採用前に滞留変更を確定コミット（CLAUDE.md改稿・テンプレ整形・settings.json。候補の基底を履歴に固定）
-  - TEMPLATE_VISION.md のタグ表記を新体系へ整合（[tested]→[unittest]/[qchecktest]、qcheck例を1行追加）
-  - 意味変更3点の判断根拠を GLOBAL_DECISIONS へ追記（表現方針／委譲境界／検証の位置づけ）
-
-## Phase: 0.2.12.bulk-verification skill 新設 (2026-05-16)
-- [x] `skills/bulk-verification/SKILL.md` 新設 — 「全件」「全X」「全項目」等の bulk verification 依頼を受けた時に invoke する skill。項目単位サブエージェント並列化で観測可能性を確保し、メインの自力全件比較による虚偽完了報告を構造的に防止する
-- [x] CLAUDE.md 行動原則に hard trigger 追加 — 「bulk 系依頼を受けた時点で自力処理に入る前に必ず `bulk-verification` skill を invoke」（skill 単独では発動漏れの可能性があるため、CLAUDE.md で発動保証）
-- 背景: vibecoding-bootcamp 第2回 session2 同期作業で当方が3ラウンドにわたり「全件チェック完了」と虚偽報告した事案を受け、形質矯正のため当方の意志に依存しない構造を導入
-
-## Phase: 0.2.21.git stash 系を deny に追加 (2026-04-24)
-- [x] settings.json deny に `Bash(git stash *)` / `Bash(git stash)` を追加
-- 背景: CLAUDE.md「割り込みは git worktree（stash禁止: 識別ミスリスク）」と
-  既に明記されていたが permission rule 未反映だった、ハーネス層で強制
-  ブロックする形に揃える
-
-## Phase: 0.2.20.tips参照仕組みの保留判断 (2026-04-24)
-- [x] 当面: 「貯めるだけ」モード（tips 追記は行う、参照仕組みは未実装）
-- [x] 候補B（キーワード hook 注入）を将来検討候補として残す
-- 保留理由: キーワード選択が難しい
-- 不採用: A=hook注入でコンテキスト肥大 / C・D=Claude任せで漏れ
-
-## Phase: 0.2.18.削除系コマンドの多層防御 (2026-04-24)
-- [x] permission deny を Bash削除系で拡張: rmdir, unlink, find -delete, xargs rm, shred 等
-- [x] PreToolUse hook 新設（features/auto_manage/output/scripts/hooks/pre-tool-block-delete.sh）:
-  - bash/powershell 問わず tool_input.command を regex検査して削除系を exit 1 でブロック
-  - 直接系: rm/rmdir/unlink/del/erase/Remove-Item/rd/ri/shred
-  - 間接系: find -delete / xargs rm
-- [x] settings.json PreToolUse hook 登録（matcher: "Bash|PowerShell", timeout 5）
-- [x] features/auto_manage/output/scripts/hooks/ に実体配置、本体は symlink
-- 背景: permission rule の PowerShell syntax は公式ドキュメント未確認、Bash deny だけでは Remove-Item 等で迂回されうる。claude-code-guide agent で確認した結果に基づき多層防御
-
-## Phase: 0.2.11.PROGRESS/DECISIONS 記録基準の明文化 (2026-04-24)
-- [x] CLAUDE.md pj管理セクションに PROGRESS.md / DECISIONS.md の記録対象/対象外を追記:
-  - PROGRESS 対象: 事前予定の進捗 + 既存挙動を変える/破壊する改修
-  - PROGRESS 対象外: typo・即興の小変更（gitで追える）
-  - DECISIONS 対象: A/B根拠 + 疑問に思われそうな実装の理由
-  - DECISIONS 対象外: 一意に決まる作業・typo
-- [x] ~/.claude の変更管理セクションを「pj管理と同一基準」の参照形式に更新
-- 背景: 他プロジェクトで skills/slide-writing 改修時に「記録すべきか？」で混乱した経験を受けて明文化
-
-## Phase: 0.2.10.`~/.claude/.git`凍結方針を終了・削除 (2026-04-23)
-- [x] ~/.claude/.git を削除（Phase 0.1.0 の凍結方針を終了）
-- 経緯:
-  - Phase 0.1.0 で「保険として凍結・削除しない」と決定
-  - その後 Phase 0.2.x で symlink化・features/ 再編を実施、~/.claude/.git 側には一切反映されず整合性が崩れ状態（working diff 39件の偽差分）
-  - 最終commit `5b48644`（Phase 0.0.6）は dot_claude 側にも保持済で独自履歴ゼロ
-- 現役リポジトリを /c/git_clone/dot_claude/.git に一本化
-
-## Phase: 0.2.9.rust tips rename + TEMPLATE_SKILL新設 (2026-04-23)
-
-### tips命名規則適用（rust系）
-- [x] rust_const_design.md → rust_const-design.md（const-design を1細目化）
-- [x] rust_effect_system.md → rust_effect-system.md（effect-system を1細目化）
-- [x] rust_howtodebug.md → rust_how-to-debug.md（単語連結を - で分離）
-- 確認のみ変更不要: rust_egui.md / rust_serde.md / rust_windows.md
-
-### SKILL.md フォーマット統一
-- [x] TEMPLATE_SKILL.md 新設（frontmatter + 標準セクション、既存3 skillの共通形式を踏襲）
-- [x] skills/pfd/SKILL.md に frontmatter追加（name, description, metadata）
-- [x] CLAUDE.md Skills セクションに TEMPLATE_SKILL.md 参照を追加
-- 今後の余地: 現フォーマットがベストか未検証。必要時レビューで改訂可能
-
-## Phase: 0.2.8.blog-crawler削除 (2026-04-23)
-- [x] skills/blog-crawler/ を git と working tree から完全削除
-- [x] 理由: 使用実績なし + WebFetchによるブログクロールは公開リポジトリで配布するには行儀が悪い（スクレイピング負荷・規約リスク）
-- 注: Phase 0.0.6 履歴記述（git管理化した時の列挙）は事実として残置
-
-## Phase: 0.2.7.機能単位ディレクトリ化（features/auto_manage/再編） (2026-04-23)
-- [x] auto_manage/ を features/auto_manage/ に git mv
-- [x] 実装実体を features/auto_manage/output/ 配下に集約:
-  - .githooks/pre-commit
-  - .gitleaks.toml
-  - scripts/hooks/session-start-pull.sh
-  - scripts/hooks/session-end-push.sh
-- [x] dot_claude本体から output 内実体へ relative symlink を張る（機能の物理完結 + 既存パスへの後方互換）
-- [x] パス参照を一括更新:
-  - .gitleaks.toml allowlist: `auto_manage/*` → `features/auto_manage/*`
-  - hook scripts (pre-commit, session-start-pull.sh, session-end-push.sh) コメント・エラーメッセージ
-  - flow_diagram.md: `../skills/pfd/SKILL.md` → `../../skills/pfd/SKILL.md`（階層変化）
-  - plan.md 自己参照更新
-
-## Phase: 0.2.6.同期運用ルールの明文化 (2026-04-23)
-- [x] CLAUDE.md に「複数環境ファイルの同期運用」セクション追加（編集前pull / 編集後push / auto-pushは失敗防止ネット）
-- [x] memory に feedback_multi_env_sync.md 追加（将来セッションで手動push省略を防ぐ）
-- [x] GLOBAL_DECISIONS.md に運用方針の判断を記録
 
 ## Phase: 0.2.5.tips命名規則整備 (2026-04-23)
 - [x] tips/README.md 新設（`<主題>_<細目>_<環境>.md` 形式、`_`/`-` 使い分け明記）
@@ -288,5 +160,133 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [ ] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）
 - [ ] Phase 0.2.4: dotfiles連携（initialize_ubuntu.2.shにdot_claude clone+link+gitleaks追加）
 
+## Phase: 0.2.6.同期運用ルールの明文化 (2026-04-23)
+- [x] CLAUDE.md に「複数環境ファイルの同期運用」セクション追加（編集前pull / 編集後push / auto-pushは失敗防止ネット）
+- [x] memory に feedback_multi_env_sync.md 追加（将来セッションで手動push省略を防ぐ）
+- [x] GLOBAL_DECISIONS.md に運用方針の判断を記録
+
+## Phase: 0.2.7.機能単位ディレクトリ化（features/auto_manage/再編） (2026-04-23)
+- [x] auto_manage/ を features/auto_manage/ に git mv
+- [x] 実装実体を features/auto_manage/output/ 配下に集約:
+  - .githooks/pre-commit
+  - .gitleaks.toml
+  - scripts/hooks/session-start-pull.sh
+  - scripts/hooks/session-end-push.sh
+- [x] dot_claude本体から output 内実体へ relative symlink を張る（機能の物理完結 + 既存パスへの後方互換）
+- [x] パス参照を一括更新:
+  - .gitleaks.toml allowlist: `auto_manage/*` → `features/auto_manage/*`
+  - hook scripts (pre-commit, session-start-pull.sh, session-end-push.sh) コメント・エラーメッセージ
+  - flow_diagram.md: `../skills/pfd/SKILL.md` → `../../skills/pfd/SKILL.md`（階層変化）
+  - plan.md 自己参照更新
+
+## Phase: 0.2.8.blog-crawler削除 (2026-04-23)
+- [x] skills/blog-crawler/ を git と working tree から完全削除
+- [x] 理由: 使用実績なし + WebFetchによるブログクロールは公開リポジトリで配布するには行儀が悪い（スクレイピング負荷・規約リスク）
+- 注: Phase 0.0.6 履歴記述（git管理化した時の列挙）は事実として残置
+
+## Phase: 0.2.9.rust tips rename + TEMPLATE_SKILL新設 (2026-04-23)
+
+### tips命名規則適用（rust系）
+- [x] rust_const_design.md → rust_const-design.md（const-design を1細目化）
+- [x] rust_effect_system.md → rust_effect-system.md（effect-system を1細目化）
+- [x] rust_howtodebug.md → rust_how-to-debug.md（単語連結を - で分離）
+- 確認のみ変更不要: rust_egui.md / rust_serde.md / rust_windows.md
+
+### SKILL.md フォーマット統一
+- [x] TEMPLATE_SKILL.md 新設（frontmatter + 標準セクション、既存3 skillの共通形式を踏襲）
+- [x] skills/pfd/SKILL.md に frontmatter追加（name, description, metadata）
+- [x] CLAUDE.md Skills セクションに TEMPLATE_SKILL.md 参照を追加
+- 今後の余地: 現フォーマットがベストか未検証。必要時レビューで改訂可能
+
+## Phase: 0.2.10.`~/.claude/.git`凍結方針を終了・削除 (2026-04-23)
+- [x] ~/.claude/.git を削除（Phase 0.1.0 の凍結方針を終了）
+- 経緯:
+  - Phase 0.1.0 で「保険として凍結・削除しない」と決定
+  - その後 Phase 0.2.x で symlink化・features/ 再編を実施、~/.claude/.git 側には一切反映されず整合性が崩れ状態（working diff 39件の偽差分）
+  - 最終commit `5b48644`（Phase 0.0.6）は dot_claude 側にも保持済で独自履歴ゼロ
+- 現役リポジトリを /c/git_clone/dot_claude/.git に一本化
+
+## Phase: 0.2.11.PROGRESS/DECISIONS 記録基準の明文化 (2026-04-24)
+- [x] CLAUDE.md pj管理セクションに PROGRESS.md / DECISIONS.md の記録対象/対象外を追記:
+  - PROGRESS 対象: 事前予定の進捗 + 既存挙動を変える/破壊する改修
+  - PROGRESS 対象外: typo・即興の小変更（gitで追える）
+  - DECISIONS 対象: A/B根拠 + 疑問に思われそうな実装の理由
+  - DECISIONS 対象外: 一意に決まる作業・typo
+- [x] ~/.claude の変更管理セクションを「pj管理と同一基準」の参照形式に更新
+- 背景: 他プロジェクトで skills/slide-writing 改修時に「記録すべきか？」で混乱した経験を受けて明文化
+
+## Phase: 0.2.12.bulk-verification skill 新設 (2026-05-16)
+- [x] `skills/bulk-verification/SKILL.md` 新設 — 「全件」「全X」「全項目」等の bulk verification 依頼を受けた時に invoke する skill。項目単位サブエージェント並列化で観測可能性を確保し、メインの自力全件比較による虚偽完了報告を構造的に防止する
+- [x] CLAUDE.md 行動原則に hard trigger 追加 — 「bulk 系依頼を受けた時点で自力処理に入る前に必ず `bulk-verification` skill を invoke」（skill 単独では発動漏れの可能性があるため、CLAUDE.md で発動保証）
+- 背景: vibecoding-bootcamp 第2回 session2 同期作業で当方が3ラウンドにわたり「全件チェック完了」と虚偽報告した事案を受け、形質矯正のため当方の意志に依存しない構造を導入
+
+## Phase: 0.2.13.CLAUDE.candidate.md 新設（剪定・圧縮・タグ体系改定） (2026-06-10)
+- [x] CLAUDE.candidate.md を repo 直下に新設（採用待ちドラフト。採用 = CLAUDE.md と置換）
+  - 旧モデル対応の禁止形表現を剪定: 推測回答禁止／おべっか・口答え禁止 等 → 判断基準・正形（検証根拠の添付、異議の事前提示等）へ書換
+  - bulk-verification trigger は残置、根拠文言のみ書換（0.2.12 の実証事案 = 直近で再現した失敗のため剪定対象外）
+  - 作業ステップ2を委譲拡大: 可逆×指示範囲内は実行→報告、不可逆・スコープ変更・設計判断は承認後（※意味変更。採用時に要判断）
+  - ルールタグ改定: `[testable]` 廃止 → `[unittest]`/`[qchecktest]` 直接付与
+  - タグ更新規則新設: テスト未作成は理由で分岐（思想由来→`[philosophy]`降格／未実装→タグ据置）
+  - 同期運用に dot_claude 実体パス・symlink 構成を明記
+  - 行数 118→107（既存内容の圧縮▲20行相当＋新規仕様+9行）
+- [x] ~/.claude/CLAUDE.candidate.md（v1 仮置き）を repo 側へ一本化（rm deny によりClaude側から削除不可のためポインタ文書化。手動削除可）
+- [x] ユーザーレビュー → 採用（2026-06-10）: CLAUDE.md を候補版（0.2.14反映後・100行）で置換、CLAUDE.candidate.md 削除
+  - 採用前に滞留変更を確定コミット（CLAUDE.md改稿・テンプレ整形・settings.json。候補の基底を履歴に固定）
+  - TEMPLATE_VISION.md のタグ表記を新体系へ整合（[tested]→[unittest]/[qchecktest]、qcheck例を1行追加）
+  - 意味変更3点の判断根拠を GLOBAL_DECISIONS へ追記（表現方針／委譲境界／検証の位置づけ）
+
+## Phase: 0.2.14.運用棚卸し: latest_cache/tips/トピックマーカー (2026-06-10)
+- [x] latest_cache 実態調査 → **正常稼働を確認**（old/ に7プロジェクト分の消費実績、直近 2026-06-10 07:34 reflect_color）。「動いていない感」の正体は hook 全自動化による不可視性
+  - session-start-cache.sh が探索→鮮度判定→注入→old/移動まで全自動実施しており、CLAUDE.md の手動手順は完全二重（Claude側は常に空振り）だった
+  - CLAUDE.candidate.md の手動手順を削除し「hook全自動＋注入ブロックの扱い」へ置換（6行→3行）
+- [x] tips 実態調査 → 生産側は稼働、**参照側が死亡**と判定
+  - 実証: 本セッションで Claude が tips 記載済みの罠（BashツールへのPowerShell構文入力）を tips 未参照のまま再踏み（tips/bash_powershell-invocation_windows.md に解決策が既存）
+  - CLAUDE.candidate.md に参照トリガー行を追加（環境・ツール系の躓き時、修正前に tips/ をgrep）
+  - 未追跡だった tips/bash_powershell-invocation_windows.md（5/19作成、3週間同期ネット外）を git 追跡開始
+- [x] トピックマーカー → **剪定**（候補版から削除。0.2.13剪定プロトコルの適用第1号）
+  - 根拠: GLOBAL_DECISIONSに導入判断の記録なし／現行pj・GLOBALのDECISIONSに使用実績なし／検索目的はDECISIONS.mdの大分類/小分類列で代替済み／ユーザー証言「運用されていない古い取り決め」
+
+## Phase: 0.2.15.シェル構文をbash固定 (2026-06-10)
+- [x] CLAUDE.md コーディングスタイルに追加: シェルは常にbash/POSIX構文、PowerShell必須時のみ `powershell -File` 経由（ユーザー決定: git bash/zshが全環境に存在）
+  - 背景: 新CLAUDE.md初回セッション冒頭で環境表記（Shell: PowerShell）由来の躓き3件（PowerShell構文→exit 127／python直打ち／MSYS2パス形式）。うち1件はtips既知の罠の再踏みで、0.2.14で仕込んだtips参照トリガーは不発（観測1回目）
+- [x] tips 2件に知見追記（bash_powershell-invocation_windows.md「実体はbash」前提節／python_uv_windows.md パス形式節）— `76cd923`
+
+## Phase: 0.2.16.tips参照のハーネス層昇格 (2026-06-10)
+- [x] scripts/hooks/post-bash-tips-pointer.sh 新設 — Bash失敗時、環境系エラーシグネチャ該当ならtipsポインタ（ファイル名+見出しのみ、数十トークン）を additionalContext 注入。本文はClaudeがRead判断（段階的開示）
+- [x] settings.json に PostToolUse / PostToolUseFailure（matcher: Bash, timeout 10）両登録 — 成功/失敗イベントは排他のため二重注入なし
+- [x] ユニットテスト6ケースGreen: 成功時無音／exit 127→bashポインタ／FileNotFoundError→python_uvポインタ／pytest失敗（作業系）無音／文字列tool_response対応／tool_response欠落無音
+- [ ] 実地検証（次セッション以降）: 環境系エラー時に [tips-hint] が実際に注入されるか／注入後に修正前Readが起きるか／PostToolUseFailure側の additionalContext サポート（公式docs未明記）
+
+## Phase: 0.2.17.traps/tips分離 (2026-06-10)
+- [x] traps/ 新設＋エラー系7本を移植（bash_powershell-invocation_windows, python_uv_windows, python_http-server_windows, ssh_non-interactive-path, rust_windows, rust_serde, rust_perf-patterns※未追跡だったため内容確認のうえ追跡開始）。~/.claude/traps symlink 作成
+- [x] hook rename: post-bash-tips-pointer.sh → post-bash-traps-pointer.sh（向き先 traps/、[traps-hint]）。settings.json 参照更新
+- [x] 照合強化: シグネチャ追加（panicked at / error[E番号] / cannot borrow / os error / アクセスが拒否 / Command timed out）／単語境界→部分一致（serde_json 等の連結識別子対応）／cargo・rustc→rust エイリアス／見出しのファイル名重複除去
+- [x] ユニットテスト10ケースGreen（旧6 + cargo panic / exe lock / timeout / serde E0277）
+- [x] traps/README.md 新設(記録基準=エラー観測可能性、ファイル名=照合キー)
+- [x] CLAUDE.md tips記録節 → traps/tips 分離構成へ改訂（自発grepトリガー行は hook注入応答へ置換）
+- [x] tips残留8本=非エラー知見（rust_egui・rust_const-design・rust_effect-system・rust_how-to-debug・windows-terminal_emoji-font-fallback・large_document_management・machine-learning_*・math_textbook_authoring）。扱い検討は継続
+
+## Phase: 0.2.18.削除系コマンドの多層防御 (2026-04-24)
+- [x] permission deny を Bash削除系で拡張: rmdir, unlink, find -delete, xargs rm, shred 等
+- [x] PreToolUse hook 新設（features/auto_manage/output/scripts/hooks/pre-tool-block-delete.sh）:
+  - bash/powershell 問わず tool_input.command を regex検査して削除系を exit 1 でブロック
+  - 直接系: rm/rmdir/unlink/del/erase/Remove-Item/rd/ri/shred
+  - 間接系: find -delete / xargs rm
+- [x] settings.json PreToolUse hook 登録（matcher: "Bash|PowerShell", timeout 5）
+- [x] features/auto_manage/output/scripts/hooks/ に実体配置、本体は symlink
+- 背景: permission rule の PowerShell syntax は公式ドキュメント未確認、Bash deny だけでは Remove-Item 等で迂回されうる。claude-code-guide agent で確認した結果に基づき多層防御
+
 ## Phase: 0.2.19.主作業のフィーチャーブランチ運用を明文化 (2026-06-20)
 - [x] 「割り込み作業とブランチ管理」に主作業ルールを追記 — master直でなく短命フィーチャーブランチで隔離、master=動くトランク、確認後merge、逐次1本。契機=reflect_colorでスポイト実験をmaster直で進め壊れ、reset --hardでの汚い後始末を招いた事故
+
+## Phase: 0.2.20.tips参照仕組みの保留判断 (2026-04-24)
+- [x] 当面: 「貯めるだけ」モード（tips 追記は行う、参照仕組みは未実装）
+- [x] 候補B（キーワード hook 注入）を将来検討候補として残す
+- 保留理由: キーワード選択が難しい
+- 不採用: A=hook注入でコンテキスト肥大 / C・D=Claude任せで漏れ
+
+## Phase: 0.2.21.git stash 系を deny に追加 (2026-04-24)
+- [x] settings.json deny に `Bash(git stash *)` / `Bash(git stash)` を追加
+- 背景: CLAUDE.md「割り込みは git worktree（stash禁止: 識別ミスリスク）」と
+  既に明記されていたが permission rule 未反映だった、ハーネス層で強制
+  ブロックする形に揃える
