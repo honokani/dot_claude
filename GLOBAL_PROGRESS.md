@@ -290,3 +290,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - 背景: CLAUDE.md「割り込みは git worktree（stash禁止: 識別ミスリスク）」と
   既に明記されていたが permission rule 未反映だった、ハーネス層で強制
   ブロックする形に揃える
+
+## Phase: 0.2.22.サブエージェントのモデル振り分け方針 (2026-07-02)
+- [x] MODEL_ROUTING.md 新設: 難度→Haiku/Sonnet/Opus/メインの振り分け表・難度判定チェック（検証可能性ベース）・価格スナップショット（10:5:3:1）
+- [x] CLAUDE.md 行動原則に発動トリガー1行を追加（bulk-verification 0.2.12 と同じ「CLAUDE.md=発動保証、別ファイル=手続き本体」の2段構成）
+- 背景: ユーザー指示「簡単な作業をOpusやSonnetに委譲してほしい」。調査スイープ等をFableのまま並列委譲するとコストが並列数倍で嵩む。価格は claude-api skill で一次確認
