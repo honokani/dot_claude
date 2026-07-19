@@ -302,3 +302,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] mermaid実装メモ・drawio実装メモに同ルールの具体例を追記（分岐条件ラベルの許容記述を削除し、分岐先オブジェクト分割方式に置換）
 - [x] pj_rat の deliverables 2件（backend_aws_plan_260712.md r2.1、system_flow_260715.drawio）を新ルールに合わせて修正、drawio_lint再合格
 - 背景: pj_rat での実運用で担当が「補助入力=点線+ラベル」という誤用をしていることにユーザーが気付き指摘。点線=ループ戻り専用は実は既存スキル記述にあった規約（担当の誤読）。矢印ラベル禁止は「分岐条件は矢印ラベルで明示可」という旧mermaid節の記述を上書きする新規則としてユーザーが指定、スキル本体へ反映するようユーザーが明示指示
+
+## Phase: 0.2.24.MODEL_ROUTING適用条件の明確化 (2026-07-20)
+- [x] MODEL_ROUTING.md: 適用条件を追記 — 降格委譲は**メインが Fable のときだけ**（Fable 以外がメインなら本表不適用・委譲はメイン継承）。振り分け表の「メイン（Fable等）」を「メイン（Fable）」へ
+- 背景: pj_likeRO 作業中に「簡単な作業は Opus4.8 へ必ず委譲、難題は fable 自身で」の指示があり、続けて適用条件が Fable メイン時のみである旨を追加指示
+- 備考: この Windows 機では ~/.claude/MODEL_ROUTING.md への symlink が無く CLAUDE.md からの参照が切れている（link_claude.sh の対象確認が必要）
