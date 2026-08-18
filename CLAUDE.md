@@ -56,9 +56,10 @@
 - 各ファイルの記録基準・タグ体系・テンプレート・初期化手順は `pj-management` skill（初期化・更新時に invoke）
 
 ## ブランチ運用
-- 主作業もmaster直でなく**短命フィーチャーブランチ**で隔離。master=常に動くトランク。リスク/実験的変更を直接masterでやらない（壊れたコミットがmasterを汚し reset --hard 等の汚い後始末を招いた実績あり）
-  - 手順: masterから `feature/<機能>-<要旨>` を切る→作業→**動作確認後にmasterへmerge**（壊れたら破棄/やり直しがmasterに波及しない）。基本は逐次1本（PROGRESS/DECISIONS等は全機能共有で並行ブランチは衝突）
-  - 例外: typo・即興の小修正はmaster直で可
+- 階層は **master → develop → feat系**。master=常に動くトランク、develop=統合ブランチ、開発は**短命フィーチャーブランチ**で隔離。リスク/実験的変更を直接master/developでやらない（壊れたコミットがmasterを汚し reset --hard 等の汚い後始末を招いた実績あり）
+  - 命名: `feat/NN-<機能>-<趣旨>`（NN=対応issue番号、2桁ゼロ埋め。3桁になったらNNN）
+  - 手順: developから切る→作業→**動作確認後にdevelopへmerge**（壊れたら破棄/やり直しがdevelop/masterに波及しない）→developで統合確認後にmasterへmerge。基本は逐次1本（PROGRESS/DECISIONS等は全機能共有で並行ブランチは衝突）
+  - 例外: typo・即興の小修正はdevelop直で可
 - 割り込みは git worktree（stash禁止: 識別ミスリスク）。Agent (`isolation: "worktree"`) で自動化可
   - 手順: WIPコミット → `git worktree add` → 完了後 `git worktree remove` → 必要に応じmerge/rebase → `git reset HEAD~1` で再開
   - 割り込みが現タスクの前提と判明 → 現ブランチを割り込みブランチ上にrebase（develop経由不要）
