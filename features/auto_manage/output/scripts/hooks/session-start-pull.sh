@@ -16,8 +16,18 @@ cd "$REPO" || exit 0
 # pull 前の HEAD を記録（表記ゆれに依存しない判定用）
 before=$(git rev-parse HEAD 2>/dev/null || echo "")
 
-# 同期 pull（rebase + autostash でローカル変更があっても邪魔しない）
-pull_output=$(git pull --rebase --autostash 2>&1)
+# read-only モード（clone はできるが push できない環境）: その clone で
+#   git config dot-claude.readonly true
+# を一度実行して有効化。ローカル commit を rebase で動かさず fast-forward だけ試み、
+# できなければ何も変えずに警告する（rebase 途中の状態がワークツリーに残らない）
+readonly_mode=$(git config --bool --get dot-claude.readonly 2>/dev/null)
+
+if [ "$readonly_mode" = "true" ]; then
+    pull_output=$(git pull --ff-only 2>&1)
+else
+    # 同期 pull（rebase + autostash でローカル変更があっても邪魔しない）
+    pull_output=$(git pull --rebase --autostash 2>&1)
+fi
 pull_status=$?
 
 after=$(git rev-parse HEAD 2>/dev/null || echo "")
@@ -29,6 +39,10 @@ if [ $pull_status -eq 0 ]; then
     fi
     echo "INFO: dot_claude: pull 成功、remote の更新を取り込みました（$before → $after）"
     echo "$pull_output" | tail -5
+elif [ "$readonly_mode" = "true" ]; then
+    echo "WARN: dot_claude: pull --ff-only 失敗（read-only モード。ローカルに commit/未保存変更があるか、remote に到達できません。ワークツリーは変更していません）"
+    echo "$pull_output" | head -10
+    echo "  手動対処: cd $REPO && git status（read-only 環境では clone を編集・commit しない運用。詳細: MAINTENANCE.md「read-only モード」）"
 else
     echo "WARN: dot_claude: pull 失敗（conflict/reject/detached 等）"
     echo "$pull_output" | head -10

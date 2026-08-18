@@ -319,6 +319,9 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] GLOBAL_VISION.md: 全体指針に「2部構成」「発動保証と手続き本体の分離」を追加、グローバル管理表を更新、latest_cache ライフサイクルの SessionStart 記述を hook 全自動（0.2.14 確認済み）へ訂正
 - [x] ブランチ運用ルール改定（ユーザー指定 2026-08-18）: 階層 master → develop → feat系、命名 `feat/NN-<機能>-<趣旨>`（NN=issue番号、2桁ゼロ埋め、3桁になったら NNN）。CLAUDE.md「ブランチ運用」と MAINTENANCE.md を更新。旧 `feature/<機能>-<要旨>`（0.2.19）は廃止
 - [x] dot_claude に develop ブランチ新設（master 5c2634c から分岐、origin へ push）。本ブランチ `feature/claude-md-smart` はルール前の例外として旧命名のまま（ユーザー決定）。gh は show-sai アカウントで honokani/dot_claude を解決できず、issue 操作は Claude 側から不可
+- [x] public 化に向けた監査（ユーザー: 会社でも使うため public 化予定）: gitleaks 全履歴58コミット → leaks なし。履歴全文 grep でメール/URL/IP/ユーザー名パスは実質なし。要判断3点を提示 → ユーザー決定で (1) GLOBAL_PROGRESS 0.0.5 のプロジェクト名2件 を「他3件」へ置換、(2) skills/slide-writing/test_layout.py の見本フットノート（企業名入り）を削除。author メール（個人 Gmail）と、上記2点の**履歴内の残存**は public 化方式（visibility 変更 or squash 新規 repo）の決定待ち
+- [x] read-only モード新設（会社PC等、clone 可・push 不可の環境向け）: `git config dot-claude.readonly true` で有効化。session-end-push.sh は push スキップ、session-start-pull.sh は `--ff-only`（失敗時ワークツリー不変で WARN）。テスト `scripts/test/hooks/test_sync_hooks.sh` 8ケース27アサーション Green。MAINTENANCE.md／features/auto_manage/plan.md・recovery.md に運用と復旧を記載
 - [ ] ユーザー: 各環境で `bash link_claude.sh` 実行（MAINTENANCE.md リンク作成＋TEMPLATE_* 残骸掃除。この Windows 機は作成のみ実施済み、掃除は未実行）
 - [ ] ユーザー: ブランチレビュー → develop へ merge → 正常稼働確認 → master へ merge → push
+- [ ] public 化方式の決定（A: 現 repo の visibility 変更／B: squash した新規 public repo）と author メールの扱い
 - [ ] B の扱いを決定（協議中: CLAUDE.md はサブエージェントにも配られるため「Fable なら不要」を理由に共通契約を削らない、を原則化するか）

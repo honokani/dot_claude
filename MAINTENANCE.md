@@ -10,6 +10,12 @@
 - トップレベル項目を追加・移動・削除したら各環境で `bash link_claude.sh` を実行（新規リンク作成と、dot_claude を指す壊れたリンクの掃除。冪等）
 - 削除系コマンドは permission deny + PreToolUse hook で多層ブロックされており Claude からは実行できない。移動は `git mv`、削除が必要な変更はユーザーに依頼する
 
+## read-only モード（clone はできるが push できない環境。会社PC等）
+- 有効化: その clone で一度 `git -C <clone> config dot-claude.readonly true`（ローカル config、commit されない）
+- 挙動: SessionEnd の auto-push はスキップ。SessionStart の pull は `--ff-only`（ローカル commit を rebase で動かさず、fast-forward できなければワークツリーを変えずに WARN）
+- 運用: read-only 環境では clone を編集・commit しない（同期ルールの「編集後に push」は適用外）。持ち帰りたい変更（traps 追記等）は差分やファイル内容として報告し、push できる環境で反映する
+- 検証: `bash scripts/test/hooks/test_sync_hooks.sh`（通常/read-only 両モードの pull/push 挙動、8ケース）
+
 ## 記録（GLOBAL_* 3ファイル）
 - GLOBAL_VISION.md（設計思想）／GLOBAL_PROGRESS.md（変更ログ）／GLOBAL_DECISIONS.md（判断根拠）。記録基準は pj管理（`pj-management` skill）と同一
 - ~/.claude 作業時・CLAUDE.md 変更時に更新する

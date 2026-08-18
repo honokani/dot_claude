@@ -13,6 +13,13 @@ fi
 [ -d "$REPO/.git" ] || exit 0
 cd "$REPO" || exit 0
 
+# read-only モード（clone はできるが push できない環境）: その clone で
+#   git config dot-claude.readonly true
+# を一度実行して有効化。push は試みない（認証プロンプト/ダイアログ待ちも起きない）
+if [ "$(git config --bool --get dot-claude.readonly 2>/dev/null)" = "true" ]; then
+    exit 0
+fi
+
 # 未pushの ahead count 取得（upstream未設定・detached等は 0 扱い）
 ahead=$(git rev-list --count '@{u}..HEAD' 2>/dev/null || echo 0)
 [ "$ahead" -eq 0 ] && exit 0

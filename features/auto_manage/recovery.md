@@ -14,6 +14,10 @@ SessionStart で `git pull --rebase --autostash` 中に conflict したケース
 ### 中断したい場合
 `git -C ~/git_clone/dot_claude rebase --abort` で rebase 前の状態に戻す。
 
+### read-only モードの clone で「pull --ff-only 失敗」が出た場合
+rebase は行われないので conflict 状態にはならない。原因は (a) その clone にローカル commit/未保存変更がある、(b) remote に到達できない、のどちらか。
+(a) は read-only 環境では発生させない運用（MAINTENANCE.md「read-only モード」）。持ち帰る価値のある変更なら内容を控えたうえで `git -C <clone> reset --hard origin/master`（ローカル commit と未保存変更は消える）で clone を remote に揃える。
+
 ## 2. push rejected (behind)
 
 ローカルのpushが remote のcommitと衝突し reject されたケース。

@@ -6,6 +6,7 @@
 - セッション開始時に dot_claude を最新化（pull --rebase --autostash）
 - セッション終了時／commit時にpush漏れを警告（ahead N 検出）
 - conflict/rejectは異常系として通知、手動解決へ誘導
+- read-only 環境（clone 可・push 不可。会社PC等）では push を試みず、pull は fast-forward のみ（ローカルの状態を壊さない）
 
 ### セキュリティ
 - commit前に機微情報検出（gitleaks）
@@ -37,6 +38,13 @@
 - SessionEnd or PreCompact で `git status -sb` → ahead N 検出
 - stdout 警告で push を促す
 - 既存の scripts/hooks/append-compact-summary.sh に統合 or 独立スクリプト
+
+### Phase 0.2.25.read-only モード（完了）
+- `git config dot-claude.readonly true`（clone のローカル config）で有効化
+- session-end-push.sh: read-only なら push をスキップ（認証プロンプト/ダイアログ待ちを起こさない）
+- session-start-pull.sh: read-only なら `git pull --ff-only`。失敗時はワークツリーを変えず WARN（rebase 途中の状態が残らない）
+- テスト: `scripts/test/hooks/test_sync_hooks.sh`（bare remote + clone のサンドボックスで通常/read-only を8ケース）
+- 運用ルールは MAINTENANCE.md「read-only モード」
 
 ### Phase 0.2.4.dotfiles連携
 - `dotfiles/initialize_ubuntu.2.sh` に dot_claude clone + link処理追加
