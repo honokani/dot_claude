@@ -318,7 +318,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] link_claude.sh: dot_claude を指す壊れた symlink の掃除ロジックを追加（テンプレート移動で `~/.claude/TEMPLATE_*.md` が残骸化するため。dry-run で対象4件のみ検出を確認）
 - [x] GLOBAL_VISION.md: 全体指針に「2部構成」「発動保証と手続き本体の分離」を追加、グローバル管理表を更新、latest_cache ライフサイクルの SessionStart 記述を hook 全自動（0.2.14 確認済み）へ訂正
 - [x] ブランチ運用ルール改定（ユーザー指定 2026-08-18）: 階層 master → develop → feat系、命名 `feat/NN-<機能>-<趣旨>`（NN=issue番号、2桁ゼロ埋め、3桁になったら NNN）。CLAUDE.md「ブランチ運用」と MAINTENANCE.md を更新。旧 `feature/<機能>-<要旨>`（0.2.19）は廃止
-- [ ] dot_claude に develop ブランチ新設／本ブランチ `feature/claude-md-smart` を新命名へリネーム（issue 番号待ち。gh は show-sai アカウントで honokani/dot_claude を解決できず、issue 操作は Claude 側から不可）
+- [x] dot_claude に develop ブランチ新設（master 5c2634c から分岐、origin へ push）。本ブランチ `feature/claude-md-smart` はルール前の例外として旧命名のまま（ユーザー決定）。gh は show-sai アカウントで honokani/dot_claude を解決できず、issue 操作は Claude 側から不可
 - [ ] ユーザー: 各環境で `bash link_claude.sh` 実行（MAINTENANCE.md リンク作成＋TEMPLATE_* 残骸掃除。この Windows 機は作成のみ実施済み、掃除は未実行）
-- [ ] ユーザー: ブランチレビュー → master merge → push
+- [ ] ユーザー: ブランチレビュー → develop へ merge → 正常稼働確認 → master へ merge → push
 - [ ] B の扱いを決定（協議中: CLAUDE.md はサブエージェントにも配られるため「Fable なら不要」を理由に共通契約を削らない、を原則化するか）
