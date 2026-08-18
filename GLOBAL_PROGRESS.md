@@ -140,7 +140,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.3.SessionEnd auto-push（実験） (2026-04-23)
 - [x] scripts/hooks/session-end-push.sh 新設（ahead検出 → git push、失敗時 stdout 警告）
 - [x] settings.json SessionEnd hook 登録（timeout 30）
-- [x] 運用検証完了（2026-04-23）: /exit 時に SessionEnd hook 発火、ahead=2 検出 → `git push` で `7e2026d` + `ec7705f` を一括push成功。GitHub web UI でも反映確認済み
+- [x] 運用検証完了（2026-04-23）: /exit 時に SessionEnd hook 発火、ahead=2 検出 → `git push` で `60e4835` + `b5d12b6` を一括push成功。GitHub web UI でも反映確認済み
 
 ## Phase: 0.2.5.tips命名規則整備 (2026-04-23)
 - [x] tips/README.md 新設（`<主題>_<細目>_<環境>.md` 形式、`_`/`-` 使い分け明記）
@@ -154,7 +154,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ### 補足修正: hook script の REPO パス解決 (2026-04-23)
 - [x] 問題発覚: `$HOME/git_clone/dot_claude` ハードコードが Windows環境（実体 `/c/git_clone/dot_claude`）で存在せず、hook が silent に exit 0 していた
 - [x] session-start-pull.sh / session-end-push.sh: `$HOME/.claude/CLAUDE.md` symlink から readlink で dot_claude repo を動的解決（OS/配置非依存化）
-- [x] 動作確認: session-end-push.sh 直接実行で ahead=1 検出 → `71c7a9c`（Phase 0.2.2）を hook 経由で auto-push 成功
+- [x] 動作確認: session-end-push.sh 直接実行で ahead=1 検出 → `a3aed36`（Phase 0.2.2）を hook 経由で auto-push 成功
 - [ ] Phase 0.2.1: gitleaks pre-commit フック実装（カスタムruleはローカル保管）
 - [ ] Phase 0.2.2: SessionStart pull 同期フック（conflict時stdout警告）
 - [ ] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）
@@ -203,7 +203,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - 経緯:
   - Phase 0.1.0 で「保険として凍結・削除しない」と決定
   - その後 Phase 0.2.x で symlink化・features/ 再編を実施、~/.claude/.git 側には一切反映されず整合性が崩れ状態（working diff 39件の偽差分）
-  - 最終commit `5b48644`（Phase 0.0.6）は dot_claude 側にも保持済で独自履歴ゼロ
+  - 最終commit `5ab47eb`（Phase 0.0.6）は dot_claude 側にも保持済で独自履歴ゼロ
 - 現役リポジトリを /c/git_clone/dot_claude/.git に一本化
 
 ## Phase: 0.2.11.PROGRESS/DECISIONS 記録基準の明文化 (2026-04-24)
@@ -249,7 +249,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.15.シェル構文をbash固定 (2026-06-10)
 - [x] CLAUDE.md コーディングスタイルに追加: シェルは常にbash/POSIX構文、PowerShell必須時のみ `powershell -File` 経由（ユーザー決定: git bash/zshが全環境に存在）
   - 背景: 新CLAUDE.md初回セッション冒頭で環境表記（Shell: PowerShell）由来の躓き3件（PowerShell構文→exit 127／python直打ち／MSYS2パス形式）。うち1件はtips既知の罠の再踏みで、0.2.14で仕込んだtips参照トリガーは不発（観測1回目）
-- [x] tips 2件に知見追記（bash_powershell-invocation_windows.md「実体はbash」前提節／python_uv_windows.md パス形式節）— `76cd923`
+- [x] tips 2件に知見追記（bash_powershell-invocation_windows.md「実体はbash」前提節／python_uv_windows.md パス形式節）— `3daed13`
 
 ## Phase: 0.2.16.tips参照のハーネス層昇格 (2026-06-10)
 - [x] scripts/hooks/post-bash-tips-pointer.sh 新設 — Bash失敗時、環境系エラーシグネチャ該当ならtipsポインタ（ファイル名+見出しのみ、数十トークン）を additionalContext 注入。本文はClaudeがRead判断（段階的開示）
@@ -318,10 +318,13 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] link_claude.sh: dot_claude を指す壊れた symlink の掃除ロジックを追加（テンプレート移動で `~/.claude/TEMPLATE_*.md` が残骸化するため。dry-run で対象4件のみ検出を確認）
 - [x] GLOBAL_VISION.md: 全体指針に「2部構成」「発動保証と手続き本体の分離」を追加、グローバル管理表を更新、latest_cache ライフサイクルの SessionStart 記述を hook 全自動（0.2.14 確認済み）へ訂正
 - [x] ブランチ運用ルール改定（ユーザー指定 2026-08-18）: 階層 master → develop → feat系、命名 `feat/NN-<機能>-<趣旨>`（NN=issue番号、2桁ゼロ埋め、3桁になったら NNN）。CLAUDE.md「ブランチ運用」と MAINTENANCE.md を更新。旧 `feature/<機能>-<要旨>`（0.2.19）は廃止
-- [x] dot_claude に develop ブランチ新設（master 5c2634c から分岐、origin へ push）。本ブランチ `feature/claude-md-smart` はルール前の例外として旧命名のまま（ユーザー決定）。gh は show-sai アカウントで honokani/dot_claude を解決できず、issue 操作は Claude 側から不可
+- [x] dot_claude に develop ブランチ新設（master 8f1418b から分岐、origin へ push）。本ブランチ `feature/claude-md-smart` はルール前の例外として旧命名のまま（ユーザー決定）。gh は show-sai アカウントで honokani/dot_claude を解決できず、issue 操作は Claude 側から不可
 - [x] public 化に向けた監査（ユーザー: 会社でも使うため public 化予定）: gitleaks 全履歴58コミット → leaks なし。履歴全文 grep でメール/URL/IP/ユーザー名パスは実質なし。要判断3点を提示 → ユーザー決定で (1) GLOBAL_PROGRESS 0.0.5 のプロジェクト名2件 を「他3件」へ置換、(2) skills/slide-writing/test_layout.py の見本フットノート（企業名入り）を削除。author メール（個人 Gmail）と、上記2点の**履歴内の残存**は public 化方式（visibility 変更 or squash 新規 repo）の決定待ち
 - [x] read-only モード新設（会社PC等、clone 可・push 不可の環境向け）: `git config dot-claude.readonly true` で有効化。session-end-push.sh は push スキップ、session-start-pull.sh は `--ff-only`（失敗時ワークツリー不変で WARN）。テスト `scripts/test/hooks/test_sync_hooks.sh` 8ケース27アサーション Green。MAINTENANCE.md／features/auto_manage/plan.md・recovery.md に運用と復旧を記載
 - [ ] ユーザー: 各環境で `bash link_claude.sh` 実行（MAINTENANCE.md リンク作成＋TEMPLATE_* 残骸掃除。この Windows 機は作成のみ実施済み、掃除は未実行）
 - [ ] ユーザー: ブランチレビュー → develop へ merge → 正常稼働確認 → master へ merge → push
-- [ ] public 化方式の決定（A: 現 repo の visibility 変更／B: squash した新規 public repo）と author メールの扱い
+- [x] 履歴書換（ユーザー指示「履歴削除お願いします」）: スクラッチ clone で `uvx git-filter-repo --replace-text`（4ルール: 0.0.5 の2名→「他3件」、0.2.25 ログ内の2名→「プロジェクト名2件」、見本フットノート4行を削除）→ 61 コミット中 56 を書換、対象文字列の履歴内ヒット 7→0、各ブランチ先頭のツリー差分は想定ファイルのみ（master/develop: GLOBAL_PROGRESS.md・test_layout.py、feature: GLOBAL_PROGRESS.md・GLOBAL_DECISIONS.md）を確認後、ユーザー承認を得て master/develop/feature/claude-md-smart を force push（8f1418b / 8f1418b / bbb3b0f）。この機の repo は fetch + reset で新履歴に整合。GLOBAL_PROGRESS/DECISIONS 内の旧ハッシュ表記7箇所を commit-map で新ハッシュへ更新
+  - author メール（個人 Gmail）は本人判断で残す（repo 所有者＝author）。public 化は現 repo の visibility 変更で行う方針
+- [ ] ユーザー: 他の環境で次回起動前に `git -C <dot_claude> fetch origin && git -C <dot_claude> reset --hard origin/master`（未 push のローカル変更があれば先に退避。放置すると SessionStart の `pull --rebase` が旧履歴を rebase しようとして conflict で止まる）
+- [ ] ユーザー: GitHub で visibility を public に変更（旧コミットは GitHub 側キャッシュに一定期間残りうる）
 - [ ] B の扱いを決定（協議中: CLAUDE.md はサブエージェントにも配られるため「Fable なら不要」を理由に共通契約を削らない、を原則化するか）
