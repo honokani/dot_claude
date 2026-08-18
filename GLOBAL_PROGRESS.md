@@ -328,3 +328,6 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [ ] ユーザー: 他の環境で次回起動前に `git -C <dot_claude> fetch origin && git -C <dot_claude> reset --hard origin/master`（未 push のローカル変更があれば先に退避。放置すると SessionStart の `pull --rebase` が旧履歴を rebase しようとして conflict で止まる）
 - [ ] ユーザー: GitHub で visibility を public に変更（旧コミットは GitHub 側キャッシュに一定期間残りうる）
 - [ ] B の扱いを決定（協議中: CLAUDE.md はサブエージェントにも配られるため「Fable なら不要」を理由に共通契約を削らない、を原則化するか）
+
+## Phase: 0.2.26.traps 追加 — zsh chpwd hook によるコマンド置換汚染 (2026-08-19)
+- [x] `traps/zsh_chpwd-hook_dirname-pwd.md` 新規 — dotfiles の `initialize.2.sh` が Mac で `command too long` になった件（zshrc の `chpwd() { _lsl }` が `$(cd "$(dirname "$0")" && pwd)` 内で発火し ls 出力が混入）。解決策 `cd ... >/dev/null && pwd`（bash/zsh 両対応）を推奨順で記載。ファイル名の照合語は誤爆しやすい `cd`/`command` を避けた
