@@ -72,6 +72,26 @@ link_dotfile() {
         fi
     done
 
+    # dot_claude 配下を指すが実体が消えた symlink を掃除（トップレベル項目の移動・削除の残骸）
+    # 対象は「リンク先が $PTH_D_BASE 配下」のものだけ。他の symlink・実ファイルには触れない
+    for link in "$HOME/.claude"/*; do
+        [ -L "$link" ] || continue
+        link_target=$(readlink "$link")
+        case "$link_target" in
+            "$PTH_D_BASE"/*) ;;
+            *) continue ;;
+        esac
+        # -e は symlink を辿って評価する → false なら実体が無い（壊れたリンク）
+        if [ ! -e "$link" ]; then
+            if rm "$link"; then
+                echo "INFO: Removed stale symlink: $link -> $link_target"
+            else
+                echo "ERROR: Failed to remove stale symlink: $link"
+                ret=1
+            fi
+        fi
+    done
+
     # git hooks を dot_claude/.githooks/ に向ける（pre-commit で gitleaks 実行）
     if git -C "$PTH_D_BASE" config core.hooksPath .githooks; then
         echo "INFO: git config core.hooksPath .githooks (dot_claude)"

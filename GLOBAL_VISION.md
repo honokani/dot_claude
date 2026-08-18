@@ -10,6 +10,8 @@ Claudeとの協働環境を、セッションをまたいで一貫性のある�
 - [philosophy] CLAUDE.mdは「指示書」、GLOBAL_VISION.mdは「設計書」。混ぜない
 - [philosophy] 自動化はフック層、判断はClaude、記録はファイル。責務を分離する
 - [philosophy] 「無いときは無い」— 強制終了等でデータが欠損する前提で設計する
+- [philosophy] CLAUDE.mdは「共通契約（全実行主体）」＋「対話セッション限定ルール」の2部構成。サブエージェント（Explore/Plan以外、モデル問わず）にも配布されるため、対話前提のルール（承認・提示・pj管理）は後半に隔離し、前半はどのモデルが読んでも成立する内容に限る
+- [philosophy] 発動保証と手続き本体を分離する。CLAUDE.mdには発動トリガー（1〜2行）だけ置き、手続き本体はskill／参照ファイル（bulk-verification・pj-management・MODEL_ROUTING.md・MAINTENANCE.md）に置く。~/.claude保守ルールはdot_claude作業時のみ必要なので、`.claude/CLAUDE.md`のimport shim経由でそのセッションだけに読ませる
 
 ### 情報アーキテクチャ
 
@@ -52,10 +54,15 @@ Claudeとの協働環境を、セッションをまたいで一貫性のある�
 ### ~/.claude グローバル管理
 | ファイル | 役割 |
 |---|---|
-| CLAUDE.md | Claudeへの指示書（行動原則、ルール、操作手順） |
+| CLAUDE.md | Claudeへの指示書（共通契約＋対話セッションのルール。全セッションに配布） |
+| MAINTENANCE.md | ~/.claude自体の保守ルール（同期・GLOBAL_*記録・剪定・仕組みの所在）。dot_claude作業時は `.claude/CLAUDE.md`（`@../MAINTENANCE.md` import shim）で自動読込 |
+| MODEL_ROUTING.md | サブエージェント委譲のモデル振り分け（手続き本体） |
+| skills/pj-management/ | pj管理3ファイルの記録基準・タグ体系・テンプレート（手続き本体） |
+| skills/TEMPLATE_SKILL.md | skill新設時のテンプレート |
 | GLOBAL_VISION.md | ~/.claudeシステム自体の設計思想（本ファイル） |
 | GLOBAL_PROGRESS.md | 設定変更ログ |
 | GLOBAL_DECISIONS.md | 設定・運用の判断根拠ログ |
+| link_claude.sh | dot_claude→~/.claude のsymlink設置＋壊れたリンクの掃除（冪等） |
 
 ### フック設計方針
 - [philosophy] フックの責務は「機械的な記録と配置」のみ。判断はClaude、更新指示はCLAUDE.md
@@ -76,7 +83,7 @@ Claudeとの協働環境を、セッションをまたいで一貫性のある�
 [PostCompact] ← フック（append-compact-summary.sh）
   → compact_summaryをそのまま追記
 
-[SessionStart] ← CLAUDE.md規約（Claude主導）
+[SessionStart] ← フック（session-start-cache.sh、0.2.14で全自動化を確認）
   → マーカー発見 → latest_cache発見 → 鮮度判定
-  → 読む/読まない → old/{プロジェクト名}/ に移動 → マーカー削除
+  → 読む（stdout経由でコンテキストに注入）/読まない → old/{プロジェクト名}/ に移動 → マーカー削除
 ```

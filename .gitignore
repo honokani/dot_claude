@@ -14,7 +14,8 @@ backups/
 ide/
 workspace_for_claude/
 delivered_by_user/
-.claude/
+.claude/*
+!.claude/CLAUDE.md
 
 # セッション・自動生成（追加）
 paste-cache/

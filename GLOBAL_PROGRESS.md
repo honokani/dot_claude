@@ -306,4 +306,17 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.24.MODEL_ROUTING適用条件の明確化 (2026-07-20)
 - [x] MODEL_ROUTING.md: 適用条件を追記 — 降格委譲は**メインが Fable のときだけ**（Fable 以外がメインなら本表不適用・委譲はメイン継承）。振り分け表の「メイン（Fable等）」を「メイン（Fable）」へ
 - 背景: pj_likeRO 作業中に「簡単な作業は Opus4.8 へ必ず委譲、難題は fable 自身で」の指示があり、続けて適用条件が Fable メイン時のみである旨を追加指示
-- 備考: この Windows 機では ~/.claude/MODEL_ROUTING.md への symlink が無く CLAUDE.md からの参照が切れている（link_claude.sh の対象確認が必要）
+- 備考: この Windows 機では ~/.claude/MODEL_ROUTING.md への symlink が無く CLAUDE.md からの参照が切れている（link_claude.sh の対象確認が必要）→ 0.2.25 で解消（`bash link_claude.sh` 再実行で作成。対象漏れではなく未実行だった）
+
+## Phase: 0.2.25.CLAUDE.md の構造再編（関心の分離・委譲体系・プロトコル外出し） (2026-08-18)
+ブランチ: `feature/claude-md-smart`（ユーザーレビュー→master merge 待ち）。ユーザー要望「スリムでなくスマートに」= 行数削減でなく設計の筋を通す。方向 A/C/D を実施、B（Fable前提の書換）は協議中
+- [x] A. CLAUDE.md を2部構成に再編 — 「共通契約（全実行主体）」（適用範囲／優先順位／報告と検証／変更管理／環境／コーディングスタイル）＋「対話セッションのルール（メインのみ）」（設計判断／作業ステップ／委譲／pj管理／ブランチ運用／知見の記録／~/.claude自体の変更）。既存ルールは全件保持（削除なし、移設のみ）。108行→73行
+  - 新設: 「適用範囲」節 — サブエージェントにも配布される事実（公式docs: Explore/Plan 以外の全サブエージェントが CLAUDE.md 階層を受け取る）を明記し、承認前提ルールの適用外と「承認待ちで停止しない」を規定
+- [x] A. MAINTENANCE.md 新設 — ~/.claude 保守ルール（実体と同期／GLOBAL_*記録／剪定／仕組みの所在）を CLAUDE.md から移設。`.claude/CLAUDE.md`（`@../MAINTENANCE.md` import shim）で dot_claude 作業時のみ自動読込。`.gitignore` を `.claude/*` + `!.claude/CLAUDE.md` に変更
+- [x] C. MODEL_ROUTING.md 再構成 — 適用条件を先頭の節に昇格（適用主体=メインのみ／Fable メイン時のみ／対象経路）、旧 CLAUDE.md の Why 行（fan-out コスト・昇格リトライ）を「目的」に統合、価格表を単価比 10:5:3:1 ＋ claude-api skill 参照に置換（intro 価格の期限切れ等で陳腐化するため）
+- [x] D. pj-management skill 新設（`skills/pj-management/SKILL.md` v1.0.0）— 旧 CLAUDE.md「pj管理」節の記録基準・タグ体系・中断スナップショット形式・初期化手順を移設。TEMPLATE_VISION/PROGRESS/DECISIONS.md を `skills/pj-management/templates/{VISION,PROGRESS,DECISIONS}.md` へ `git mv`、TEMPLATE_SKILL.md を `skills/TEMPLATE_SKILL.md` へ
+- [x] link_claude.sh: dot_claude を指す壊れた symlink の掃除ロジックを追加（テンプレート移動で `~/.claude/TEMPLATE_*.md` が残骸化するため。dry-run で対象4件のみ検出を確認）
+- [x] GLOBAL_VISION.md: 全体指針に「2部構成」「発動保証と手続き本体の分離」を追加、グローバル管理表を更新、latest_cache ライフサイクルの SessionStart 記述を hook 全自動（0.2.14 確認済み）へ訂正
+- [ ] ユーザー: 各環境で `bash link_claude.sh` 実行（MAINTENANCE.md リンク作成＋TEMPLATE_* 残骸掃除。この Windows 機は作成のみ実施済み、掃除は未実行）
+- [ ] ユーザー: ブランチレビュー → master merge → push
+- [ ] B の扱いを決定（協議中: CLAUDE.md はサブエージェントにも配られるため「Fable なら不要」を理由に共通契約を削らない、を原則化するか）
