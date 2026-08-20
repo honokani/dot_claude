@@ -1,10 +1,10 @@
 ---
 name: pj-management
-description: プロジェクト管理3ファイル（VISION.md / PROGRESS.md / DECISIONS.md）を初期化・更新する時に invoke する。「pj管理の更新。」と言われた時、セッション開始時に3ファイルが無く初期化する時、Phase の追加/完了・A/B判断の記録・VISIONルールタグの付与/更新・中断スナップショットの記録をする時に使う。各ファイルの記録基準・棲み分け・タグ体系・テンプレート・初期化手順を提供する。
+description: プロジェクト管理3ファイル（VISION.md / PROGRESS.md / DECISIONS.md）を初期化・更新する時に invoke する。「pj管理の更新。」と言われた時、セッション開始時に3ファイルが無く初期化する時、Phase の追加/完了・A/B判断の記録・VISIONルールタグの付与/更新・中断スナップショットの記録をする時に使う。各ファイルの記録基準・棲み分け・タグ体系・テンプレート・初期化手順、標準ディレクトリ（_from_owner/_deliverables/_gomi）の作成規約を提供する。
 compatibility: OS非依存
 metadata:
   author: honokani
-  version: 1.0.0
+  version: 1.1.0
   source: CLAUDE.md「pj管理」節（〜2026-08）を skill 化。CLAUDE.md 側は発動トリガーのみ
 ---
 
@@ -17,6 +17,18 @@ VISION.md（ポールスター）・PROGRESS.md（実行記録）・DECISIONS.md
 - 「pj管理の更新。」→ 未反映の変更を本 skill の記録基準で3ファイルへ仕分けて反映
 - Phase の開始/完了、既存挙動を変える改修、A/B 判断の発生、VISION ルールの追加やテスト作成、作業の中断
 - SKIP: 3ファイルの読込・照合だけで更新が無い場合（Read で足りる）
+
+## 標準ディレクトリ
+3ファイル読込・初期化時に、無ければプロジェクト直下に作成する（pj管理対象のプロジェクトだけが対象。無関係の cwd には作らない）。
+
+| ディレクトリ | 用途 | git |
+|---|---|---|
+| `_from_owner/` | ユーザーから渡されるファイルの置き場。Claude は読む側（編集・生成はしない） | ignore |
+| `_deliverables/` | ユーザーと会話するための生成物（レポート・図・検討資料）。プログラム本体は通常の src/app 等の構成に置き、ここには置かない | ignore |
+| `_gomi/` | 削除退避先。削除が必要なファイルは削除せず `mv` でここへ移し、中身の削除はユーザーが行う（CLAUDE.md 変更管理） | ignore |
+
+- git 管理プロジェクトでは3つとも .gitignore に追加する（無ければ追記。ユーザーが既に別方針で管理している場合は従う）
+- git 追跡済みファイルを `_gomi/` へ退避する時は plain `mv`（`git mv` 不可: ignore 先へ移すため）。履歴上は削除、実体は `_gomi/` に残る
 
 ## 3ファイルの棲み分け
 | ファイル | 役割 | 更新頻度 |
@@ -59,6 +71,7 @@ VISION.md（ポールスター）・PROGRESS.md（実行記録）・DECISIONS.md
 ## 初期化手順
 1. `templates/{VISION,PROGRESS,DECISIONS}.md` をプロジェクトルートへコピーし `{プロジェクト名}` を置換
 2. 既知の情報（README・既存コード・会話）から Why と Phase 0.0.1 を埋める。不明点は空欄のまま提示し、ユーザーに確認する（推測で埋めない）
+3. 標準ディレクトリ3つ（前掲）を作成し、git 管理下なら .gitignore に追記
 
 ## 注意事項
 - `[qchecktest]` の検証チャネルは `qcheck` skill（`tests/*.qcheck.md`）

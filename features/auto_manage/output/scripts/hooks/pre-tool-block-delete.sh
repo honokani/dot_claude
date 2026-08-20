@@ -20,7 +20,7 @@ INDIRECT_DELETE='(find.+-delete|xargs.+(rm|rmdir|unlink))'
 if echo "$CMD" | grep -qiE "$DIRECT_DELETE" || echo "$CMD" | grep -qiE "$INDIRECT_DELETE"; then
     echo "ERROR: 削除系コマンドはブロックされました（pre-tool-block-delete.sh）" >&2
     echo "  検出コマンド: $CMD" >&2
-    echo "  対処: ユーザーが手動で削除を実行するか、Claudeに別手段（mv 退避等）を依頼" >&2
+    echo "  対処: 削除せず mv でプロジェクト直下の _gomi/ へ退避（無ければ作成。CLAUDE.md 変更管理）。実削除はユーザーが行う" >&2
     exit 1
 fi
 

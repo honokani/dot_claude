@@ -331,3 +331,12 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 
 ## Phase: 0.2.26.traps 追加 — zsh chpwd hook によるコマンド置換汚染 (2026-08-19)
 - [x] `traps/zsh_chpwd-hook_dirname-pwd.md` 新規 — dotfiles の `initialize.2.sh` が Mac で `command too long` になった件（zshrc の `chpwd() { _lsl }` が `$(cd "$(dirname "$0")" && pwd)` 内で発火し ls 出力が混入）。解決策 `cd ... >/dev/null && pwd`（bash/zsh 両対応）を推奨順で記載。ファイル名の照合語は誤爆しやすい `cd`/`command` を避けた
+
+## Phase: 0.2.27.プロジェクト標準ディレクトリ導入 (2026-08-20)
+ブランチ: `feature/claude-md-smart` に追加（ユーザー依頼）
+- [x] pj管理に標準ディレクトリ3つを新設: `_from_owner/`（ユーザーからの受領物、Claudeは読む側）・`_deliverables/`（会話用生成物。プログラム本体は src/app 等に置く）・`_gomi/`（削除退避。実削除はユーザー）。pj管理3ファイル読込・初期化時に無ければ作成、git 管理下なら3つとも .gitignore へ
+- [x] CLAUDE.md: pj管理節に作成トリガー1行、共通契約「変更管理」に `_gomi/` 退避ルール（削除ブロックへの標準対処。サブエージェントにも適用されるため共通契約側）
+- [x] pj-management skill v1.1.0: 「標準ディレクトリ」節（用途・git扱い・追跡済ファイルは plain mv）＋初期化手順に手順3追加
+- [x] pre-tool-block-delete.sh のブロックメッセージを `_gomi/` 誘導に更新（ブロックされた瞬間に正しい手が案内される）
+- [x] dot_claude 自体: .gitignore に `_gomi/` 追加、link_claude.sh の対象外リストに `_gomi` 追加
+- [x] 命名は `_` 先頭で統一（ユーザー要望: 名前順で先頭に来る）。パス安全性確認済み: 全OS・シェル・gitで特別扱いなし。Jekyll等一部SSGは `_` 先頭をビルド対象外とするが、公開物に含めない方向なので好都合

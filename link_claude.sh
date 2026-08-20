@@ -63,7 +63,7 @@ link_dotfile() {
         [ -e "$item" ] || continue
         name=$(basename "$item")
         case "$name" in
-            link_claude.sh|README.md)
+            link_claude.sh|README.md|_gomi)
                 continue
                 ;;
         esac

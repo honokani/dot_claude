@@ -44,3 +44,6 @@ plans/
 
 # ローカル専用（gitleaks カスタムルール等、公開禁止）
 gitleaks/
+
+# 削除退避（実削除はユーザー。pj-management skill 標準ディレクトリ）
+_gomi/

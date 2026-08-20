@@ -8,7 +8,7 @@
 - 編集前に `git pull`、編集後に `git push`（他環境へ即時反映）。SessionEnd hook の auto-push は失敗防止ネットであり、毎回の push を省略しない
 - ブランチは CLAUDE.md ブランチ運用と同じ master → develop → `feat/NN-<機能>-<趣旨>`。~/.claude/CLAUDE.md は実体への symlink なので、ブランチ checkout 中に始まる新規セッションはブランチ版の CLAUDE.md を読む（試運転として使える／戻すには master を checkout）。各環境が pull するのは checkout 中のブランチ（通常 master）
 - トップレベル項目を追加・移動・削除したら各環境で `bash link_claude.sh` を実行（新規リンク作成と、dot_claude を指す壊れたリンクの掃除。冪等）
-- 削除系コマンドは permission deny + PreToolUse hook で多層ブロックされており Claude からは実行できない。移動は `git mv`、削除が必要な変更はユーザーに依頼する
+- 削除系コマンドは permission deny + PreToolUse hook で多層ブロックされており Claude からは実行できない。移動は `git mv`、削除が必要なファイルは plain `mv` で `_gomi/`（.gitignore 済み）へ退避し、実削除・repo からの `git rm` はユーザーに依頼する
 
 ## read-only モード（clone はできるが push できない環境。会社PC等）
 - 有効化: その clone で一度 `git -C <clone> config dot-claude.readonly true`（ローカル config、commit されない）
