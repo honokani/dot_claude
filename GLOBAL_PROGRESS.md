@@ -340,3 +340,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] pre-tool-block-delete.sh のブロックメッセージを `_gomi/` 誘導に更新（ブロックされた瞬間に正しい手が案内される）
 - [x] dot_claude 自体: .gitignore に `_gomi/` 追加、link_claude.sh の対象外リストに `_gomi` 追加
 - [x] 命名は `_` 先頭で統一（ユーザー要望: 名前順で先頭に来る）。パス安全性確認済み: 全OS・シェル・gitで特別扱いなし。Jekyll等一部SSGは `_` 先頭をビルド対象外とするが、公開物に含めない方向なので好都合
+
+## Phase: 0.2.28.traps 追加 — Bash ツール経由の `\\` 潰れ (2026-09-17)
+ブランチ: `feature/claude-md-smart` に追加（0.2.27 と同じ運用。develop 直コミットは GLOBAL_PROGRESS.md の衝突を招くため。移す場合はユーザー判断）
+- [x] `traps/powershell_backslash-collapse_bash-tool.md` 新規 — Claude Code の Bash ツールでは quoted heredoc 内でも `\\` が `\` に潰れる（`printf '%s\n' 'x\\y' | od -c` で再現。Write／Edit ツールは潰れない）。PowerShell 正規表現のパス区切りで「\k 名前付き逆参照」エラー、sed 置換で `C:\Windows` が `C:Windows` になった件（pj_this_pc の minidump 解析中）。対処: regex／sed 置換にバックスラッシュを書かない、必要なら実行時生成か Write ツールで書く、Bash なら `\\\\` と書いて 2 個にする
