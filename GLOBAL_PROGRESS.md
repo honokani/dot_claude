@@ -344,3 +344,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.28.traps 追加 — Bash ツール経由の `\\` 潰れ (2026-09-17)
 ブランチ: `feature/claude-md-smart` に追加（0.2.27 と同じ運用。develop 直コミットは GLOBAL_PROGRESS.md の衝突を招くため。移す場合はユーザー判断）
 - [x] `traps/powershell_backslash-collapse_bash-tool.md` 新規 — Claude Code の Bash ツールでは quoted heredoc 内でも `\\` が `\` に潰れる（`printf '%s\n' 'x\\y' | od -c` で再現。Write／Edit ツールは潰れない）。PowerShell 正規表現のパス区切りで「\k 名前付き逆参照」エラー、sed 置換で `C:\Windows` が `C:Windows` になった件（pj_this_pc の minidump 解析中）。対処: regex／sed 置換にバックスラッシュを書かない、必要なら実行時生成か Write ツールで書く、Bash なら `\\\\` と書いて 2 個にする
+
+## Phase: 0.2.29.traps 追加 — git bash のスラッシュ スイッチ パス変換 (2026-09-17)
+ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）
+- [x] `traps/exe_slash-switch-msys-path-conversion_git-bash.md` 新規 — `/c/Windows/System32/shutdown.exe /r /t 180` が MSYS のパス変換で usage 表示になった件。対処は `MSYS_NO_PATHCONV=1` プレフィックス（確認済み）、`//r` 二重スラッシュ、powershell 経由
