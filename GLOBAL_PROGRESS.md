@@ -320,3 +320,10 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] CLAUDE.md コーディングスタイルへ1行昇格（hook 配信不可のため。下記 DECISIONS 参照）
 - 背景: pj_music の note 記事md化で、変換結果の保全チェックに `grep -c '🔊'` を使い 0 件・exit 1 を得て「音声埋め込みが消えた」と誤診。node で数え直して誤検出と判明
 - 検証: `od -c` でファイルは正常(F0 9F 94 8A)。`grep`=0 / `grep -F`=0 / `grep -a`=0 / `grep '日'`=1 / `LC_ALL=C grep`=1 / `grep -P '\x{1F50A}'`=1 / `rg`=1（LANG=ja_JP.UTF-8, GNU grep 3.0）
+
+## Phase: 0.2.27.SyntaxError を hook シグネチャに追加 (2026-09-21)
+- [x] `scripts/hooks/post-bash-traps-pointer.sh`: SIGNATURES の `syntax error` → `syntax ?error`
+- [x] `traps/bash_heredoc-backslash_windows.md` 新設: Bash ツールの heredoc が `\` を `\` に潰す罠
+- 背景: pj_music 作業中、`<<'JSEOF'` で書いた `/\/g` が `/\/g` になり node が SyntaxError。原因調査の過程で、node/Python の `SyntaxError`（空白なし）が既存シグネチャ `syntax error`（空白あり）に一致せず、**構文エラー全般が hook 未配信**だったことが判明
+- 検証: 修正後シグネチャで node `SyntaxError:` / Python `SyntaxError: invalid syntax` / bash `syntax error near` の3種すべて発火、正常出力は無音を確認
+- 測定: `\s` `\n` `\)` は保持、`\`→`\` / `\\`→`\` と **`\` ペアのみ半減**

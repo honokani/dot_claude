@@ -36,7 +36,7 @@ ERRTEXT=$(jget '
   | map(select(. != null and . != "")) | join("\n")')
 
 # 環境系エラーシグネチャ（該当しなければ無音）
-SIGNATURES='command not found|is not recognized|syntax error|No such file or directory|FileNotFoundError|ModuleNotFoundError|ImportError|UnicodeDecodeError|UnicodeEncodeError|cp932|Permission denied|exec format error|panicked at|error\[E[0-9]+\]|cannot borrow|os error|Command timed out|認識されません|見つかりません|アクセスが拒否'
+SIGNATURES='command not found|is not recognized|syntax ?error|No such file or directory|FileNotFoundError|ModuleNotFoundError|ImportError|UnicodeDecodeError|UnicodeEncodeError|cp932|Permission denied|exec format error|panicked at|error\[E[0-9]+\]|cannot borrow|os error|Command timed out|認識されません|見つかりません|アクセスが拒否'
 if ! printf '%s' "$ERRTEXT" | grep -qiE "$SIGNATURES"; then
   exit 0
 fi
