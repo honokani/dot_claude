@@ -314,3 +314,9 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] session-start-pull.sh: `git pull --rebase --autostash` → 未コミット変更検出時は pull skip + 警告、clean 時のみ `git pull --rebase`
 - 背景: SessionStart hook の autostash pop が衝突し `settings.json` にコンフリクトマーカーが残留、グローバル設定が JSON パース不能（`Expected object, but received undefined`）のまま放置されていた。ユーザーが起動時エラーとして持ち込み発覚
 - 注意: 復旧前の未コミット作業ツリーは削除系 deny 9件と PreToolUse 削除ブロック hook を除去する内容だった（実施者・時期は不明）。0.2.12/0.2.20 で意図的に入れた多層防御のため復旧側を採用
+
+## Phase: 0.2.26.grep の astral plane 非対応を罠化 (2026-09-21)
+- [x] `traps/grep_astral-plane-emoji_windows.md` 新設: MSYS2/git bash の GNU grep 3.0 が BMP 外文字（絵文字等）にマッチしない罠。回避策を優先順で記載（rg / `LC_ALL=C grep` / `grep -P '\x{...}'` / node）
+- [x] CLAUDE.md コーディングスタイルへ1行昇格（hook 配信不可のため。下記 DECISIONS 参照）
+- 背景: pj_music の note 記事md化で、変換結果の保全チェックに `grep -c '🔊'` を使い 0 件・exit 1 を得て「音声埋め込みが消えた」と誤診。node で数え直して誤検出と判明
+- 検証: `od -c` でファイルは正常(F0 9F 94 8A)。`grep`=0 / `grep -F`=0 / `grep -a`=0 / `grep '日'`=1 / `LC_ALL=C grep`=1 / `grep -P '\x{1F50A}'`=1 / `rg`=1（LANG=ja_JP.UTF-8, GNU grep 3.0）
