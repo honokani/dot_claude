@@ -307,3 +307,10 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] MODEL_ROUTING.md: 適用条件を追記 — 降格委譲は**メインが Fable のときだけ**（Fable 以外がメインなら本表不適用・委譲はメイン継承）。振り分け表の「メイン（Fable等）」を「メイン（Fable）」へ
 - 背景: pj_likeRO 作業中に「簡単な作業は Opus4.8 へ必ず委譲、難題は fable 自身で」の指示があり、続けて適用条件が Fable メイン時のみである旨を追加指示
 - 備考: この Windows 機では ~/.claude/MODEL_ROUTING.md への symlink が無く CLAUDE.md からの参照が切れている（link_claude.sh の対象確認が必要）
+
+## Phase: 0.2.25.session-start-pull の autostash 撤廃 (2026-09-21)
+- [x] settings.json のコンフリクトマーカー除去: HEAD 版へ復元（deny 11件・PreToolUse削除ブロックhook を全復旧）＋ `skipWorkflowUsageWarning: true` のみ足し戻し。node JSON.parse で valid 確認
+- [x] 残留 autostash entry を drop（diff はセッション scratchpad へ退避）
+- [x] session-start-pull.sh: `git pull --rebase --autostash` → 未コミット変更検出時は pull skip + 警告、clean 時のみ `git pull --rebase`
+- 背景: SessionStart hook の autostash pop が衝突し `settings.json` にコンフリクトマーカーが残留、グローバル設定が JSON パース不能（`Expected object, but received undefined`）のまま放置されていた。ユーザーが起動時エラーとして持ち込み発覚
+- 注意: 復旧前の未コミット作業ツリーは削除系 deny 9件と PreToolUse 削除ブロック hook を除去する内容だった（実施者・時期は不明）。0.2.12/0.2.20 で意図的に入れた多層防御のため復旧側を採用

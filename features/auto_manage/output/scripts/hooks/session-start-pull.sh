@@ -16,8 +16,17 @@ cd "$REPO" || exit 0
 # pull 前の HEAD を記録（表記ゆれに依存しない判定用）
 before=$(git rev-parse HEAD 2>/dev/null || echo "")
 
-# 同期 pull（rebase + autostash でローカル変更があっても邪魔しない）
-pull_output=$(git pull --rebase --autostash 2>&1)
+# 未コミット変更があれば pull しない（stash禁止ルール準拠 / autostash の pop 衝突で
+# settings.json 等にコンフリクトマーカーが残り、グローバル設定が壊れる事故を防ぐ）
+if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+    echo "WARN: dot_claude: 未コミット変更あり、pull skip"
+    git status --short 2>/dev/null | head -5
+    echo "  手動対処: cd $REPO && git status（commit or 破棄してから再起動）"
+    exit 0
+fi
+
+# 同期 pull（clean な作業ツリーのみ。stash は使わない）
+pull_output=$(git pull --rebase 2>&1)
 pull_status=$?
 
 after=$(git rev-parse HEAD 2>/dev/null || echo "")
