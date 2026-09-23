@@ -356,3 +356,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.31.traps 追加 — Bash ツールの長いコマンドの打ち切り (2026-09-23)
 ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）
 - [x] `traps/bash_command-truncated-unexpected-eof_bash-tool.md` 新規 — 約 8K 文字/317 行のコマンドが 205 行目で、100 文字×90 行の heredoc が 76 行目（約 7.5K 文字）で切れ `syntax error: unexpected end of file`。原因（ハーネス上限かモデル出力打ち切りか）は未特定。対処: 1 コマンド 1 ファイル・6K 文字以下、大きいファイルは Write ツール
+
+## Phase: 0.2.32.traps 追加 — `claude -p --bare` の Not logged in (2026-09-23)
+ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）
+- [x] `traps/claude_print-bare-not-logged-in.md` 新規 — pj_building で `claude -p` をバックエンドに使う検証中、`--bare` 付きだと「Not logged in」（`claude auth status` はログイン済み）。外すと成功。`--json-schema`／stdin／`structured_output` の使い方も記載
