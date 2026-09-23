@@ -14,3 +14,8 @@
 1. 正規表現・sed 置換にバックスラッシュを書かない: PowerShell は `-like '*\amd64\kd.exe'`（ワイルドカード）、`.EndsWith('\amd64\kd.exe')`、`[IO.Path]::GetFileName()` で比較。sed 置換文字列に Windows パスを入れない
 2. どうしても正規表現で必要なら実行時に生成: `[regex]::Escape('\amd64\')`、`[char]92`、.NET regex の `\x5c`
 3. `\\` を含むファイルは Write ツールで書く（潰れない）。Bash で書くなら必要な `\\` ごとに `\\\\` と書く（4個→2個になることを `printf '%s\n' 'a\\\\b' | od -c` で確認済み）
+
+## 追記 2026-09-23: Python heredoc でも同じ（NUL バイト混入・\u エスケープ化け）
+- 症状: `uv run python - <<'EOF'` の中で `'\\x00'` と書いた → Python には `'\x00'` が届き、ファイルに NUL バイトが書かれて `SyntaxError: source code string cannot contain null bytes`。`'\\u3000'` は `'\u3000'`＝全角空白そのものになり、文字列照合が一致しない（pj_building、2026-09-23）
+- 対処: Bash 経由の Python では `\\` を書かず `chr(92)` で組み立てる（例: `chr(92) + "x00"`）。バイト列リテラル `b"\x00"` のように 1 個なら潰れない
+- 照合キー補足: エラー語は python / null bytes。本ファイル名（powershell）では hook が拾わない可能性がある

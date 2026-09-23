@@ -348,3 +348,11 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.29.traps 追加 — git bash のスラッシュ スイッチ パス変換 (2026-09-17)
 ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）
 - [x] `traps/exe_slash-switch-msys-path-conversion_git-bash.md` 新規 — `/c/Windows/System32/shutdown.exe /r /t 180` が MSYS のパス変換で usage 表示になった件。対処は `MSYS_NO_PATHCONV=1` プレフィックス（確認済み）、`//r` 二重スラッシュ、powershell 経由
+
+## Phase: 0.2.30.traps 追記 — Bash ツール経由の `\\` 潰れ（Python heredoc の症状追加） (2026-09-23)
+ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）
+- [x] `traps/powershell_backslash-collapse_bash-tool.md` に追記 — pj_building で `uv run python - <<'EOF'` 内の `'\\x00'` が NUL バイトとしてファイルに書かれ SyntaxError、`'\\u3000'` が全角空白になり照合失敗。対処は `chr(92)` で組み立て。同じ罠の 2 件目（9/17 PowerShell regex・sed、9/23 Python）→ CLAUDE.md 環境ルールへの昇格候補（ユーザー判断待ち）
+
+## Phase: 0.2.31.traps 追加 — Bash ツールの長いコマンドの打ち切り (2026-09-23)
+ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）
+- [x] `traps/bash_command-truncated-unexpected-eof_bash-tool.md` 新規 — 約 8K 文字/317 行のコマンドが 205 行目で、100 文字×90 行の heredoc が 76 行目（約 7.5K 文字）で切れ `syntax error: unexpected end of file`。原因（ハーネス上限かモデル出力打ち切りか）は未特定。対処: 1 コマンド 1 ファイル・6K 文字以下、大きいファイルは Write ツール
