@@ -6,8 +6,9 @@
 #       トークンは都度 keyring から取得し、ファイルに保存しない
 TOKEN=$(gh auth token --user honokani 2>/dev/null)
 if [ -z "$TOKEN" ]; then
-    echo "ERROR: gh に honokani アカウントが未登録です。先に以下を実行:" >&2
-    echo "  gh auth login -h github.com -w" >&2
+    echo "ERROR: gh に honokani アカウントが未登録です。環境タイプで対応が分かれます（MAINTENANCE.md 三層ルール）:" >&2
+    echo "  - 登録してよい環境: gh auth login -h github.com -w（honokani でログイン）" >&2
+    echo "  - GitHub 認証を置かない環境（read-only 運用）: 起票せず、issue 文面を報告に残して他環境から立てる" >&2
     exit 1
 fi
 exec env GH_TOKEN="$TOKEN" gh "$@"

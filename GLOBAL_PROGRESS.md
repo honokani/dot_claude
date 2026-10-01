@@ -425,3 +425,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] MAINTENANCE.md 三層ルールを「issue は honokani 名義・ラッパー経由」へ改訂（0.2.40 の「作成者は環境により異なってよい」を撤回）
 - [x] show-sai 名義の open issues #2〜#9 を honokani 名義 #11〜#18 として再作成（本文に相互参照）、旧版は移管先コメント付きで close。close 済み #1 は履歴として残置
 - [x] 再作成時、`/learn` 始まりのタイトルが MSYS パス変換で `C:/Program Files/Git/learn` に化ける既知の罠（traps/exe_slash-switch-msys-path-conversion_git-bash.md）を #13 で再踏 → `MSYS_NO_PATHCONV=1` で修正済み。旧 #4 も同症状のまま close（修正不要）
+
+## Phase: 0.2.42.三層ルールの環境別運用を明記 (2026-10-01) — issue #19 / feat/19-issue-rule-env-variants
+- [x] MAINTENANCE.md 三層ルール: 起票手段を環境タイプ別の表に改訂 — gh+honokani 登録環境（個人PC・複数アカウント会社PC）=ラッパー／GitHub 認証を置かない環境（read-only 運用の機微込み会社PC）=**起票せず issue 文面を報告に残して他環境から起票**（持ち帰り運用と同型）。閲覧のみは匿名 curl 可を追記
+- [x] scripts/gh-honokani.sh: 未登録時エラーを環境タイプ分岐の案内に修正（旧メッセージは認証を置かない環境に gh auth login を促す誤誘導だった）
+- 背景: ユーザーから実環境は3タイプ（通常会社PC／honokani のみの個人PC／認証を置かない機微込み会社PC）との指摘。現行文面は gh 必須前提で第3タイプが運用不能だった
