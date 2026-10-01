@@ -17,7 +17,15 @@
 - 検証: `bash scripts/test/hooks/test_sync_hooks.sh`（通常/read-only/並行ロックの pull/push 挙動、14ケース）
 
 ## 問題対応の三層ルール（修正は分散、信号は issue）
-issue は GitHub `honokani/dot_claude` に **honokani 名義**で立てる。gh の既定アカウントが別名義の環境でも名義が揃うよう、issue/API 操作は `bash ~/.claude/scripts/gh-honokani.sh <ghサブコマンド>` を使う（`GH_TOKEN=$(gh auth token --user honokani)` を付与するだけのラッパー。トークン非保存。gh に honokani 未登録の環境では先に `gh auth login -h github.com -w`）。
+issue は GitHub `honokani/dot_claude` に **honokani 名義**で立てる。起票手段は環境タイプで分岐:
+
+| 環境タイプ | 起票手段 |
+|---|---|
+| gh に honokani 登録済み（個人PC、複数アカウント運用の会社PC） | `bash ~/.claude/scripts/gh-honokani.sh <ghサブコマンド>`（`GH_TOKEN=$(gh auth token --user honokani)` を付与するだけのラッパー。トークン非保存。honokani のみの環境でも同じ挙動なので常にこれでよい） |
+| GitHub 認証を一切置かない環境（read-only 運用の機微情報込み会社PC） | **起票しない**。issue 文面（タイトル＋本文）を整形して報告に残し、認証のある環境から後で起票する — read-only モードの「持ち帰り」運用と同じ。この環境で `gh auth login` はしない |
+
+- 閲覧だけなら認証不要: `curl -s https://api.github.com/repos/honokani/dot_claude/issues`（public repo の read は匿名可）
+- gh はあるが honokani 未登録で、**登録してよい環境**なら: `gh auth login -h github.com -w`（honokani でログイン）してからラッパーを使う
 
 | 層 | 対象 | 動き |
 |---|---|---|
