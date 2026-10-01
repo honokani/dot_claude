@@ -99,8 +99,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] ln -sn で既存ディレクトリへの副作用リンク作成を防止（skills/skills誤リンク対策）
 - [x] mv/ln 失敗時に ERROR 出力 + return 1、exit statusで伝播
 - [x] ~/.claude/skills/skills 誤リンク削除（初回実行の副作用クリーンアップ）
-- [ ] Claude Code 終了後に link_claude.sh 手動実行で skills/ リンク化完了（ユーザー側作業）
-- [ ] 動作確認後、~/.claude/*_bk（CLAUDE.md_bk, GLOBAL_*_bk, plans_bk, scripts_bk, settings.json_bk, skills_bk, TEMPLATE_*_bk, tips_bk）を削除
+- [x] Claude Code 終了後に link_claude.sh 手動実行で skills/ リンク化完了 — 完了確認 2026-10-01（~/.claude/skills symlink 稼働中）
+- [x] 動作確認後、~/.claude/*_bk（CLAUDE.md_bk, GLOBAL_*_bk, plans_bk, scripts_bk, settings.json_bk, skills_bk, TEMPLATE_*_bk, tips_bk）を削除 — 2026-10-01 確認: 残存なし
 
 ## Phase: 0.1.2.plans対象外化 (2026-04-22)
 - [x] ~/.claude/plans シンボリックリンクを削除、dot_claude/plans/ 内容を ~/.claude/plans/ にcpで実ディレクトリ復元
@@ -155,9 +155,9 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] 問題発覚: `$HOME/git_clone/dot_claude` ハードコードが Windows環境（実体 `/c/git_clone/dot_claude`）で存在せず、hook が silent に exit 0 していた
 - [x] session-start-pull.sh / session-end-push.sh: `$HOME/.claude/CLAUDE.md` symlink から readlink で dot_claude repo を動的解決（OS/配置非依存化）
 - [x] 動作確認: session-end-push.sh 直接実行で ahead=1 検出 → `a3aed36`（Phase 0.2.2）を hook 経由で auto-push 成功
-- [ ] Phase 0.2.1: gitleaks pre-commit フック実装（カスタムruleはローカル保管）
-- [ ] Phase 0.2.2: SessionStart pull 同期フック（conflict時stdout警告）
-- [ ] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）
+- [x] Phase 0.2.1: gitleaks pre-commit フック実装（カスタムruleはローカル保管）
+- [x] Phase 0.2.2: SessionStart pull 同期フック（conflict時stdout警告）
+- [x] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）
 - [ ] Phase 0.2.4: dotfiles連携（initialize_ubuntu.2.shにdot_claude clone+link+gitleaks追加）
 
 ## Phase: 0.2.6.同期運用ルールの明文化 (2026-04-23)
@@ -255,7 +255,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] scripts/hooks/post-bash-tips-pointer.sh 新設 — Bash失敗時、環境系エラーシグネチャ該当ならtipsポインタ（ファイル名+見出しのみ、数十トークン）を additionalContext 注入。本文はClaudeがRead判断（段階的開示）
 - [x] settings.json に PostToolUse / PostToolUseFailure（matcher: Bash, timeout 10）両登録 — 成功/失敗イベントは排他のため二重注入なし
 - [x] ユニットテスト6ケースGreen: 成功時無音／exit 127→bashポインタ／FileNotFoundError→python_uvポインタ／pytest失敗（作業系）無音／文字列tool_response対応／tool_response欠落無音
-- [ ] 実地検証（次セッション以降）: 環境系エラー時に [tips-hint] が実際に注入されるか／注入後に修正前Readが起きるか／PostToolUseFailure側の additionalContext サポート（公式docs未明記）
+- [x] 実地検証: 発火実績を transcripts で確認（2026-08 時点で4セッション8行の [traps-hint] 注入）。PostToolUseFailure 側 additionalContext の公式文書化は未確認のまま（両掛け登録で実害なし）。原記述: 環境系エラー時に [tips-hint] が実際に注入されるか／注入後に修正前Readが起きるか／PostToolUseFailure側の additionalContext サポート（公式docs未明記）
 
 ## Phase: 0.2.17.traps/tips分離 (2026-06-10)
 - [x] traps/ 新設＋エラー系7本を移植（bash_powershell-invocation_windows, python_uv_windows, python_http-server_windows, ssh_non-interactive-path, rust_windows, rust_serde, rust_perf-patterns※未追跡だったため内容確認のうえ追跡開始）。~/.claude/traps symlink 作成
@@ -321,12 +321,12 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] dot_claude に develop ブランチ新設（master 8f1418b から分岐、origin へ push）。本ブランチ `feature/claude-md-smart` はルール前の例外として旧命名のまま（ユーザー決定）。gh は show-sai アカウントで honokani/dot_claude を解決できず、issue 操作は Claude 側から不可
 - [x] public 化に向けた監査（ユーザー: 会社でも使うため public 化予定）: gitleaks 全履歴58コミット → leaks なし。履歴全文 grep でメール/URL/IP/ユーザー名パスは実質なし。要判断3点を提示 → ユーザー決定で (1) GLOBAL_PROGRESS 0.0.5 のプロジェクト名2件 を「他3件」へ置換、(2) skills/slide-writing/test_layout.py の見本フットノート（企業名入り）を削除。author メール（個人 Gmail）と、上記2点の**履歴内の残存**は public 化方式（visibility 変更 or squash 新規 repo）の決定待ち
 - [x] read-only モード新設（会社PC等、clone 可・push 不可の環境向け）: `git config dot-claude.readonly true` で有効化。session-end-push.sh は push スキップ、session-start-pull.sh は `--ff-only`（失敗時ワークツリー不変で WARN）。テスト `scripts/test/hooks/test_sync_hooks.sh` 8ケース27アサーション Green。MAINTENANCE.md／features/auto_manage/plan.md・recovery.md に運用と復旧を記載
-- [ ] ユーザー: 各環境で `bash link_claude.sh` 実行（MAINTENANCE.md リンク作成＋TEMPLATE_* 残骸掃除。この Windows 機は作成のみ実施済み、掃除は未実行）
-- [ ] ユーザー: ブランチレビュー → develop へ merge → 正常稼働確認 → master へ merge → push
+- [x] 各環境で `bash link_claude.sh` 実行 — この機=完了（2026-10-01、TEMPLATE_* 残骸4件の掃除込み）・Mac=完了報告（2026-08-19）。他環境が残っていても次回実行で自動回収（stale 掃除は冪等）
+- [x] ブランチレビュー → develop へ merge → 正常稼働確認 → master へ merge → push — 0.2.39 で完了（2026-10-01）
 - [x] 履歴書換（ユーザー指示「履歴削除お願いします」）: スクラッチ clone で `uvx git-filter-repo --replace-text`（4ルール: 0.0.5 の2名→「他3件」、0.2.25 ログ内の2名→「プロジェクト名2件」、見本フットノート4行を削除）→ 61 コミット中 56 を書換、対象文字列の履歴内ヒット 7→0、各ブランチ先頭のツリー差分は想定ファイルのみ（master/develop: GLOBAL_PROGRESS.md・test_layout.py、feature: GLOBAL_PROGRESS.md・GLOBAL_DECISIONS.md）を確認後、ユーザー承認を得て master/develop/feature/claude-md-smart を force push（8f1418b / 8f1418b / bbb3b0f）。この機の repo は fetch + reset で新履歴に整合。GLOBAL_PROGRESS/DECISIONS 内の旧ハッシュ表記7箇所を commit-map で新ハッシュへ更新
   - author メール（個人 Gmail）は本人判断で残す（repo 所有者＝author）。public 化は現 repo の visibility 変更で行う方針
-- [ ] ユーザー: 他の環境で次回起動前に `git -C <dot_claude> fetch origin && git -C <dot_claude> reset --hard origin/master`（未 push のローカル変更があれば先に退避。放置すると SessionStart の `pull --rebase` が旧履歴を rebase しようとして conflict で止まる）
-- [ ] ユーザー: GitHub で visibility を public に変更（旧コミットは GitHub 側キャッシュに一定期間残りうる）
+- [x] 他の環境の fetch+reset — 完了を確認（2026-09-21 の他環境コミットが書換後の新履歴上にある）。原記述: 次回起動前に `git -C <dot_claude> fetch origin && git -C <dot_claude> reset --hard origin/master`（未 push のローカル変更があれば先に退避。放置すると SessionStart の `pull --rebase` が旧履歴を rebase しようとして conflict で止まる）
+- [x] GitHub visibility の public 化 — 完了を確認（2026-10-01、匿名 https で ls-remote 成功）。原記述: GitHub で visibility を public に変更（旧コミットは GitHub 側キャッシュに一定期間残りうる）
 - [ ] B の扱いを決定（協議中: CLAUDE.md はサブエージェントにも配られるため「Fable なら不要」を理由に共通契約を削らない、を原則化するか）
 
 ## Phase: 0.2.26.traps 追加 — zsh chpwd hook によるコマンド置換汚染 (2026-08-19)
@@ -364,7 +364,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.33.traps 追加 — git pull の Cannot rebase onto multiple branches (2026-10-01)
 ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）
 - [x] `traps/git_pull-rebase-multiple-branches.md` 新規 — 別セッションの SessionStart hook が pull 失敗を WARN した件。診断: branch.*.merge 重複なし・FETCH_HEAD 正常・rebase 残骸なし・hook 再実行成功 → FETCH_HEAD の並行書き込み競合（一過性、rebase 開始前の fatal なのでワークツリー無傷）と判定。恒久原因（config の merge 行重複）との切り分け手順も記載
-- [ ] hook の競合対策検討（mkdir ロックで同時 pull をスキップ等）— 2窓同時起動で再発しうるが頻度低・無害のため提案のみ
+- [x] hook の競合対策 — 提案を経て 0.2.34 で実装（ユーザー承認）
 
 ## Phase: 0.2.34.pull hook の並行実行ロック (2026-10-01)
 ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）。0.2.33 の FETCH_HEAD 競合の恒久対策（ユーザー承認済み提案）
@@ -378,6 +378,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json の未コミット差分を確認のうえ commit — 既定モデル opus（ユーザー判断で維持）、agentPushNotifEnabled: true（Remote Control 時のモバイルプッシュ通知。公式設定、/config の「Push when Claude decides」が書き込む。claude-code-guide agent で一次確認）
 - [x] MODEL_ROUTING.md: 適用条件を「メインが Fable のときだけ」→「メインが Opus 以上（Fable / Opus）のとき」へ拡大（ユーザー指示）。メイン=Opus 時は Opus ティア=メインティアで、昇格リトライの上限はメイン自身。振り分け表の最上段を「メイン（Fable / Opus）」へ
 - [x] ローカル master を origin/master（9f96fca）へ fast-forward（behind 3 の解消。ローカル独自コミット無しを確認済み）
+- [x] MODEL_ROUTING.md の適用条件行から出所注記（指示日・旧ルールとの差分）を削除 — 手続きファイルは現行ルールのみ、出所は DECISIONS 責務（同名 DECISIONS 行参照）
 
 ## Phase: 0.2.36.session-start-pull の autostash 撤廃 (2026-09-21)
 - [x] settings.json のコンフリクトマーカー除去: HEAD 版へ復元（deny 11件・PreToolUse削除ブロックhook を全復旧）＋ `skipWorkflowUsageWarning: true` のみ足し戻し。node JSON.parse で valid 確認

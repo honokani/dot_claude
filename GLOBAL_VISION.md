@@ -69,6 +69,11 @@ Claudeとの協働環境を、セッションをまたいで一貫性のある�
 - [philosophy] フックは失敗しても本体動作をブロックしない（exit 0で終了）
 - [philosophy] スクリプトは `~/.claude/scripts/hooks/` に配置（`.claude/hooks/`はClaude Code本体と混同リスク）
 
+### 同期設計（dot_claude の pull/push）
+- [philosophy] 同期経路では stash を一切使わない（autostash 含む）。dirty なら同期しない — settings.json 等、ランタイムが書き換えるファイルが repo に同居する前提では、退避・復元（pop 衝突で設定破壊の実績）より「触らない」が正
+- [philosophy] セッション間・マシン間に調停者は存在しない（各セッションは独立プロセス、共有はディスクのみ）。排他・直列化はファイルシステム（mkdir ロック等）で行う
+- [philosophy] push できない環境は仕組みで区別する（read-only モード）。一次防壁は認証を与えないこと、hook 側の readonly は二次防壁
+
 ### セッション継続方針
 - [philosophy] 主手段は `claude --continue`（会話履歴の完全復元）
 - [philosophy] latest_cacheは「resumeもcontinueもしなかった場合」のフォールバック

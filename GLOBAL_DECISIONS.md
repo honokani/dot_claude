@@ -145,3 +145,4 @@
 | 0.2.39.統合 | 運用 | dirty 判定の範囲 | 追跡ファイルのみ（`--porcelain -uno`） | 全ファイル（master 0.2.36 の原実装） | 未追跡ファイルは rebase と衝突しない（パス衝突時も git が clean に中断）。未追跡で pull を止めると skills/synced/ のような本体生成物が出るたび同期が止まる |
 | 0.2.39.統合 | pj管理 | Phase番号衝突の解消 | master 側 0.2.25〜27 を 0.2.36〜38 へ振替（日付は原記録維持） | feature 側を振替 / 枝番（0.2.25b等） | DECISIONS の Phase 列は参照キーで一意性が必須。feature 側は 0.2.25〜35 が連番で既に相互参照が多く、master 側3件の振替が最小変更。枝番はセマンティックバージョニング準拠ルールから外れる |
 | 0.2.39.統合 | セキュリティ | Mac（会社PC）の push 防止 | GitHub 認証を与えないことを一次防壁、readonly モードは任意の二次防壁 | readonly 必須化 / hook での push 遮断強化 | ユーザー判断（2026-10-01）。認証が無ければ push は構造的に失敗する。readonly は pull の ff-only 化と push スキップを足す無害な追加防壁として推奨に留める |
+| 0.2.27.標準ディレクトリ | 管理境界 | dot_claude 自身への適用 | `_gomi/` のみ（_from_owner/_deliverables は作らない） | 3つとも作成（skill の原則どおり） | dot_claude は設定repoで、ユーザーとのファイル受け渡しは各作業PJ側で発生する。作ると link_claude.sh がトップレベル項目として ~/.claude へ symlink してしまい汚染する（_gomi はリンク除外済み）。GLOBAL_* は pj管理の特例で、標準ディレクトリ規約も _gomi のみ適用 |
