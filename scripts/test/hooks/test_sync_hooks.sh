@@ -151,6 +151,33 @@ sb=$(make_sandbox)
 assert_eq "pull 出力なし" "" "$(run_pull "$sb")"
 assert_eq "push 出力なし" "" "$(run_push "$sb")"
 
+lock_path() { echo "$(clone_dir "$1")/.git/dot-claude-pull.lock"; }
+
+echo "Test 9: pull ロック保持中（新鮮）→ 黙ってスキップ、pull しない、ロックは残す"
+sb=$(make_sandbox); remote_advance "$sb" 1
+mkdir "$(lock_path "$sb")"
+before=$(local_head "$sb")
+out=$(run_pull "$sb"); st=$?
+assert_eq "exit 0" 0 "$st"
+assert_eq "出力なし" "" "$out"
+assert_eq "HEAD 不変（pull していない）" "$before" "$(local_head "$sb")"
+assert_eq "ロックは保持者のもの（残っている）" yes "$([ -d "$(lock_path "$sb")" ] && echo yes || echo no)"
+
+echo "Test 10: 古いロック残骸（TTL超過）→ 回収して pull 実行、終了後ロック無し"
+sb=$(make_sandbox); remote_advance "$sb" 1
+mkdir "$(lock_path "$sb")"
+touch -t 202601010000 "$(lock_path "$sb")"
+out=$(run_pull "$sb"); st=$?
+assert_eq "exit 0" 0 "$st"
+assert_contains "pull 成功の INFO" "INFO: dot_claude: pull 成功" "$out"
+assert_eq "HEAD が remote に一致" "$(remote_head "$sb")" "$(local_head "$sb")"
+assert_eq "ロックが掃除されている" no "$([ -d "$(lock_path "$sb")" ] && echo yes || echo no)"
+
+echo "Test 11: 通常 pull 後にロックが残らない（trap 掃除）"
+sb=$(make_sandbox); remote_advance "$sb" 1
+run_pull "$sb" >/dev/null
+assert_eq "ロック無し" no "$([ -d "$(lock_path "$sb")" ] && echo yes || echo no)"
+
 echo ""
 echo "Result: PASS=$PASS FAIL=$FAIL"
 [ "$FAIL" -eq 0 ]

@@ -13,6 +13,23 @@ fi
 [ -d "$REPO/.git" ] || exit 0
 cd "$REPO" || exit 0
 
+# 並行 pull の直列化（Phase 0.2.34）: FETCH_HEAD はロックされないため、
+# 2セッション同時起動で pull が重なると "Cannot rebase onto multiple branches" になる
+# （traps/git_pull-rebase-multiple-branches.md）。mkdir はアトミックなので
+# 取れなければ別プロセスが pull 中 = 相手に任せて黙ってスキップ。
+# TTL 超えの残骸（pull 中の強制終了等）だけ回収して再試行する
+LOCK="$REPO/.git/dot-claude-pull.lock"
+TTL_MIN="${DOT_CLAUDE_PULL_LOCK_TTL_MIN:-5}"
+if ! mkdir "$LOCK" 2>/dev/null; then
+    if [ -n "$(find "$LOCK" -maxdepth 0 -mmin +"$TTL_MIN" 2>/dev/null)" ]; then
+        rmdir "$LOCK" 2>/dev/null
+        mkdir "$LOCK" 2>/dev/null || exit 0
+    else
+        exit 0
+    fi
+fi
+trap 'rmdir "$LOCK" 2>/dev/null' EXIT
+
 # pull 前の HEAD を記録（表記ゆれに依存しない判定用）
 before=$(git rev-parse HEAD 2>/dev/null || echo "")
 

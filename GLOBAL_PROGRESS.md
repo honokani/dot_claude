@@ -365,3 +365,10 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）
 - [x] `traps/git_pull-rebase-multiple-branches.md` 新規 — 別セッションの SessionStart hook が pull 失敗を WARN した件。診断: branch.*.merge 重複なし・FETCH_HEAD 正常・rebase 残骸なし・hook 再実行成功 → FETCH_HEAD の並行書き込み競合（一過性、rebase 開始前の fatal なのでワークツリー無傷）と判定。恒久原因（config の merge 行重複）との切り分け手順も記載
 - [ ] hook の競合対策検討（mkdir ロックで同時 pull をスキップ等）— 2窓同時起動で再発しうるが頻度低・無害のため提案のみ
+
+## Phase: 0.2.34.pull hook の並行実行ロック (2026-10-01)
+ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）。0.2.33 の FETCH_HEAD 競合の恒久対策（ユーザー承認済み提案）
+- [x] session-start-pull.sh: mkdir ロック（`.git/dot-claude-pull.lock`）で pull を直列化 — 取れなければ別プロセスが pull 中とみなし黙ってスキップ。TTL（既定5分、`DOT_CLAUDE_PULL_LOCK_TTL_MIN` で変更可）超過の残骸は回収して再試行、正常時は trap で掃除
+- [x] push 側はロック対象外 — 競合時も reject→WARN で無害、スキップすると失敗防止ネットが抜けるため
+- [x] test_sync_hooks.sh に3ケース追加（ロック保持中スキップ／残骸回収／trap 掃除）: 11ケース36アサーション Green。実環境でも単発・2並行の smoke 実行でロック残りなしを確認
+- [x] MAINTENANCE.md（検証行）・features/auto_manage/plan.md（Phase 0.2.34 節）更新

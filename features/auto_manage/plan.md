@@ -46,6 +46,12 @@
 - テスト: `scripts/test/hooks/test_sync_hooks.sh`（bare remote + clone のサンドボックスで通常/read-only を8ケース）
 - 運用ルールは MAINTENANCE.md「read-only モード」
 
+### Phase 0.2.34.pull の並行実行ロック（完了）
+- session-start-pull.sh に mkdir ロック（`.git/dot-claude-pull.lock`）
+- 取れなければ別プロセスが pull 中 = 黙ってスキップ（2セッション同時起動で FETCH_HEAD が競合し "Cannot rebase onto multiple branches" になるのを防ぐ。traps/git_pull-rebase-multiple-branches.md）
+- TTL（既定5分、env DOT_CLAUDE_PULL_LOCK_TTL_MIN）超過の残骸は回収して再試行。正常終了時は trap で掃除
+- push 側はロック対象外（競合しても reject→WARN で無害。スキップすると失敗防止ネットが抜ける）
+
 ### Phase 0.2.4.dotfiles連携
 - `dotfiles/initialize_ubuntu.2.sh` に dot_claude clone + link処理追加
 - gitleaks インストールも同スクリプトで統合
