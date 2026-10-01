@@ -360,3 +360,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.32.traps 追加 — `claude -p --bare` の Not logged in (2026-09-23)
 ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）
 - [x] `traps/claude_print-bare-not-logged-in.md` 新規 — pj_building で `claude -p` をバックエンドに使う検証中、`--bare` 付きだと「Not logged in」（`claude auth status` はログイン済み）。外すと成功。`--json-schema`／stdin／`structured_output` の使い方も記載
+
+## Phase: 0.2.33.traps 追加 — git pull の Cannot rebase onto multiple branches (2026-10-01)
+ブランチ: `feature/claude-md-smart` に追加（0.2.28 と同じ運用）
+- [x] `traps/git_pull-rebase-multiple-branches.md` 新規 — 別セッションの SessionStart hook が pull 失敗を WARN した件。診断: branch.*.merge 重複なし・FETCH_HEAD 正常・rebase 残骸なし・hook 再実行成功 → FETCH_HEAD の並行書き込み競合（一過性、rebase 開始前の fatal なのでワークツリー無傷）と判定。恒久原因（config の merge 行重複）との切り分け手順も記載
+- [ ] hook の競合対策検討（mkdir ロックで同時 pull をスキップ等）— 2窓同時起動で再発しうるが頻度低・無害のため提案のみ

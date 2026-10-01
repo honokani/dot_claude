@@ -24,6 +24,7 @@ session-env/
 project_info/
 tasks/
 telemetry/
+skills/synced/
 
 # Skill別の大きな参考資料・キャッシュ
 skills/*/reference/
