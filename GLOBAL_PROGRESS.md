@@ -56,10 +56,10 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] 「無いときは無い」の適用範囲をDECISIONSに明文化 — 強制終了時のみ、正常終了は含まない
 - [x] SessionEndフック解除 — `--continue`常用により不要化。スクリプトは残置
 - [x] セッション継続方針決定 — `claude --continue`をデフォルト運用、latest_cacheはフォールバックに格下げ
-- [x] compact→compact時の二重圧縮劣化問題 → issue #2 へ移管（2026-10-01）
-- [x] ツール呼び出しカウント→compact提案フック検討 → issue #3 へ移管（2026-10-01）
-- [x] /learnコマンド検討 → issue #4 へ移管（2026-10-01）
-- [x] フック重要度モード検討 → issue #5 へ移管（2026-10-01）
+- [x] compact→compact時の二重圧縮劣化問題 → issue #11 へ移管（2026-10-01、旧 #2 から名義移管）
+- [x] ツール呼び出しカウント→compact提案フック検討 → issue #12 へ移管（2026-10-01、旧 #3 から名義移管）
+- [x] /learnコマンド検討 → issue #13 へ移管（2026-10-01、旧 #4 から名義移管）
+- [x] フック重要度モード検討 → issue #14 へ移管（2026-10-01、旧 #5 から名義移管）
 
 ### 調査メモ: everything-claude-code (affaan-m) からのいいとこ取り候補
 - 出典: https://github.com/affaan-m/everything-claude-code
@@ -75,7 +75,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
   - [x] GLOBAL_DECISIONS.md / GLOBAL_PROGRESS.md 内の参照書換 + Phase 0.0.5判断/作業ログ追加
   - [x] scripts/hooks/session-start.sh のロジック書換（VISION.md mtime参照に変更、コメントも追従）
   - [x] scripts/test/hooks/test_compact_hooks.sh のテストデータ書換
-- [x] 既存6プロジェクトのDESIGN.md → VISION.md改名 → issue #6 へ移管（2026-10-01）
+- [x] 既存6プロジェクトのDESIGN.md → VISION.md改名 → issue #15 へ移管（2026-10-01、旧 #6 から名義移管）
 
 ## Phase: 0.0.6.管理対象整理 (2026-04-22)
 - [x] 未追跡skill/tips/plansをgit管理化（blog-crawler, mermaid-to-svg, slide-writing, pdf-reader/scripts/pdf_to_png.py, tips/*.md, plans/, TEMPLATE_PROGRESS.md）
@@ -149,7 +149,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
   - python_windows_http_server.md → python_http-server_windows.md（環境を末尾に統一）
   - windows_terminal_emoji_font_fallback.md → windows-terminal_emoji-font-fallback.md（Windows Terminal を固有名詞として `-` 連結）
 - [x] tips/ssh_non-interactive-path.md を git 追跡開始（`_` → `-` リネーム + add）
-- [x] rust_*.md 系の命名規則レビュー → issue #7 へ移管（2026-10-01）。原記述: 後日レビュー（rust_howtodebug.md は `rust_how-to-debug.md` 相当）
+- [x] rust_*.md 系の命名規則レビュー → issue #16 へ移管（2026-10-01、旧 #7 から名義移管）。原記述: 後日レビュー（rust_howtodebug.md は `rust_how-to-debug.md` 相当）
 
 ### 補足修正: hook script の REPO パス解決 (2026-04-23)
 - [x] 問題発覚: `$HOME/git_clone/dot_claude` ハードコードが Windows環境（実体 `/c/git_clone/dot_claude`）で存在せず、hook が silent に exit 0 していた
@@ -158,7 +158,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] Phase 0.2.1: gitleaks pre-commit フック実装（カスタムruleはローカル保管）
 - [x] Phase 0.2.2: SessionStart pull 同期フック（conflict時stdout警告）
 - [x] Phase 0.2.3: push忘れ警告（SessionEnd/PreCompactでahead検出）
-- [x] Phase 0.2.4: dotfiles連携 → issue #8 へ移管（2026-10-01）
+- [x] Phase 0.2.4: dotfiles連携 → issue #17 へ移管（2026-10-01、旧 #8 から名義移管）
 
 ## Phase: 0.2.6.同期運用ルールの明文化 (2026-04-23)
 - [x] CLAUDE.md に「複数環境ファイルの同期運用」セクション追加（編集前pull / 編集後push / auto-pushは失敗防止ネット）
@@ -327,7 +327,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
   - author メール（個人 Gmail）は本人判断で残す（repo 所有者＝author）。public 化は現 repo の visibility 変更で行う方針
 - [x] 他の環境の fetch+reset — 完了を確認（2026-09-21 の他環境コミットが書換後の新履歴上にある）。原記述: 次回起動前に `git -C <dot_claude> fetch origin && git -C <dot_claude> reset --hard origin/master`（未 push のローカル変更があれば先に退避。放置すると SessionStart の `pull --rebase` が旧履歴を rebase しようとして conflict で止まる）
 - [x] GitHub visibility の public 化 — 完了を確認（2026-10-01、匿名 https で ls-remote 成功）。原記述: GitHub で visibility を public に変更（旧コミットは GitHub 側キャッシュに一定期間残りうる）
-- [x] B′原則の協議 → issue #9 へ移管（2026-10-01）
+- [x] B′原則の協議 → issue #18 へ移管（2026-10-01、旧 #9 から名義移管）
 
 ## Phase: 0.2.26.traps 追加 — zsh chpwd hook によるコマンド置換汚染 (2026-08-19)
 - [x] `traps/zsh_chpwd-hook_dirname-pwd.md` 新規 — dotfiles の `initialize.2.sh` が Mac で `command too long` になった件（zshrc の `chpwd() { _lsl }` が `$(cd "$(dirname "$0")" && pwd)` 内で発火し ls 出力が混入）。解決策 `cd ... >/dev/null && pwd`（bash/zsh 両対応）を推奨順で記載。ファイル名の照合語は誤爆しやすい `cd`/`command` を避けた
@@ -416,5 +416,12 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.40.問題対応の三層ルール導入 (2026-10-01) — issue #1 / feat/01-issue-triage-policy
 - [x] MAINTENANCE.md に三層ルール明文化: 層1=ブロック破損・traps は即時修正（従来どおり）／層2=共有挙動の再設計は issue を立ててから同セッションが feat/NN で修正／層3=非ブロッキングは issue のみ（GLOBAL_PROGRESS に長期 [ ] を貯めない）
 - [x] GLOBAL_VISION 全体指針に「修正は分散、調整は中央（黙って直さない）」を追加
-- [x] 既存バックログ 8件を issue #2〜#9 へ移管し消込。残置2件 = gitleaks ローカルルール配置（必要時にユーザーが作る条件付きメモ）・他環境の pull skip WARN 対処（各環境で自己解消する運用ノート）
-- [x] feat/NN 命名の NN=issue番号 運用が初稼働（本 Phase が #1）。issue は show-sai アカウントから作成（public repo のため作成可。作成者が環境で異なることは MAINTENANCE.md に許容を明記）
+- [x] 既存バックログ 8件を issue #2〜#9 へ移管し消込（後に名義移管で #11〜#18、0.2.41）。残置2件 = gitleaks ローカルルール配置（必要時にユーザーが作る条件付きメモ）・他環境の pull skip WARN 対処（各環境で自己解消する運用ノート）
+- [x] feat/NN 命名の NN=issue番号 運用が初稼働（本 Phase が #1）。issue は show-sai アカウントから作成（→ 0.2.41 で honokani 名義へ方針変更・再作成）
+
+## Phase: 0.2.41.gh アカウントのディレクトリ別固定 (2026-10-01) — issue #10 / feat/10-gh-account-pinning
+- [x] gh に honokani アカウントを追加（ユーザー操作: device flow）。既定アカウントは show-sai のまま維持（仕事側 C:/ws の gh 前提を保護）
+- [x] `scripts/gh-honokani.sh` 新設 — `GH_TOKEN=$(gh auth token --user honokani)` を付与して gh を実行するラッパー（トークンは keyring から都度取得・非保存、未登録環境では ERROR 案内）。直接／~/.claude symlink 経由とも `api user` → honokani を確認
+- [x] MAINTENANCE.md 三層ルールを「issue は honokani 名義・ラッパー経由」へ改訂（0.2.40 の「作成者は環境により異なってよい」を撤回）
+- [x] show-sai 名義の open issues #2〜#9 を honokani 名義 #11〜#18 として再作成（本文に相互参照）、旧版は移管先コメント付きで close。close 済み #1 は履歴として残置
+- [x] 再作成時、`/learn` 始まりのタイトルが MSYS パス変換で `C:/Program Files/Git/learn` に化ける既知の罠（traps/exe_slash-switch-msys-path-conversion_git-bash.md）を #13 で再踏 → `MSYS_NO_PATHCONV=1` で修正済み。旧 #4 も同症状のまま close（修正不要）
