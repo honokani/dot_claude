@@ -372,3 +372,9 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] push 側はロック対象外 — 競合時も reject→WARN で無害、スキップすると失敗防止ネットが抜けるため
 - [x] test_sync_hooks.sh に3ケース追加（ロック保持中スキップ／残骸回収／trap 掃除）: 11ケース36アサーション Green。実環境でも単発・2並行の smoke 実行でロック残りなしを確認
 - [x] MAINTENANCE.md（検証行）・features/auto_manage/plan.md（Phase 0.2.34 節）更新
+
+## Phase: 0.2.35.settings 同期と MODEL_ROUTING 適用条件の拡大 (2026-10-01)
+ブランチ: `feature/claude-md-smart` に追加
+- [x] settings.json の未コミット差分を確認のうえ commit — 既定モデル opus（ユーザー判断で維持）、agentPushNotifEnabled: true（Remote Control 時のモバイルプッシュ通知。公式設定、/config の「Push when Claude decides」が書き込む。claude-code-guide agent で一次確認）
+- [x] MODEL_ROUTING.md: 適用条件を「メインが Fable のときだけ」→「メインが Opus 以上（Fable / Opus）のとき」へ拡大（ユーザー指示）。メイン=Opus 時は Opus ティア=メインティアで、昇格リトライの上限はメイン自身。振り分け表の最上段を「メイン（Fable / Opus）」へ
+- [x] ローカル master を origin/master（9f96fca）へ fast-forward（behind 3 の解消。ローカル独自コミット無しを確認済み）
