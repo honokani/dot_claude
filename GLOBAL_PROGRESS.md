@@ -378,3 +378,33 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] settings.json の未コミット差分を確認のうえ commit — 既定モデル opus（ユーザー判断で維持）、agentPushNotifEnabled: true（Remote Control 時のモバイルプッシュ通知。公式設定、/config の「Push when Claude decides」が書き込む。claude-code-guide agent で一次確認）
 - [x] MODEL_ROUTING.md: 適用条件を「メインが Fable のときだけ」→「メインが Opus 以上（Fable / Opus）のとき」へ拡大（ユーザー指示）。メイン=Opus 時は Opus ティア=メインティアで、昇格リトライの上限はメイン自身。振り分け表の最上段を「メイン（Fable / Opus）」へ
 - [x] ローカル master を origin/master（9f96fca）へ fast-forward（behind 3 の解消。ローカル独自コミット無しを確認済み）
+
+## Phase: 0.2.36.session-start-pull の autostash 撤廃 (2026-09-21)
+- [x] settings.json のコンフリクトマーカー除去: HEAD 版へ復元（deny 11件・PreToolUse削除ブロックhook を全復旧）＋ `skipWorkflowUsageWarning: true` のみ足し戻し。node JSON.parse で valid 確認
+- [x] 残留 autostash entry を drop（diff はセッション scratchpad へ退避）
+- [x] session-start-pull.sh: `git pull --rebase --autostash` → 未コミット変更検出時は pull skip + 警告、clean 時のみ `git pull --rebase`
+- 背景: SessionStart hook の autostash pop が衝突し `settings.json` にコンフリクトマーカーが残留、グローバル設定が JSON パース不能（`Expected object, but received undefined`）のまま放置されていた。ユーザーが起動時エラーとして持ち込み発覚
+- 注意: 復旧前の未コミット作業ツリーは削除系 deny 9件と PreToolUse 削除ブロック hook を除去する内容だった（実施者・時期は不明）。0.2.12/0.2.20 で意図的に入れた多層防御のため復旧側を採用
+
+## Phase: 0.2.37.grep の astral plane 非対応を罠化 (2026-09-21)
+- [x] `traps/grep_astral-plane-emoji_windows.md` 新設: MSYS2/git bash の GNU grep 3.0 が BMP 外文字（絵文字等）にマッチしない罠。回避策を優先順で記載（rg / `LC_ALL=C grep` / `grep -P '\x{...}'` / node）
+- [x] CLAUDE.md コーディングスタイルへ1行昇格（hook 配信不可のため。下記 DECISIONS 参照）
+- 背景: pj_music の note 記事md化で、変換結果の保全チェックに `grep -c '🔊'` を使い 0 件・exit 1 を得て「音声埋め込みが消えた」と誤診。node で数え直して誤検出と判明
+- 検証: `od -c` でファイルは正常(F0 9F 94 8A)。`grep`=0 / `grep -F`=0 / `grep -a`=0 / `grep '日'`=1 / `LC_ALL=C grep`=1 / `grep -P '\x{1F50A}'`=1 / `rg`=1（LANG=ja_JP.UTF-8, GNU grep 3.0）
+
+## Phase: 0.2.38.SyntaxError を hook シグネチャに追加 (2026-09-21)
+- [x] `scripts/hooks/post-bash-traps-pointer.sh`: SIGNATURES の `syntax error` → `syntax ?error`
+- [x] `traps/bash_heredoc-backslash_windows.md` 新設: Bash ツールの heredoc が `\` を `\` に潰す罠
+- 背景: pj_music 作業中、`<<'JSEOF'` で書いた `/\/g` が `/\/g` になり node が SyntaxError。原因調査の過程で、node/Python の `SyntaxError`（空白なし）が既存シグネチャ `syntax error`（空白あり）に一致せず、**構文エラー全般が hook 未配信**だったことが判明
+- 検証: 修正後シグネチャで node `SyntaxError:` / Python `SyntaxError: invalid syntax` / bash `syntax error near` の3種すべて発火、正常出力は無音を確認
+- 測定: `\s` `\n` `\)` は保持、`\`→`\` / `\\`→`\` と **`\` ペアのみ半減**
+
+## Phase: 0.2.39.feature/claude-md-smart と master の統合 (2026-10-01)
+- [x] origin/master（9f96fca、master側 0.2.36〜38 相当）を feature へ merge。conflict 5ファイルを解消
+  - session-start-pull.sh: 両系統を統合 — 並行ロック（feature）→ read-only なら `--ff-only`（feature。dirty でも git が安全に拒否/前進するためガード不要）／通常は「追跡ファイルに未コミット変更あれば pull skip」（master）→ clean 時のみ `git pull --rebase`。**autostash は廃止**（master の事故対策を正式採用）。dirty 判定は `-uno`（未追跡は rebase を妨げないため対象外。master 版から変更）
+  - CLAUDE.md: master 側の新規1行（絵文字・BMP外文字は rg / LC_ALL=C grep）を「環境」節へ移植。master 側に残っていた旧構成の重複行（shell/python）は新構成の「環境」節が既に保持
+  - settings.json: 両側のキーを統合（model: opus / agentPushNotifEnabled / skipWorkflowUsageWarning）、JSON パース検証済み
+  - GLOBAL_PROGRESS / GLOBAL_DECISIONS: master 側エントリの Phase 番号が feature 側と衝突（0.2.25〜27 を両側で別件に使用）していたため、master 側を 0.2.36〜38 へ振替して統合（日付は原記録の 2026-09-21 を維持）
+  - link_claude.sh（zsh fix + _gomi 除外）・post-bash-traps-pointer.sh（SyntaxError シグネチャ）は自動マージ
+- [x] test_sync_hooks.sh を新仕様へ改訂: autostash 前提のケースを dirty-skip 前提に書換え、ケース追加（通常 dirty skip／未追跡のみは pull 続行／read-only dirty 非重複 ff 成功）
+- [x] Mac（会社PC）の push 防止は「GitHub 認証を与えない」を一次防壁とする（ユーザー判断）。readonly モード（`git config dot-claude.readonly true`）は merge により master へも届き、設定すれば pull 挙動も ff-only 化される（推奨・任意）

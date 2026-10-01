@@ -40,10 +40,22 @@ before=$(git rev-parse HEAD 2>/dev/null || echo "")
 readonly_mode=$(git config --bool --get dot-claude.readonly 2>/dev/null)
 
 if [ "$readonly_mode" = "true" ]; then
+    # ff-only は dirty でも安全: 取り込みが dirty ファイルに触れる場合は
+    # git が何も変えずに拒否し、触れない場合は変更を保持したまま前進する
     pull_output=$(git pull --ff-only 2>&1)
 else
-    # 同期 pull（rebase + autostash でローカル変更があっても邪魔しない）
-    pull_output=$(git pull --rebase --autostash 2>&1)
+    # 追跡ファイルに未コミット変更があれば pull しない（stash禁止ルール準拠 /
+    # autostash の pop 衝突で settings.json 等にコンフリクトマーカーが残り、
+    # グローバル設定が壊れる事故の再発防止。autostash は廃止）
+    # 未追跡ファイルは rebase を妨げないため対象外（-uno）
+    if [ -n "$(git status --porcelain -uno 2>/dev/null)" ]; then
+        echo "WARN: dot_claude: 未コミット変更あり、pull skip"
+        git status --short -uno 2>/dev/null | head -5
+        echo "  手動対処: cd $REPO && git status（commit or 破棄してから再起動）"
+        exit 0
+    fi
+    # 同期 pull（clean な作業ツリーのみ。stash は使わない）
+    pull_output=$(git pull --rebase 2>&1)
 fi
 pull_status=$?
 

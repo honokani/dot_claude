@@ -9,7 +9,7 @@ if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
 fi
 
 : "SET_BASE_PATH" && {
-    PTH_D_BASE=$(cd "$(dirname "$0")" && pwd)
+    PTH_D_BASE=$(cd "$(dirname "$0")" >/dev/null && pwd)
 }
 
 # 安全にシンボリックリンクを張る（冪等性対応）

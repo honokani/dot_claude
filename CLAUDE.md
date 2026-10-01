@@ -22,6 +22,7 @@
 ## 環境
 - シェルコマンドは常にbash/POSIX構文（全環境にgit bash or zshあり。環境表記がPowerShellでもBashツールの実体はbash）。PowerShell必須の操作のみ `powershell -File` 経由
 - Bashでのpython実行は `uv run python`（`python` 直打ち禁止、`pyenv` 操作禁止）。コード内に埋め込むパスはWindows形式（MSYS2形式 `/c/...` 不可）
+- 絵文字・BMP外文字の検索/カウントは `rg` か `LC_ALL=C grep`（MSYS2のgrepはastral plane非対応で、存在するのに無言で0件・exit 1。検証スクリプトが誤ってNGを出す）
 - Bash失敗時にhookが注入する [traps-hint] は、修正前に該当 `~/.claude/traps/*.md` をRead
 - セッション冒頭の「=== Previous session context (latest_cache) ===」ブロックは前セッションからの引き継ぎとして扱う
 - `~/.claude/workspace_for_claude/` はClaudeの作業用。自由に使ってよい

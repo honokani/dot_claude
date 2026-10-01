@@ -42,8 +42,8 @@
 ### Phase 0.2.25.read-only モード（完了）
 - `git config dot-claude.readonly true`（clone のローカル config）で有効化
 - session-end-push.sh: read-only なら push をスキップ（認証プロンプト/ダイアログ待ちを起こさない）
-- session-start-pull.sh: read-only なら `git pull --ff-only`。失敗時はワークツリーを変えず WARN（rebase 途中の状態が残らない）
-- テスト: `scripts/test/hooks/test_sync_hooks.sh`（bare remote + clone のサンドボックスで通常/read-only を8ケース）
+- session-start-pull.sh: read-only なら `git pull --ff-only`。失敗時はワークツリーを変えず WARN（rebase 途中の状態が残らない）。通常モードは dirty ガード→`git pull --rebase`（autostash 廃止、Phase 0.2.36/0.2.39）
+- テスト: `scripts/test/hooks/test_sync_hooks.sh`（bare remote + clone のサンドボックスで通常/read-only/ロックを14ケース）
 - 運用ルールは MAINTENANCE.md「read-only モード」
 
 ### Phase 0.2.34.pull の並行実行ロック（完了）

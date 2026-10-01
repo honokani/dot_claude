@@ -120,7 +120,7 @@ assert_contains "read-only の WARN" "read-only モード" "$out"
 assert_eq "HEAD 不変" "$before" "$(local_head "$sb")"
 assert_eq "rebase 途中で止まっていない" no "$(rebase_in_progress "$sb")"
 
-echo "Test 5: read-only / 未保存変更 + remote が同ファイルを更新 → 変更を守って WARN（autostash しない）"
+echo "Test 5: read-only / 未保存変更 + remote が同ファイルを更新 → 変更を守って WARN（stash しない）"
 sb=$(make_sandbox); set_readonly "$sb"
 echo "dirty" >> "$(clone_dir "$sb")/CLAUDE.md"; remote_advance "$sb" 1
 before=$(local_head "$sb")
@@ -130,6 +130,37 @@ assert_contains "read-only の WARN" "read-only モード" "$out"
 assert_eq "HEAD 不変" "$before" "$(local_head "$sb")"
 assert_eq "未保存変更が残る" 1 "$(grep -c dirty "$(clone_dir "$sb")/CLAUDE.md")"
 assert_eq "stash が作られていない" 0 "$(git -C "$(clone_dir "$sb")" stash list | wc -l | tr -d ' ')"
+
+echo "Test 5b: read-only / 未保存変更 + remote は別ファイルを更新 → 変更を保持したまま ff で前進"
+sb=$(make_sandbox); set_readonly "$sb"
+echo "dirty" >> "$(clone_dir "$sb")/local-note.md"; git -C "$(clone_dir "$sb")" add local-note.md; git -C "$(clone_dir "$sb")" "${GITID[@]}" commit -q -m seed-note; git -C "$(clone_dir "$sb")" push -q 2>/dev/null
+git -C "$sb/other" pull -q --rebase 2>/dev/null; remote_advance "$sb" 1
+echo "dirty2" >> "$(clone_dir "$sb")/local-note.md"
+out=$(run_pull "$sb"); st=$?
+assert_eq "exit 0" 0 "$st"
+assert_contains "INFO 出力（ff 成功）" "INFO: dot_claude: pull 成功" "$out"
+assert_eq "HEAD が remote に一致" "$(remote_head "$sb")" "$(local_head "$sb")"
+assert_eq "未保存変更が残る" 1 "$(grep -c dirty2 "$(clone_dir "$sb")/local-note.md")"
+
+echo "Test 5c: 通常モード / 追跡ファイルに未保存変更 + remote 先行 → pull skip の WARN、何も変えない"
+sb=$(make_sandbox)
+echo "dirty" >> "$(clone_dir "$sb")/CLAUDE.md"; remote_advance "$sb" 1
+before=$(local_head "$sb")
+out=$(run_pull "$sb"); st=$?
+assert_eq "exit 0" 0 "$st"
+assert_contains "dirty skip の WARN" "未コミット変更あり、pull skip" "$out"
+assert_eq "HEAD 不変" "$before" "$(local_head "$sb")"
+assert_eq "未保存変更が残る" 1 "$(grep -c dirty "$(clone_dir "$sb")/CLAUDE.md")"
+assert_eq "stash が作られていない" 0 "$(git -C "$(clone_dir "$sb")" stash list | wc -l | tr -d ' ')"
+
+echo "Test 5d: 通常モード / 未追跡ファイルのみ + remote 先行 → pull は止まらない（-uno）"
+sb=$(make_sandbox)
+echo "junk" > "$(clone_dir "$sb")/untracked-junk.md"; remote_advance "$sb" 1
+out=$(run_pull "$sb"); st=$?
+assert_eq "exit 0" 0 "$st"
+assert_contains "INFO 出力（pull 実行）" "INFO: dot_claude: pull 成功" "$out"
+assert_eq "HEAD が remote に一致" "$(remote_head "$sb")" "$(local_head "$sb")"
+assert_eq "未追跡ファイルが残る" yes "$([ -f "$(clone_dir "$sb")/untracked-junk.md" ] && echo yes || echo no)"
 
 echo "Test 6: 通常モード / ローカル commit あり → push hook が push する"
 sb=$(make_sandbox); local_commit "$sb" a
