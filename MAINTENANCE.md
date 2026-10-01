@@ -17,7 +17,7 @@
 - 検証: `bash scripts/test/hooks/test_sync_hooks.sh`（通常/read-only/並行ロックの pull/push 挙動、14ケース）
 
 ## 問題対応の三層ルール（修正は分散、信号は issue）
-issue は GitHub `honokani/dot_claude` に立てる（public のため各環境の gh から作成可。作成者アカウントは環境により異なってよい）。
+issue は GitHub `honokani/dot_claude` に **honokani 名義**で立てる。gh の既定アカウントが別名義の環境でも名義が揃うよう、issue/API 操作は `bash ~/.claude/scripts/gh-honokani.sh <ghサブコマンド>` を使う（`GH_TOKEN=$(gh auth token --user honokani)` を付与するだけのラッパー。トークン非保存。gh に honokani 未登録の環境では先に `gh auth login -h github.com -w`）。
 
 | 層 | 対象 | 動き |
 |---|---|---|
@@ -26,7 +26,7 @@ issue は GitHub `honokani/dot_claude` に立てる（public のため各環境�
 | 3. issue化して待つ | 非ブロッキングの問題・アイデア・レビュー事項 | issue のみ立てる。GLOBAL_PROGRESS に長期 `[ ]` を貯めない（作業中 Phase 内の短期チェックリストは従来どおり） |
 
 - issue の書式: タイトル=1行要約。本文に症状or動機／環境／応急処置の有無／関連 Phase
-- 棚卸し: dot_claude 作業セッションの開始時に `gh issue list -R honokani/dot_claude` を一瞥。放置が目立てば定期棚卸し（cloud Routine 等）を検討
+- 棚卸し: dot_claude 作業セッションの開始時に `bash ~/.claude/scripts/gh-honokani.sh issue list -R honokani/dot_claude` を一瞥。放置が目立てば定期棚卸し（cloud Routine 等）を検討
 
 ## 記録（GLOBAL_* 3ファイル）
 - GLOBAL_VISION.md（設計思想）／GLOBAL_PROGRESS.md（変更ログ）／GLOBAL_DECISIONS.md（判断根拠）。記録基準は pj管理（`pj-management` skill）と同一

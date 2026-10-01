@@ -116,6 +116,6 @@
   },
   "effortLevel": "high",
   "tui": "fullscreen",
-  "agentPushNotifEnabled": true,
-  "skipWorkflowUsageWarning": true
+  "skipWorkflowUsageWarning": true,
+  "agentPushNotifEnabled": true
 }
