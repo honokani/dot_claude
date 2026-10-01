@@ -16,6 +16,18 @@
 - 運用: read-only 環境では clone を編集・commit しない（同期ルールの「編集後に push」は適用外）。持ち帰りたい変更（traps 追記等）は差分やファイル内容として報告し、push できる環境で反映する
 - 検証: `bash scripts/test/hooks/test_sync_hooks.sh`（通常/read-only/並行ロックの pull/push 挙動、14ケース）
 
+## 問題対応の三層ルール（修正は分散、信号は issue）
+issue は GitHub `honokani/dot_claude` に立てる（public のため各環境の gh から作成可。作成者アカウントは環境により異なってよい）。
+
+| 層 | 対象 | 動き |
+|---|---|---|
+| 1. 即時修正 | 自セッションをブロックする破損（同期不能・設定破損・hook クラッシュ）、エラー知見の traps 記録 | 従来どおりその場で修正・記録・push。事後に GLOBAL_PROGRESS へ |
+| 2. issue→同セッション修正 | 共有挙動の再設計（hook の方式変更・CLAUDE.md の意味変更・MODEL_ROUTING 等） | **着手前に issue を立て**、同セッションが `feat/NN-<機能>-<趣旨>`（NN=issue番号）で修正してよい。issue は待ち行列でなく他セッションへの調整信号。完了時に commit を添えて close |
+| 3. issue化して待つ | 非ブロッキングの問題・アイデア・レビュー事項 | issue のみ立てる。GLOBAL_PROGRESS に長期 `[ ]` を貯めない（作業中 Phase 内の短期チェックリストは従来どおり） |
+
+- issue の書式: タイトル=1行要約。本文に症状or動機／環境／応急処置の有無／関連 Phase
+- 棚卸し: dot_claude 作業セッションの開始時に `gh issue list -R honokani/dot_claude` を一瞥。放置が目立てば定期棚卸し（cloud Routine 等）を検討
+
 ## 記録（GLOBAL_* 3ファイル）
 - GLOBAL_VISION.md（設計思想）／GLOBAL_PROGRESS.md（変更ログ）／GLOBAL_DECISIONS.md（判断根拠）。記録基準は pj管理（`pj-management` skill）と同一
 - ~/.claude 作業時・CLAUDE.md 変更時に更新する
