@@ -11,6 +11,7 @@ Claudeとの協働環境を、セッションをまたいで一貫性のある�
 - [philosophy] 自動化はフック層、判断はClaude、記録はファイル。責務を分離する
 - [philosophy] 「無いときは無い」— 強制終了等でデータが欠損する前提で設計する
 - [philosophy] CLAUDE.mdは「共通契約（全実行主体）」＋「対話セッション限定ルール」の2部構成。サブエージェント（Explore/Plan以外、モデル問わず）にも配布されるため、対話前提のルール（承認・提示・pj管理）は後半に隔離し、前半はどのモデルが読んでも成立する内容に限る
+- [philosophy] 修正は分散、調整は中央 — 問題は踏んだセッションが文脈ごと直すのが正（環境固有の再現性・エラー出力の鮮度）。ただし共有挙動を変える時は黙って直さず、先に issue で信号を出す（無信号の分散修正が同一 hook の2系統分岐を招いた実績）
 - [philosophy] 発動保証と手続き本体を分離する。CLAUDE.mdには発動トリガー（1〜2行）だけ置き、手続き本体はskill／参照ファイル（bulk-verification・pj-management・MODEL_ROUTING.md・MAINTENANCE.md）に置く。~/.claude保守ルールはdot_claude作業時のみ必要なので、`.claude/CLAUDE.md`のimport shim経由でそのセッションだけに読ませる
 
 ### 情報アーキテクチャ
