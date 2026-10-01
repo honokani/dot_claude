@@ -408,3 +408,6 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
   - link_claude.sh（zsh fix + _gomi 除外）・post-bash-traps-pointer.sh（SyntaxError シグネチャ）は自動マージ
 - [x] test_sync_hooks.sh を新仕様へ改訂: autostash 前提のケースを dirty-skip 前提に書換え、ケース追加（通常 dirty skip／未追跡のみは pull 続行／read-only dirty 非重複 ff 成功）
 - [x] Mac（会社PC）の push 防止は「GitHub 認証を与えない」を一次防壁とする（ユーザー判断）。readonly モード（`git config dot-claude.readonly true`）は merge により master へも届き、設定すれば pull 挙動も ff-only 化される（推奨・任意）
+- [x] 昇格: develop を master(9f96fca)→feature 先頭(01e690c) へ ff、検証後 master も ff。3ブランチ=origin 全一致
+- [x] 検証: test_sync_hooks 14ケース49アサーション Green／統合 hook の実機実行（無音・ロック残なし）／link_claude.sh 冪等実行（TEMPLATE_* の stale symlink 4件を設計どおり掃除）／headless 新セッションが統合後 CLAUDE.md（共通契約＋grep罠行）を読むことを確認
+- [ ] 他環境: 次回セッションで旧 hook の dirty ガードにより pull skip の WARN が出る場合、settings.json 等の未コミット差分を一度 commit か破棄すれば以後は自動同期に復帰
