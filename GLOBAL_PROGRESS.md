@@ -430,3 +430,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] MAINTENANCE.md 三層ルール: 起票手段を環境タイプ別の表に改訂 — gh+honokani 登録環境（個人PC・複数アカウント会社PC）=ラッパー／GitHub 認証を置かない環境（read-only 運用の機微込み会社PC）=**起票せず issue 文面を報告に残して他環境から起票**（持ち帰り運用と同型）。閲覧のみは匿名 curl 可を追記
 - [x] scripts/gh-honokani.sh: 未登録時エラーを環境タイプ分岐の案内に修正（旧メッセージは認証を置かない環境に gh auth login を促す誤誘導だった）
 - 背景: ユーザーから実環境は3タイプ（通常会社PC／honokani のみの個人PC／認証を置かない機微込み会社PC）との指摘。現行文面は gh 必須前提で第3タイプが運用不能だった
+
+## Phase: 0.2.43.traps 追加 — `env` の `-u` 順序 / `zsh -n` の `$(<file)` 評価 (2026-10-01)
+ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
+- [x] `traps/env_unset-option-after-assignment.md` 新規 — dotfiles issue #3 のテスト作成中、`env A=1 -u B cmd` が `env: '-u': No such file or directory`。env は最初の `NAME=VALUE` でオプション解析を止める → `-u` は代入より前に置く
+- [x] `traps/zsh_syntax-check-n-file-substitution.md` 新規 — 同上、`zsh -n` がトップレベルの `$(<file)` を評価して `no such file or directory` で非0終了（構文は正常）。トップレベルでは `$(cat -- file)` か関数内へ
