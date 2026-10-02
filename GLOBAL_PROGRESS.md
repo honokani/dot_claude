@@ -435,3 +435,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
 - [x] `traps/env_unset-option-after-assignment.md` 新規 — dotfiles issue #3 のテスト作成中、`env A=1 -u B cmd` が `env: '-u': No such file or directory`。env は最初の `NAME=VALUE` でオプション解析を止める → `-u` は代入より前に置く
 - [x] `traps/zsh_syntax-check-n-file-substitution.md` 新規 — 同上、`zsh -n` がトップレベルの `$(<file)` を評価して `no such file or directory` で非0終了（構文は正常）。トップレベルでは `$(cat -- file)` か関数内へ
+
+## Phase: 0.2.44.traps 追加 — ssh 切断でリモートのジョブが止まる / pytorch3d の bin_size (2026-10-02)
+ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
+- [x] `traps/ssh_remote-job-killed-on-disconnect.md` 新規 — pj_make3dbypic で `ssh host '<長いジョブ>'` 中に `client_loop: send disconnect: Connection reset by peer`（exit 255）、リモートのジョブも SIGHUP で消えた → `setsid nohup ... > log 2>&1 < /dev/null &` で切り離してログを読む。備考に、待ち合わせの `ssh host 'pgrep -f X'` が自分の shell に当たって終わらない件（`"[X]..."` で外す）
+- [x] `traps/pytorch3d_rasterize-bin-size.md` 新規 — 同上、4096² の UV を `bin_size=64` でラスタライズして `bin_size too small, number of faces per bin must be less than 22`（実際は 1 辺の区画の数の上限）→ `bin_size = 2^ceil(log2(size/21))`・`max_faces_per_bin=面数`。備考に、faces_per_pixel ≥ 2 で共有する辺の上の画素が両側に数えられる件（重心座標の最小で除く）
