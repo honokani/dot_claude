@@ -460,3 +460,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
 - [x] `traps/cuda_driver-insufficient-comfy-kitchen_wsl.md` 新規 — pj_30croquis で学習データのキャプション付けに TextGenerate（Krea2 の Qwen3-VL-4B）を使ったところ `CUDA driver version is insufficient for CUDA runtime version`。comfy_kitchen の flash_attention_decode がドライバ 560.94 で動かない → 根本はドライバ更新、回避は可用判定を False にするモジュール（ドライバ版は cuDriverGetVersion で取得）
 - 備考: エラー文が hook の SIGNATURES に一致しないため [traps-hint] では配信されない（0.2.46 の備考と同じ扱い）
+
+## Phase: 0.2.48.traps 追加 — OS クラッシュ後に git の ref がゼロ埋め (2026-10-08)
+ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
+- [x] `traps/git_bad-ref-zeroed-after-crash_windows.md` 新規 — pj_30croquis でブルースクリーン（0x139）後、作業ブランチの ref が NUL 埋めになり `git status` が全ファイル A・`git fsck` が `bad ref for .git/logs/HEAD`。reflog 最終行の新しい側ハッシュを書き戻して復旧（壊れた ref は _gomi へ退避）
+- 備考: エラー文が hook の SIGNATURES に一致しないため [traps-hint] では配信されない
