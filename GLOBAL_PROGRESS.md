@@ -455,3 +455,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] `traps/pkill_self-match_linux.md` 新規 — 同上、`pkill -f "<pattern>"` が自分の `bash -c` に当たって exit 15 → `[m]ain.py` 形式
 - [x] `traps/bash_pipe-masks-exit-status.md` 新規 — 本 repo への反映中、`git pull --ff-only | tail && git commit && git push` で pull 中断が隠れてローカルだけ commit → push 拒否。自分の commit を `reset --mixed HEAD~1` で戻して復旧
 - 備考: 2・3・5件目のエラー文（`Recv failure` / `Failure writing output` / 出力なしの exit 15）は hook の SIGNATURES に一致せず [traps-hint] で配信されない（追加するなら層2: issue を立てて hook を改修）
+
+## Phase: 0.2.47.traps 追加 — ComfyUI の TextGenerate が古いドライバで落ちる (2026-10-08)
+ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
+- [x] `traps/cuda_driver-insufficient-comfy-kitchen_wsl.md` 新規 — pj_30croquis で学習データのキャプション付けに TextGenerate（Krea2 の Qwen3-VL-4B）を使ったところ `CUDA driver version is insufficient for CUDA runtime version`。comfy_kitchen の flash_attention_decode がドライバ 560.94 で動かない → 根本はドライバ更新、回避は可用判定を False にするモジュール（ドライバ版は cuDriverGetVersion で取得）
+- 備考: エラー文が hook の SIGNATURES に一致しないため [traps-hint] では配信されない（0.2.46 の備考と同じ扱い）
