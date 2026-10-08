@@ -445,3 +445,13 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
 - [x] `traps/pytorch3d_join-meshes-texture-type.md` 新規 — pj_make3dbypic で部品ごとに色の付け方を変えて join_meshes_as_scene し `All meshes in the batch must have the same type of texture.`、最近傍の部品を混ぜて `All textures must have the same sampling_mode.` → 単色は小さな TexturesUV にし、取り方をそろえる
 - [x] `traps/zsh_unquoted-var-no-word-split_ssh.md` 新規 — 同上、ssh 先（ログインシェルが zsh）で `set -- $x` が分かれず、`ValueError: string is not a file` → zsh は `${=x}`、両用なら関数の引数で渡す
+
+## Phase: 0.2.46.traps 追加 — Triton の Python.h / portproxy の接続リセット / MSYS と curl / wsl.exe の変数展開 / pkill の自己マッチ / パイプが失敗を隠す (2026-10-08)
+ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
+- [x] `traps/triton_python-h-missing_wsl.md` 新規 — pj_30croquis で WSL の ComfyUI（Krea2）初回推論時、Triton の実行時ビルドが `fatal error: Python.h: No such file or directory` → `python3.12-dev`
+- [x] `traps/curl_connection-reset-portproxy_windows.md` 新規 — 同上、Windows→WSL の `127.0.0.1:8188` が `Recv failure: Connection was reset`。ユーザ既存の netsh portproxy（`0.0.0.0:8188→WSL IP`）が先取り → 別ポートへ
+- [x] `traps/curl_devnull-msys-no-pathconv_windows.md` 新規 — 同上、`MSYS_NO_PATHCONV=1` を export した shell で `curl -o /dev/null` が (23) → 変数は wsl.exe の行だけに付ける（逆向きの `exe_slash-switch-...` と相互参照）
+- [x] `traps/wsl_exec-variable-expansion_windows.md` 新規 — 同上、`wsl.exe -- bash -c '...$t...'` の `$t` が既定シェルで先に展開されて空 → `--exec`
+- [x] `traps/pkill_self-match_linux.md` 新規 — 同上、`pkill -f "<pattern>"` が自分の `bash -c` に当たって exit 15 → `[m]ain.py` 形式
+- [x] `traps/bash_pipe-masks-exit-status.md` 新規 — 本 repo への反映中、`git pull --ff-only | tail && git commit && git push` で pull 中断が隠れてローカルだけ commit → push 拒否。自分の commit を `reset --mixed HEAD~1` で戻して復旧
+- 備考: 2・3・5件目のエラー文（`Recv failure` / `Failure writing output` / 出力なしの exit 15）は hook の SIGNATURES に一致せず [traps-hint] で配信されない（追加するなら層2: issue を立てて hook を改修）
