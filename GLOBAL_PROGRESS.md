@@ -465,3 +465,10 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
 - [x] `traps/git_bad-ref-zeroed-after-crash_windows.md` 新規 — pj_30croquis でブルースクリーン（0x139）後、作業ブランチの ref が NUL 埋めになり `git status` が全ファイル A・`git fsck` が `bad ref for .git/logs/HEAD`。reflog 最終行の新しい側ハッシュを書き戻して復旧（壊れた ref は _gomi へ退避）
 - 備考: エラー文が hook の SIGNATURES に一致しないため [traps-hint] では配信されない
+
+## Phase: 0.2.49.traps 追加 — Ollama の qwen3-vl 思考型で答えが空 / wsl.exe の WSAETIMEDOUT / Python の write_text で CRLF (2026-10-09)
+ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
+- [x] `traps/ollama_qwen3-vl-thinking-empty-content.md` 新規 — `qwen3-vl:8b` は思考型で `think: false` が効かず、出力上限を思考で使い切って `content` が空。`qwen3-vl:8b-instruct` で解決
+- [x] `traps/wsl_service-wsaetimedout_windows.md` 新規 — wsl.exe が一時的に `Wsl/Service/WSAETIMEDOUT`（UTF-16 で化ける → `WSL_UTF8=1` で読める）。再実行で成功
+- [x] `traps/git_needs-update-crlf-python-write-text_windows.md` 新規 — Windows の `Path.write_text` が CRLF で書き、LF に戻した後も `git status` が M（needs update）。`newline="\n"` で書く／`git add -u` で index を取り直す
+- 備考: 3 件ともエラー文が hook の SIGNATURES に一致しないため [traps-hint] では配信されない
