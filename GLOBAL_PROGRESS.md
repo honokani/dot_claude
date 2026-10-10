@@ -480,3 +480,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - 発端: ユーザーの指示「PowerShell 系を使うことは無いと思うが、一応禁止に入れておく」
 - 備考: Claude Code の文書では、Bash の deny ルールがあると PowerShell ツールは無効になる（この環境のセッションにも PowerShell ツールが無い）。今回の直しは、Bash から PowerShell を呼ぶ形の削除を止めるもの
 - 備考: 直した後は、コマンドの行に削除系の語（引用符の中を含む）があると止まる。文中にそれらの語を含む追記は、スクリプトをファイルに書いてから実行する
+## Phase: 0.2.51.traps 追加 — TOML で Python 流に文字列を分けると Invalid value (2026-10-10)
+ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
+- [x] `traps/toml_string-concat-invalid-value.md` 新規 — pj_loratrain で判定ツリーの叩き台（tree.toml）に長い文字列を `("..." "...")` と書き、tomllib が `TOMLDecodeError: Invalid value`。TOML には括弧の式も文字列の連結も無い → 複数行の基本文字列を行末の `\` でつなぐ。備考に、tomllib（TOML 1.0）ではインラインテーブルも 1 行で書く件
+- 備考: このときのエラーは `uv run ... python` の実行中の例外で、hook の SIGNATURES に一致するかは確かめていない
