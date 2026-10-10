@@ -19,6 +19,8 @@
       "Bash(xargs rm *)",
       "Bash(xargs unlink *)",
       "Bash(shred *)",
+      "Bash(*Remove-Item*)",
+      "Bash(*remove-item*)",
       "Bash(git stash *)",
       "Bash(git stash)"
     ]
