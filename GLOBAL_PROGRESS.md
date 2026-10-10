@@ -472,3 +472,11 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] `traps/wsl_service-wsaetimedout_windows.md` 新規 — wsl.exe が一時的に `Wsl/Service/WSAETIMEDOUT`（UTF-16 で化ける → `WSL_UTF8=1` で読める）。再実行で成功
 - [x] `traps/git_needs-update-crlf-python-write-text_windows.md` 新規 — Windows の `Path.write_text` が CRLF で書き、LF に戻した後も `git status` が M（needs update）。`newline="\n"` で書く／`git add -u` で index を取り直す
 - 備考: 3 件ともエラー文が hook の SIGNATURES に一致しないため [traps-hint] では配信されない
+## Phase: 0.2.50.削除防止フックが止めていなかった件を修正 (2026-10-10) — issue #20 / feat/20-delete-hook-block
+- [x] `features/auto_manage/output/scripts/hooks/pre-tool-block-delete.sh`: `exit 1` → `exit 2`。PreToolUse で exit 1 は止めない（エラー表示だけでコマンドは実行される）。pj_loratrain のセッションで、`echo rd` が検出されたうえで実行されたことから判明
+- [x] 同: 区切りに引用符（`"` `'`）と開き括弧を足し、`powershell -Command "Remove-Item x"`・`pwsh -c 'del x'`・`(rm x)` も検出
+- [x] `scripts/test/hooks/test_block_delete_hook.sh` 新規（止める 11・通す 4 の 15 ケース）。直す前は 11 件失敗、直した後は 15 件 Green。実際の Claude Code でも `echo rd` が止まることを確認
+- [x] settings.json の deny に `Bash(*Remove-Item*)`・`Bash(*remove-item*)`（フックが動かないときの保険）。`echo xRemove-Itemx`（フックの検出条件には当たらない）が deny で止まることを確認
+- 発端: ユーザーの指示「PowerShell 系を使うことは無いと思うが、一応禁止に入れておく」
+- 備考: Claude Code の文書では、Bash の deny ルールがあると PowerShell ツールは無効になる（この環境のセッションにも PowerShell ツールが無い）。今回の直しは、Bash から PowerShell を呼ぶ形の削除を止めるもの
+- 備考: 直した後は、コマンドの行に削除系の語（引用符の中を含む）があると止まる。文中にそれらの語を含む追記は、スクリプトをファイルに書いてから実行する
