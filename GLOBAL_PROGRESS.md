@@ -484,3 +484,6 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
 - [x] `traps/toml_string-concat-invalid-value.md` 新規 — pj_loratrain で判定ツリーの叩き台（tree.toml）に長い文字列を `("..." "...")` と書き、tomllib が `TOMLDecodeError: Invalid value`。TOML には括弧の式も文字列の連結も無い → 複数行の基本文字列を行末の `\` でつなぐ。備考に、tomllib（TOML 1.0）ではインラインテーブルも 1 行で書く件
 - 備考: このときのエラーは `uv run ... python` の実行中の例外で、hook の SIGNATURES に一致するかは確かめていない
+## Phase: 0.2.52.traps 追加 — git merge -F - が標準入力を読めない (2026-10-11)
+ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
+- [x] `traps/git_merge-file-stdin.md` 新規 — pj_loratrain で `git merge --no-ff <branch> -F - <<'EOF'` が `error: could not read file '-'`。`git commit -F -` と違い、merge の `-F` は「-」を標準入力として扱わない → `-m` で渡す（段落は `-m` を重ねる）か、ファイルに書いて `-F <ファイル>`。`checkout && merge` とつないでいると checkout は済んでいる点も書いた
