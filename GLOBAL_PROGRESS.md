@@ -487,3 +487,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.52.traps 追加 — git merge -F - が標準入力を読めない (2026-10-11)
 ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
 - [x] `traps/git_merge-file-stdin.md` 新規 — pj_loratrain で `git merge --no-ff <branch> -F - <<'EOF'` が `error: could not read file '-'`。`git commit -F -` と違い、merge の `-F` は「-」を標準入力として扱わない → `-m` で渡す（段落は `-m` を重ねる）か、ファイルに書いて `-F <ファイル>`。`checkout && merge` とつないでいると checkout は済んでいる点も書いた
+## Phase: 0.2.53.現在形の文書には今あるものだけ (2026-10-11) — issue #21 / feat/21-current-docs-only
+- [x] CLAUDE.md 共通契約「変更管理」に 1 行: 現在の姿を書く文書（README・VISION 等）には今あるもの（使い方・ルール）だけを書く。外した機能・過去の状態の説明は書かず、経緯は DECISIONS・PROGRESS・git 履歴に置く
+- 発端: pj_loratrain で README に「古い写しに `replace` の行があれば、それも消す。もう使いません」と書いた。ユーザーの指摘「この手の、もう無いものの説明は、README や VISION には不要です。DECISION か PROGRESS にいるはずなので大丈夫です」「このルールはもっと上位の統括的なルールにしたい」
+- 備考: pj_loratrain のプロジェクトのメモリ（readme-vision-current-only）は、この共通ルールと重なるので外す
