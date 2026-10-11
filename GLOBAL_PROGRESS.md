@@ -491,3 +491,6 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] CLAUDE.md 共通契約「変更管理」に 1 行: 現在の姿を書く文書（README・VISION 等）には今あるもの（使い方・ルール）だけを書く。外した機能・過去の状態の説明は書かず、経緯は DECISIONS・PROGRESS・git 履歴に置く
 - 発端: pj_loratrain で README に「古い写しに `replace` の行があれば、それも消す。もう使いません」と書いた。ユーザーの指摘「この手の、もう無いものの説明は、README や VISION には不要です。DECISION か PROGRESS にいるはずなので大丈夫です」「このルールはもっと上位の統括的なルールにしたい」
 - 備考: pj_loratrain のプロジェクトのメモリ（readme-vision-current-only）は、この共通ルールと重なるので外す
+## Phase: 0.2.54.traps 追加 — wsl.exe --exec で /usr/sbin のコマンドが見つからない (2026-10-11)
+ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
+- [x] `traps/wsl_exec-sbin-execvpe_windows.md` 新規 — pj_loratrain で WSL の VHDX を圧縮する前に `wsl.exe -d <distro> -u root --exec fstrim -av` が `execvpe(fstrim) failed: No such file or directory`。起動した先の PATH には `/usr/sbin` があるのに、`--exec` は名前で渡した `/usr/sbin` のコマンド（fstrim・sysctl）を見つけない（root でも一般ユーザーでも）→ フルパスで渡すか `bash -lc` を通す。探し場所が Relay 自身の PATH（glibc 既定 `/bin:/usr/bin`）というのは推測
