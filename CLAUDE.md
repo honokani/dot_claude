@@ -50,8 +50,8 @@
 3. 検証: 「報告と検証」の基準（外部経路優先）
 
 ## 委譲
-- bulk系依頼（「全件」「全項目」「全ファイル」「全テスト」等の「全X」）は自力処理前に必ず `bulk-verification` skill を invoke
-  - Why: 項目単位の観測可能性確保。単一コンテキストの全件処理は網羅性を外部検証できない
+- 次の意図を含む依頼は、自力処理前に該当 skill を invoke: bulk系依頼（「全件」「全X」）→ `bulk-verification`／フロー図・PFD の作成→ `pfd`／pj管理3ファイルの初期化・更新→ `pj-management`／Mermaid 図の SVG 化→ `mermaid-to-svg`／PDF の読み取り→ `pdf-reader`／pptx スライド作成→ `slide-writing`／qcheck の品質チェック→ `qcheck`
+  - Why: skill 一覧の description との照合はモデル任せで漏れる（PFD で実績）。bulk は項目単位の観測可能性確保のため、漏れると虚偽完了報告になる
 - サブエージェント委譲のモデルは `~/.claude/MODEL_ROUTING.md` に従う（簡単・定型作業をメインモデルのまま委譲しない）
 
 ## pj管理

@@ -47,3 +47,4 @@ issue は GitHub `honokani/dot_claude` に **honokani 名義**で立てる。起
 - hook 本体は `scripts/hooks/`（settings.json に登録）。設計思想は `GLOBAL_VISION.md`、自動管理（pull/push・gitleaks）の設計と復旧手順は `features/auto_manage/`
 - latest_cache: SessionStart hook（session-start-cache.sh）がマーカー探索→鮮度判定→注入→old/ 移動まで全自動処理。Claude 側の手動確認は不要
 - traps 配信: Bash 失敗時に post-bash-traps-pointer.sh が [traps-hint] を注入。照合キー=traps ファイル名の主題語（`traps/README.md`）
+- skill の発動: 経路は `/name`・CLAUDE.md「委譲」の意図→skill 一覧・モデルによる description 照合の3つで、3つ目に保証は無い。skill を追加・改名したら CLAUDE.md の一覧に1項目足す（description のトリガー語と揃える）
