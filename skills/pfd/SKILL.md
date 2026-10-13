@@ -3,12 +3,19 @@ name: pfd
 description: 「フローを描いて」「ProcessFlowDiagramで」「PFDで」と指示された場合に、drawio/mermaid/箇条書きいずれかの形式でPFD準拠のフロー図を生成する。タスク＝関数、オブジェクト＝入出力の関数的composabilityを確保
 metadata:
   author: honokani
-  version: 1.2.0
+  version: 2.0.0
 ---
 
 # ProcessFlowDiagram (PFD) 描画スキル
 
 「フローを描いて」「ProcessFlowDiagramで」「PFDで」と指示された場合は本スキルに従う。出力形式は **drawio / mermaid / 箇条書き** のいずれか（ユーザー指示または文脈で判断）。形式が異なっても**PFD精神（タスク＝関数、オブジェクト＝入出力、交互連鎖、具体性）は共通**。
+
+## 記号の割り当て（原典準拠）
+
+- **丸 ○ ＝ タスク**（原典の「プロセス」）、**四角または帳票記号 ＝ オブジェクト**（原典の「成果物」）。清水吉男氏の PFD の割り当てと同じ
+- 用語は本スキルでは「タスク／オブジェクト」を使う（原典: プロセス／成果物）
+- 出典: アンリツエンジニアリング「はじめてのPFD」（清水吉男「PFDの書き方 第3版」に基づく）「プロセス: 一重線の○」「成果物（入出力）: 帳票記号で表す」 https://affordd.jp/previous/conference2016/affordd_conference2016_ws_PFD.pdf ／ DeNA SWET「成果物: 四角で示します」「プロセス: 丸で示します」 https://swet.dena.com/entry/2024/11/15/120000
+- 原典に無い本スキル独自の規則: 矢印にラベルを付けない（原典は線上に成果物の構成要素を書いてよい）、点線はループの戻り専用（DeNA は「初回の実行では入力がない」の意味で使う）、上→下の1方向、色分け。これらは意図した差であり、記号の割り当ては差にしない
 
 ## 設計思想（Why）
 
@@ -42,8 +49,8 @@ PFDは**タスクを関数として扱う**フロー記法。
 
 | 要素 | drawio style | mermaid記法 | 箇条書き記法 | 用途 |
 |------|-------------|-------------|-------------|------|
-| 丸オブジェクト | `ellipse` | `X(("..."))` | `◯ ...` | 実態のあるファイル・生成物・入力物（以下「オブジェクト」） |
-| 四角オブジェクト | `rounded=0` (rectangle) | `X["..."]` | `[ ... ]` | タスク・関数・プロシージャ（以下「タスク」） |
+| 丸（タスク） | `ellipse` | `X(("..."))` | `◯ ...` | タスク・関数・プロシージャ（以下「タスク」）。原典の「プロセス」 |
+| 四角（オブジェクト） | `rounded=0` (rectangle)。帳票記号 `shape=document` でもよい | `X["..."]`。帳票なら `X@{ shape: doc, label: "..." }` | `[ ... ]` | 実態のあるファイル・生成物・入力物（以下「オブジェクト」）。原典の「成果物」 |
 | 実線矢印 | `endArrow=classic` | `-->` | `→` | タスクへの入力、タスクからの出力 |
 | 点線矢印 | `endArrow=classic;dashed=1` | `-.->` | `-.->` | **フローが戻る場合のみ**。ラベル文字は付けない |
 | 補助入力矢印（実線） | orthogonalEdgeStyleで端を迂回（`dashed`は使わない） | `-->`（迂回配置で表現、ラベルなし） | `補助入力:` として配下列挙（矢印自体は無地） | 主フローとは別系統の設定等。ノードの色（橙=設定・緑=外部成果物）で区別する |
@@ -109,31 +116,31 @@ PFDは**タスクを関数として扱う**フロー記法。
                  │    [メイン入力]             │
                  │     (中央上)               │
                  │        │                   │
-                 └──→ [タスク1] ←─────────────┘
+                 └──→ (タスク1) ←─────────────┘
                           │
                      [中間生成物]
                       (中央)
                     ┌────┴────┐
-               [タスク2]    [タスク3]
+               (タスク2)    (タスク3)
                  (左)         (右)
                   │            │
               [出力A]      [出力B]
                   │            │
-                  └──→ [統合] ←┘
+                  └──→ (統合) ←┘
                          │
                     [最終出力]
 ```
 
 ## drawio実装メモ
 
-- 丸: `style="ellipse;whiteSpace=wrap;html=1;"`
-- 四角: `style="rounded=0;whiteSpace=wrap;html=1;"`
+- 丸（タスク）: `style="ellipse;whiteSpace=wrap;html=1;"`
+- 四角（オブジェクト）: `style="rounded=0;whiteSpace=wrap;html=1;"`（帳票記号にするなら `style="shape=document;whiteSpace=wrap;html=1;"`）
 - 実線矢印: `style="endArrow=classic;html=1;"`（`value`属性は設定しない＝矢印にテキストを持たせない）
 - 点線矢印: `style="endArrow=classic;html=1;dashed=1;"`（**ループの戻り専用**。補助入力・未実装への矢印には使わない）
 - 直角折れ矢印: `style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=...;entryY=...;exitX=...;exitY=...;"`
 - グループ: `style="rounded=1;dashed=1;fillColor=none;strokeColor=#666666;fontSize=10;fontColor=#666666;verticalAlign=top;align=left;"`
-- 未実装オブジェクト: `style="ellipse;whiteSpace=wrap;html=1;dashed=1;strokeColor=#999999;fontColor=#999999;fillColor=#f5f5f5;"`
-- 未実装タスク: `style="rounded=0;whiteSpace=wrap;html=1;dashed=1;strokeColor=#999999;fontColor=#999999;fillColor=#f5f5f5;"`
+- 未実装オブジェクト: `style="rounded=0;whiteSpace=wrap;html=1;dashed=1;strokeColor=#999999;fontColor=#999999;fillColor=#f5f5f5;"`
+- 未実装タスク: `style="ellipse;whiteSpace=wrap;html=1;dashed=1;strokeColor=#999999;fontColor=#999999;fillColor=#f5f5f5;"`
 - 未実装への矢印: `style="endArrow=classic;html=1;strokeColor=#999999;"`（`dashed=1`は付けない。グレーの実線）
 
 ### 色パレット（drawio / mermaid 共通）
@@ -154,9 +161,9 @@ mermaid で PFD を描くときの最小規約:
 
 ```mermaid
 flowchart TD
-    O1(("オブジェクト名<br/>(具体的な実体)"))
-    T1["タスク名"]
-    O2(("次のオブジェクト"))
+    O1["オブジェクト名<br/>(具体的な実体)"]
+    T1(("タスク名"))
+    O2["次のオブジェクト"]
     O1 --> T1 --> O2
 
     classDef obj fill:#dae8fc,stroke:#6c8ebf
@@ -165,7 +172,7 @@ flowchart TD
     class T1 task
 ```
 
-- オブジェクトは `(( ))`（円）、タスクは `[ ]`（矩形）
+- タスクは `(( ))`（円）、オブジェクトは `[ ]`（矩形）または `@{ shape: doc, label: "..." }`（帳票）
 - ノードIDは `O*` / `T*` の命名で役割を明示すると可読性が上がる
 - 長いラベルは `<br/>` で改行
 - 補助入力は実線 `-->` でつなぎ、ノードの色（橙=設定・緑=外部成果物）で主フローと区別する。**点線にもラベルにもしない**
@@ -176,8 +183,8 @@ flowchart TD
 
 ### XML記述順序
 1. グループ枠（最背面）
-2. オブジェクト（丸）
-3. タスク（四角）
+2. オブジェクト（四角）
+3. タスク（丸）
 4. 矢印（エッジ）
 
 ## 生成手順
