@@ -525,3 +525,6 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] skills/pfd/SKILL.md（v2.1.0→v2.2.0）: 記号の割り当てを「楕円＝タスク（原典は○）、長方形＝オブジェクト（原典は帳票記号）」に。割り当て（プロセスが丸い側、成果物が四角い側）は原典のまま、形だけ変える。mermaid はタスク `([ ])`（楕円の代わり。`(( ))` の円は使わない）、オブジェクト `[ ]`（帳票 `doc` は使わない）。drawio は `ellipse` の幅を広く取る。使用要素の表、drawio・mermaid の実装メモ、XML 記述順序を揃えた
 - [x] features/auto_manage/flow_diagram.md: タスク10個を `([ ])` に。冒頭の記法の説明も
 - 発端: pj_agriculture の PFD 4枚を見たユーザー「図のフォーマットはオブジェクトは長方形、関数・タスクは楕円にさせてください」（2026-10-13）。円はラベルが長いと大きくなり、帳票は波線の分だけ縦に伸びて、図が間延びしていた
+## Phase: 0.2.61._deliverables/ を作業場所にし、確定版だけを公開場所へ (2026-10-13) — issue #28 / feat/28-deliverables-workplace
+- [x] skills/pj-management/SKILL.md「標準ディレクトリ」の `_deliverables/`: 作業場所であること、ユーザーが確定と言った版だけを docs/ などの公開場所へ写すこと、公開場所では直接直さないこと、報告では `_deliverables/` のパスを示すことを追加
+- 発端: pj_agriculture で docs/ を直しながら _deliverables/ に写しを置く運用にしていたら、ユーザーは写しを見ていて変更が見えなかった。「_deliverables に置け。いつも。それ以外の話をしていない。確定してから外に出せ。外でいじるな」
