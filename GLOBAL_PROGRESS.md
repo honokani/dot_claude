@@ -521,3 +521,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] skills/pj-management/SKILL.md「標準ディレクトリ」の `_deliverables/`: 「`yymmddhhmi_<内容の名称>/` のディレクトリを作成時刻で作り、その中に置く（例: `2610131640_概要設計書の案_prereview/`）」を追加。レビュー途中の写しも対象に含めた
 - 発端: pj_agriculture で、レビュー途中の設計資料の写しを `_deliverables/` に「prereview」の印を付けて置きたいという依頼と、「yymmddhhmi_内容の名称、のディレクトリを_deliverablesに作って配置というルールを全体へ更新したい」（ユーザー、2026-10-13）
 - 備考: pj_agriculture の既存の `_deliverables/01_初回メモ/`〜`03_先方の期待の整理/` は番号付きのまま（改名はユーザーに確認）
+## Phase: 0.2.60.pfd skill の形を、タスク＝楕円、オブジェクト＝長方形に (2026-10-13) — issue #27 / feat/27-pfd-ellipse-rect
+- [x] skills/pfd/SKILL.md（v2.1.0→v2.2.0）: 記号の割り当てを「楕円＝タスク（原典は○）、長方形＝オブジェクト（原典は帳票記号）」に。割り当て（プロセスが丸い側、成果物が四角い側）は原典のまま、形だけ変える。mermaid はタスク `([ ])`（楕円の代わり。`(( ))` の円は使わない）、オブジェクト `[ ]`（帳票 `doc` は使わない）。drawio は `ellipse` の幅を広く取る。使用要素の表、drawio・mermaid の実装メモ、XML 記述順序を揃えた
+- [x] features/auto_manage/flow_diagram.md: タスク10個を `([ ])` に。冒頭の記法の説明も
+- 発端: pj_agriculture の PFD 4枚を見たユーザー「図のフォーマットはオブジェクトは長方形、関数・タスクは楕円にさせてください」（2026-10-13）。円はラベルが長いと大きくなり、帳票は波線の分だけ縦に伸びて、図が間延びしていた
