@@ -528,3 +528,6 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.61._deliverables/ を作業場所にし、確定版だけを公開場所へ (2026-10-13) — issue #28 / feat/28-deliverables-workplace
 - [x] skills/pj-management/SKILL.md「標準ディレクトリ」の `_deliverables/`: 作業場所であること、ユーザーが確定と言った版だけを docs/ などの公開場所へ写すこと、公開場所では直接直さないこと、報告では `_deliverables/` のパスを示すことを追加
 - 発端: pj_agriculture で docs/ を直しながら _deliverables/ に写しを置く運用にしていたら、ユーザーは写しを見ていて変更が見えなかった。「_deliverables に置け。いつも。それ以外の話をしていない。確定してから外に出せ。外でいじるな」
+## Phase: 0.2.62.公開場所へ写した資料に断面日時を書く (2026-10-13) — issue #29 / feat/29-published-cut-date
+- [x] skills/pj-management/SKILL.md「標準ディレクトリ」の `_deliverables/`: 公開場所へ写すときは README と各資料の冒頭に断面（日時、元コミット、確定済み／確定前、作業中の版の場所）を書く、を追加
+- 発端: ユーザー「docs という一級オブジェクトの見た目で古いのが問題。断面日付がある方は問題ない」（2026-10-13）。pj_agriculture の docs/03_概要設計書の案/ に断面の行を入れた
