@@ -517,3 +517,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] templates/VISION.md: 「今の対象と範囲」節（任意）を追加。「入出力情報」の説明を同じ表現に直し、原文を書かない旨のコメントを足した
 - 発端: pj_agriculture で VISION.md を 9/28 から受け取りログ（原文3つ＋読み＋ユーザー談）にしていた。「入出力情報」を「受領した原文とその読み」と読んだため。ユーザー「古い道程は PROGRESS、古い判断は DECISIONS、VISION は今向かっている北極星」「VISION に VISION でない物を溜める発想を捨てろ」「あなたが正しく読めるように表現を直して」
 - 備考: 規則そのものは pj-management の棲み分け（VISION＝ポールスター）と CLAUDE.md 変更管理（0.2.53）にあった。足りなかったのは「受領物をどこに置くか」の明示
+## Phase: 0.2.59._deliverables/ の置き方を時刻付きディレクトリに統一 (2026-10-13) — issue #26 / feat/26-deliverables-timestamp-dir
+- [x] skills/pj-management/SKILL.md「標準ディレクトリ」の `_deliverables/`: 「`yymmddhhmi_<内容の名称>/` のディレクトリを作成時刻で作り、その中に置く（例: `2610131640_概要設計書の案_prereview/`）」を追加。レビュー途中の写しも対象に含めた
+- 発端: pj_agriculture で、レビュー途中の設計資料の写しを `_deliverables/` に「prereview」の印を付けて置きたいという依頼と、「yymmddhhmi_内容の名称、のディレクトリを_deliverablesに作って配置というルールを全体へ更新したい」（ユーザー、2026-10-13）
+- 備考: pj_agriculture の既存の `_deliverables/01_初回メモ/`〜`03_先方の期待の整理/` は番号付きのまま（改名はユーザーに確認）
