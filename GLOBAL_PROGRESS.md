@@ -494,3 +494,10 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.54.traps 追加 — wsl.exe --exec で /usr/sbin のコマンドが見つからない (2026-10-11)
 ブランチ: develop 直（traps 追加の小修正）→ master へ fast-forward
 - [x] `traps/wsl_exec-sbin-execvpe_windows.md` 新規 — pj_loratrain で WSL の VHDX を圧縮する前に `wsl.exe -d <distro> -u root --exec fstrim -av` が `execvpe(fstrim) failed: No such file or directory`。起動した先の PATH には `/usr/sbin` があるのに、`--exec` は名前で渡した `/usr/sbin` のコマンド（fstrim・sysctl）を見つけない（root でも一般ユーザーでも）→ フルパスで渡すか `bash -lc` を通す。探し場所が Relay 自身の PATH（glibc 既定 `/bin:/usr/bin`）というのは推測
+## Phase: 0.2.55.skill 参照のキーワード一覧を CLAUDE.md に (2026-10-13) — issue #22 / feat/22-skill-trigger-list
+- [x] CLAUDE.md「委譲」: bulk だけにあった発動トリガー行を、意図→skill のキーワード一覧 1 行に統合（bulk-verification・pfd・pj-management・mermaid-to-svg・pdf-reader・slide-writing・qcheck）。Why は「description 照合はモデル任せで漏れる（PFD で実績）」と bulk の観測可能性の 2 点
+- [x] MAINTENANCE.md「仕組みの所在」: skill の発動経路は 3 つ（`/name`・CLAUDE.md の一覧・モデルの description 照合）で 3 つ目に保証が無いこと、skill を追加・改名したら一覧に 1 項目足すこと
+- 発端: pj_agriculture で「PFDで情報の流れを2枚」「pfdは記述ルールだけでもツール読んどいてね」と頼まれたのに `pfd` skill を invoke せず、Web と「はじめてのPFD」PDF で記法を調べて丸と四角が逆の図を描いた。ユーザー「ルールはskillsにあるでしょ…書いてるけど無視したのか」「Claude.mdに1行、skillsを参照するキーワードリストがほしい」「bulkはなんで特別扱いされてるんだ？skill参照ルールでは？」
+- 備考: CLAUDE.md に PFD の記載は過去にも無かった（`git log -S pfd -- CLAUDE.md` 該当なし）。規則は skills/pfd/SKILL.md の description と冒頭、GLOBAL_DECISIONS 0.2.0 にだけあった。ハーネス側にキーワードの自動照合や hook は無い
+- 備考: 見出し「委譲」は MODEL_ROUTING.md が参照しているので変えていない
+- 備考: develop が master より 9 コミット遅れていた（0.2.46〜0.2.54 は master だけに入っていた）ので、develop を master に合わせてから feat を載せ直した
