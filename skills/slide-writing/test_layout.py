@@ -86,10 +86,31 @@ def add_background(slide, image_path=None):
     return pic
 
 
+# タイトル: 文字数に応じて24-20ptを動的選択（1行に収める）
+# 目安（スライド幅25.4cm, 左右マージン1cm, Meiryo太字, 全角換算）:
+#   24pt: ~26文字, 22pt: ~29文字, 20pt: ~32文字
+TITLE_THRESHOLDS = [
+    (26, 24),
+    (29, 22),
+    (32, 20),
+]
+TITLE_FALLBACK = 18  # 33文字~（原則ここまで長くしない）
+
+
+def title_font_size(text: str) -> int:
+    n = len(text)
+    for threshold, size in TITLE_THRESHOLDS:
+        if n <= threshold:
+            return size
+    return TITLE_FALLBACK
+
+
 def add_title(slide, text):
-    """全スライド共通位置にタイトルを配置."""
+    """全スライド共通位置にタイトルを配置（フォントサイズは文字数で動的。1行に収める）."""
+    size = title_font_size(text)
     add_textbox(slide, LEFT, TITLE_TOP, BODY_W, TITLE_H,
-                text, 24, bold=True, color=BLACK)
+                text, size, bold=True, color=BLACK)
+    return size
 
 
 def add_headline(slide, text):
