@@ -34,3 +34,10 @@ uv管理のPythonからはシステムのPATHにあるコマンド（`claude` �
 [claude]
 path = "C:/usr/local/claude.cmd"
 ```
+
+## 隔離モード（`-I`）で日本語の出力が文字化けする
+
+`uv run python -I script.py` で日本語を print すると（リダイレクト先のファイルも）、cp932 で書かれて化ける。exit 0 なので気づきにくい。
+
+- 原因: `-I` は `-E` を含むので、`PYTHONIOENCODING`・`PYTHONUTF8` などの環境変数が無視される（前に `PYTHONIOENCODING=utf-8` を付けても効かない）
+- 対策: コマンドラインのオプションで UTF-8 モードにする → `uv run python -I -X utf8 script.py`

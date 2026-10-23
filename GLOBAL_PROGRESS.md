@@ -545,3 +545,6 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.66.traps: robocopy の集計行ラベルがコードページで言語を変える罠 (2026-10-23) — 層1（issue なし）
 - [x] traps/robocopy_summary-label-locale_powershell.md を新設: 既定の shift_jis では集計行が日本語（`バイト:`）、`[Console]::OutputEncoding = UTF8` 設定後は英語（`Bytes :`）になり、英語固定の解析が昇格プロセス側でだけ無言で外れた。対処は robocopy を呼ぶプロセスごとの UTF8 設定と、ラベルに依存しない行位置（3 行目）での解析
 - 発端: pj_this_pc の空き容量調査で、管理者権限で起動した計測スクリプトだけ全件 -1 になり、UAC のやり直しが 2 回増えた（2026-10-23）
+## Phase: 0.2.67.traps: uv run python -I で日本語の出力が文字化けする罠 (2026-10-23) — 層1（issue なし）
+- [x] traps/python_uv_windows.md に「隔離モード（`-I`）で日本語の出力が文字化けする」を追記: `-I` は `-E` を含むので `PYTHONIOENCODING`・`PYTHONUTF8` が無視され、日本語の print（リダイレクト先も）が cp932 で書かれる。対処は `-X utf8`（コマンドラインのオプションなので `-I` でも効く）
+- 発端: pj_kite でランキングの試算スクリプトを `uv run python -I` で実行したら、日本語のラベルが化けた。`PYTHONIOENCODING=utf-8` を前に付けても直らなかった（2026-10-23）
