@@ -548,3 +548,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.67.traps: uv run python -I で日本語の出力が文字化けする罠 (2026-10-23) — 層1（issue なし）
 - [x] traps/python_uv_windows.md に「隔離モード（`-I`）で日本語の出力が文字化けする」を追記: `-I` は `-E` を含むので `PYTHONIOENCODING`・`PYTHONUTF8` が無視され、日本語の print（リダイレクト先も）が cp932 で書かれる。対処は `-X utf8`（コマンドラインのオプションなので `-I` でも効く）
 - 発端: pj_kite でランキングの試算スクリプトを `uv run python -I` で実行したら、日本語のラベルが化けた。`PYTHONIOENCODING=utf-8` を前に付けても直らなかった（2026-10-23）
+
+## Phase: 0.2.68.traps: Git Bash の grep が CR を見つけられない罠 (2026-10-23) — 層1（issue なし）
+- [x] traps/git_needs-update-crlf-python-write-text_windows.md に「grep で \r を探せない」を追記: MSYS2 の GNU grep 3.0 はテキストのファイルから CR を落として照合するので `grep -c $'\r'` は CRLF でも 0（`-U` で正しく数える）。`$( )` の中の `$'\r'` は空のパターンになり全行を数える。確かめ方の候補（Python のバイト数え・`grep -cU`・`file`・Grep ツール）を並べた
+- 発端: pj_kite で Python のパッチスクリプト（write_text）が .rs / .ts を CRLF にしたのを、grep で「なし」と誤判定した。`git add` の `CRLF will be replaced by LF` で気づいた（2026-10-23）
