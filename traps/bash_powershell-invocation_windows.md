@@ -31,7 +31,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "C:\path\to\script.ps1"
 ```
 
 bash は文字列展開せず、PowerShell が自前でファイルを読む。`$_`, `$env:`, パイプ内変数すべて素のまま通る。
-日本語コメントや正規表現も問題なし（UTF-8 BOM 付きで保存しなくても通る）。
+日本語を書くなら UTF-8 BOM 付きで保存するか、ASCII だけで書く。BOM 無しは Windows PowerShell 5.1 が cp932 として読み、改行が LF だと日本語の行の次の行が黙って消えることがある（`powershell_bomless-ps1-cp932_windows.md`）。
 
 ### 2. シングルクォートで囲む（短い 1 行コマンド向け）
 
@@ -52,5 +52,5 @@ powershell -Command "Get-ChildItem \$env:TEMP | %{ \$_.Name }"
 ## 派生のハマりどころ
 
 - **PowerShell スクリプトを自分が消す Temp 配下に置かない**: `$env:TEMP` を消すスクリプトの出力先が `$env:TEMP` だと、スクリプト実行中に Claude Code 自身の出力ファイル (`C:\Users\<user>\AppData\Local\Temp\claude\...`) も消えて、bash 経由の戻り値が読めなくなる。スクリプトは `~/.claude/workspace_for_claude/` に置く。
-- **日本語混じり Regex のパースエラー**: 行末バッククォート継続行 + 日本語 + `match` を組み合わせるとパーサが文字化けして死ぬことがある。ASCII のみで `-match` を書く方が安全。
+- **日本語混じり Regex のパースエラー**: 行末バッククォート継続行 + 日本語 + `match` を組み合わせるとパーサが文字化けして死ぬことがある。ASCII のみで `-match` を書く方が安全。原因は BOM 無しを cp932 で読むことと思われる（推測。`powershell_bomless-ps1-cp932_windows.md`）。
 - **管理者権限が必要なコマンド** (`DISM /Online /Cleanup-Image`, `reagentc /info` 等) は Claude Code からは実行不可。ユーザーに管理者ターミナルでの実行を依頼する。

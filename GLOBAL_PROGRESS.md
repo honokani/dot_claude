@@ -552,3 +552,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.68.traps: Git Bash の grep が CR を見つけられない罠 (2026-10-23) — 層1（issue なし）
 - [x] traps/git_needs-update-crlf-python-write-text_windows.md に「grep で \r を探せない」を追記: MSYS2 の GNU grep 3.0 はテキストのファイルから CR を落として照合するので `grep -c $'\r'` は CRLF でも 0（`-U` で正しく数える）。`$( )` の中の `$'\r'` は空のパターンになり全行を数える。確かめ方の候補（Python のバイト数え・`grep -cU`・`file`・Grep ツール）を並べた
 - 発端: pj_kite で Python のパッチスクリプト（write_text）が .rs / .ts を CRLF にしたのを、grep で「なし」と誤判定した。`git add` の `CRLF will be replaced by LF` で気づいた（2026-10-23）
+
+## Phase: 0.2.69.traps: npm 版 claude が仮置きのまま起動しない罠／BOM 無し .ps1 で次の行が消える罠 (2026-10-25) — 層1（issue なし）
+- [x] traps/claude_native-binary-not-installed_windows.md を新設: 古い版のまま起動しているセッションの自動更新が 30 分おきに `npm install -g` を繰り返し、EBUSY（実行中の本体がパッケージのフォルダの中にある）と ENOSPC で失敗して、`bin/claude.exe` が 500 バイトの仮置きのまま残った。`claude-code-win32-x64/package.json` は新しい版なのに `claude.exe` は古い版だったので、エラー文の言う `install.cjs` の再実行では直らない。npm キャッシュの tarball と SHA-256 で照合した本体（`bin/claude.exe.old.*`）をリネームで戻して直した
+- [x] traps/powershell_bomless-ps1-cp932_windows.md を新設し、traps/bash_powershell-invocation_windows.md の「BOM 無しでも日本語コメントは通る」を訂正: Windows PowerShell 5.1 は BOM 無しの .ps1 を cp932 で読み、改行が LF のファイルで行末の文字が cp932 の先頭バイトで終わると、次の行がコメントに飲まれる（再現: BOM 無し・LF で次の行が実行されない。行末 ASCII・BOM 付き・CRLF なら実行される）
+- 発端: pj_check_freeapp でユーザー「ターミナルでclaudeというコマンドが効かないです」（2026-10-25）。調べるための .ps1 で `$base` が空になり、パスが `C:\bin\claude.exe` になった
