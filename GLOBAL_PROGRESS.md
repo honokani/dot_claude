@@ -557,3 +557,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] traps/claude_native-binary-not-installed_windows.md を新設: 古い版のまま起動しているセッションの自動更新が 30 分おきに `npm install -g` を繰り返し、EBUSY（実行中の本体がパッケージのフォルダの中にある）と ENOSPC で失敗して、`bin/claude.exe` が 500 バイトの仮置きのまま残った。`claude-code-win32-x64/package.json` は新しい版なのに `claude.exe` は古い版だったので、エラー文の言う `install.cjs` の再実行では直らない。npm キャッシュの tarball と SHA-256 で照合した本体（`bin/claude.exe.old.*`）をリネームで戻して直した
 - [x] traps/powershell_bomless-ps1-cp932_windows.md を新設し、traps/bash_powershell-invocation_windows.md の「BOM 無しでも日本語コメントは通る」を訂正: Windows PowerShell 5.1 は BOM 無しの .ps1 を cp932 で読み、改行が LF のファイルで行末の文字が cp932 の先頭バイトで終わると、次の行がコメントに飲まれる（再現: BOM 無し・LF で次の行が実行されない。行末 ASCII・BOM 付き・CRLF なら実行される）
 - 発端: pj_check_freeapp でユーザー「ターミナルでclaudeというコマンドが効かないです」（2026-10-25）。調べるための .ps1 で `$base` が空になり、パスが `C:\bin\claude.exe` になった
+
+## Phase: 0.2.70.依頼が無い限り作業中pjの範囲外を確認しない (2026-10-25) — issue #33 / feat/33-scope-no-other-pj
+- [x] CLAUDE.md 共通契約に「## 作業範囲」を新設: 依頼が無い限り、作業中pjの範囲外（他pjのファイル・メモリ・会話ログの読込、ホームや複数pjをまたぐ横断検索、それらを元にした提案）を確認しない。範囲外の確認が要るなら実行せず聞く（サブエージェントは判断事項として返す）。CLAUDE.md・skill が指示する参照（traps・MAINTENANCE.md 等）は除く。Why 付き
+- 発端: pj_this_pc で WSL ディストリ削除の確認中、ホーム全体を grep して他pjのメモリ2件を読み、他pjのメモリ修正を申し出た。ユーザー「めちゃくちゃお節介。基本的にこちらから依頼するまでpj範囲を飛び出した確認を一切禁止する。これ重大な越権行為。」「このｐｊに書いても、そのmemoを別のｐｊで確認しようとする行為が越権だと言っている。…もっと上位の設定を」（2026-10-25）
