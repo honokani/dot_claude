@@ -573,3 +573,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.73.traps: 複数のファイルに tail -2 を使うと失敗する罠を追加 (2026-10-25) — 層1（issue なし）
 - [x] traps/tail_obsolete-option-multiple-files.md を新設: `tail -2 a b` は `option used in invalid context -- 2` で失敗する（数字だけの昔の書き方は、ファイルが 1 つのときだけ通る）。`tail -n 2` と書く
 - 発端: pj_kite でシミュレーションを裏で回した最後に `tail -2 main.txt extra.txt` を付け、計算は終わっていたのに知らせが failed になった（2026-10-25）
+
+## Phase: 0.2.74.traps: Python の write_text で CRLF になる罠に観測を追記 (2026-10-25) — 層1（issue なし）
+- [x] traps/git_needs-update-crlf-python-write-text_windows.md の観測に 1 行足した: pj_kite でパッチ用の Python スクリプトが `newline="\n"` なしで書き、.tsx / .md が CRLF になった（この罠の pj_kite での観測は 3 回目）
+- 発端: pj_kite の順位の画面の作業で、`git diff --stat` の警告で気づいた（2026-10-25）

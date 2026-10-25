@@ -28,3 +28,4 @@
 - 2026-10-09 pj_30croquis（パッチ用の Python スクリプトで .py / .toml / .md を書き換えた）
 - 2026-10-23 pj_kite（パッチ用の Python スクリプトで .rs / .ts を書き換えた。`grep -q $'\r'` で調べて「CRLF なし」と誤って判断し、`git add` の警告で気づいた）
 - 2026-10-25 pj_kite（コミット前の確かめで、変更した 35 ファイルをループと `$(grep -cU $'\r' "$f")` で調べ、全部 CRLF と誤検出した。この罠の「`$( )` の中では使わない」を、ループの中では見落とした）
+- 2026-10-25 pj_kite（同じ日の 2 回目。パッチ用の Python スクリプトで .tsx / .md を `write_text(s, encoding="utf-8")` で書き換え、`newline="\n"` を付け忘れた。`git diff --stat` が出した `CRLF will be replaced by LF` で気づき、`git ls-files --eol` で 3 ファイルが `w/crlf` なのを確かめ、`sed -i 's/\r$//'` で戻した。対処 1 を、書く前に思い出せていない）
