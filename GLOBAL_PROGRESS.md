@@ -569,3 +569,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.72.traps: gh で honokani の private リポジトリが見つからない罠を追加 (2026-10-25) — 層1（issue なし）
 - [x] traps/gh_graphql-repo-inactive-account.md を新設: 既定のアカウント（show-sai）からは honokani の private リポジトリが見えず、`GraphQL: Could not resolve to a Repository` で失敗する。`scripts/gh-honokani.sh` を通す（既定は切り替えない）。このエラー文では hook の `[traps-hint]` が出ないことも書いた
 - 発端: pj_kite で issue を見ようとして、文脈の要約のあとに honokani のトークンを付け忘れた（2026-10-25）
+
+## Phase: 0.2.73.traps: 複数のファイルに tail -2 を使うと失敗する罠を追加 (2026-10-25) — 層1（issue なし）
+- [x] traps/tail_obsolete-option-multiple-files.md を新設: `tail -2 a b` は `option used in invalid context -- 2` で失敗する（数字だけの昔の書き方は、ファイルが 1 つのときだけ通る）。`tail -n 2` と書く
+- 発端: pj_kite でシミュレーションを裏で回した最後に `tail -2 main.txt extra.txt` を付け、計算は終わっていたのに知らせが failed になった（2026-10-25）
