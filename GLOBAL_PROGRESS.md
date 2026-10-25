@@ -565,3 +565,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.71.traps: grep で \r を探す罠に、ループで調べたときの誤検出と確かめ方を追記 (2026-10-25) — 層1（issue なし）
 - [x] traps/git_needs-update-crlf-python-write-text_windows.md: 確かめ方に `git ls-files --eol`（git が見ている形）を足し、複数のファイルはこれか Python で数えると書いた。ループで `$(grep -cU $'\r' "$f")` と数を受け取る形でも、全部の行を数える誤検出が起きることと、その観測を追記
 - 発端: pj_kite でコミット前に 35 ファイルの改行を確かめ、全部 CRLF と誤検出した（実際は全部 LF）。「`$( )` の中では使わない」は書いてあったが、ループの中で見落とした（2026-10-25）
+
+## Phase: 0.2.72.traps: gh で honokani の private リポジトリが見つからない罠を追加 (2026-10-25) — 層1（issue なし）
+- [x] traps/gh_graphql-repo-inactive-account.md を新設: 既定のアカウント（show-sai）からは honokani の private リポジトリが見えず、`GraphQL: Could not resolve to a Repository` で失敗する。`scripts/gh-honokani.sh` を通す（既定は切り替えない）。このエラー文では hook の `[traps-hint]` が出ないことも書いた
+- 発端: pj_kite で issue を見ようとして、文脈の要約のあとに honokani のトークンを付け忘れた（2026-10-25）
