@@ -577,3 +577,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.74.traps: Python の write_text で CRLF になる罠に観測を追記 (2026-10-25) — 層1（issue なし）
 - [x] traps/git_needs-update-crlf-python-write-text_windows.md の観測に 1 行足した: pj_kite でパッチ用の Python スクリプトが `newline="\n"` なしで書き、.tsx / .md が CRLF になった（この罠の pj_kite での観測は 3 回目）
 - 発端: pj_kite の順位の画面の作業で、`git diff --stat` の警告で気づいた（2026-10-25）
+
+## Phase: 0.2.75.traps: python -I の日本語出力の罠に、落ちる場合とスクリプト側の直し方を追記 (2026-10-27) — 層1（issue なし）
+- [x] traps/python_uv_windows.md の「隔離モード（`-I`）」節: 化けるだけでなく、cp932 に無い文字（`≈` など）では `UnicodeEncodeError` で落ちることと、スクリプト側の直し方（`sys.stdout.reconfigure(encoding="utf-8")`）を足した
+- 発端: pj_traincolor で答え合わせの集計スクリプトを `uv run python -I` で回し、`≈` を含む行で落ちた（2026-10-27）
