@@ -33,6 +33,12 @@ check 2 "cmd del"                              Bash 'cmd /c del foo.txt'
 check 2 "rd at the end"                        Bash 'echo rd'
 check 2 "find -delete"                         Bash 'find . -name "*.tmp" -delete'
 check 2 "xargs rm"                             Bash 'ls | xargs rm'
+check 2 "xargs -0 rm -f"                       Bash 'find . -name "*.tmp" -print0 | xargs -0 rm -f'
+check 2 "xargs -I{} rm"                        Bash 'ls | xargs -I{} rm {}'
+check 2 "xargs -n 1 rm (flag with a value)"    Bash 'ls | xargs -n 1 rm'
+check 2 "xargs rmdir"                          Bash 'ls -d */ | xargs rmdir'
+check 2 "xargs sh -c rm (direct rule)"         Bash "ls | xargs -I{} sh -c 'rm {}'"
+check 2 "find -delete followed by ;"           Bash 'find . -name "*.tmp" -delete; echo done'
 check 2 "PowerShell tool Remove-Item"          PowerShell 'Remove-Item foo.txt'
 check 2 "PowerShell tool alias ri"             PowerShell 'ri foo.txt'
 
@@ -41,6 +47,12 @@ check 0 "git status"                           Bash 'git status'
 check 0 "grep for the word del"                Bash 'grep -n "del" notes.txt'
 check 0 "rm inside words"                      Bash 'npm run format && echo firmware riddle'
 check 0 "mv to _gomi"                          Bash 'mv a.txt _gomi/'
+check 0 "xargs stat --format"                  Bash 'ls *.log | xargs stat --format="%s %n"'
+check 0 "xargs grep permission"                Bash 'git ls-files | xargs grep -l "permission denied"'
+check 0 "xargs -n 1 stat --format"             Bash 'ls | xargs -n 1 stat --format=%s'
+check 0 "rmeta in a comment after xargs"       Bash 'find . -name "*.rlib" | xargs du -ch   # rmeta is elsewhere'
+check 0 "find pattern containing -delete"      Bash 'find /var/log -name "*-deleted*" -print'
+check 0 "docker run --rm"                      Bash 'docker run --rm -it python:3.12 python -V'
 
 echo "passed $PASS, failed $FAIL"
 [ "$FAIL" = 0 ]

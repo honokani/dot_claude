@@ -581,3 +581,9 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.75.traps: python -I の日本語出力の罠に、落ちる場合とスクリプト側の直し方を追記 (2026-10-27) — 層1（issue なし）
 - [x] traps/python_uv_windows.md の「隔離モード（`-I`）」節: 化けるだけでなく、cp932 に無い文字（`≈` など）では `UnicodeEncodeError` で落ちることと、スクリプト側の直し方（`sys.stdout.reconfigure(encoding="utf-8")`）を足した
 - 発端: pj_traincolor で答え合わせの集計スクリプトを `uv run python -I` で回し、`≈` を含む行で落ちた（2026-10-27）
+
+## Phase: 0.2.76.hooks: 削除ブロックの間接系の式を、xargs が実行するコマンド名と単独の引数 -delete に絞る (2026-10-30) — 層1（issue なし）
+- [x] features/auto_manage/output/scripts/hooks/pre-tool-block-delete.sh（scripts/hooks/ の同名ファイルはここへの symlink）: `INDIRECT_DELETE` を、`find … -delete`（単独の引数。後ろは空白・`;&|)`・行末）と、`xargs` の後にフラグ（値付きも可）を挟んで来る `rm|rmdir|unlink` だけに絞った。旧式は単語境界が無く、`xargs stat --format`・`xargs grep -l 'permission'`・コメントの `rmeta`・`find -name '*-deleted*'` でも止まっていた。直接系（引用符直後の `ri` 等）は据え置き
+- [x] scripts/test/hooks/test_block_delete_hook.sh: 止める例 6 件（`xargs -0 rm -f`・`xargs -I{} rm {}`・`xargs -n 1 rm`・`xargs rmdir`・`xargs sh -c 'rm {}'`・`-delete;`）と通す例 6 件（上の誤検知 4 種・`xargs -n 1 stat`・`docker run --rm`）を追加。27 件すべて PASS
+- [x] traps/pre-tool-block-delete_xargs-false-positive.md を新設: 症状・原因・回避（引用符直後の alias 名はパターンを変える、xargs を使わない）・判定だけ試す方法（試すコマンドを Bash ツールに直接書くと、その呼び出し自体が止まる）
+- 発端: ユーザーが別セッションの「確認のコマンドが削除系と誤って判定されたので、xargs を使わない形に分けて確認します」を見つけて質問（2026-10-30）。pj_this_pc のセッションで実物に 15 例を流して確かめた

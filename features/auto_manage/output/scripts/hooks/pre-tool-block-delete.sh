@@ -18,8 +18,9 @@ CMD=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
 SQ="'"
 DIRECT_DELETE="(^|[[:space:];|&(\"${SQ}])(rm|rmdir|unlink|del|erase|Remove-Item|rd|ri|shred)([[:space:]]|\$)"
 
-# 間接的な削除系（find -delete / xargs rm 等）
-INDIRECT_DELETE='(find.+-delete|xargs.+(rm|rmdir|unlink))'
+# 間接的な削除系: find の単独の引数 -delete、xargs が（フラグと、その値の後に）実行する rm/rmdir/unlink
+# 旧式 `xargs.+(rm|…)` は単語境界が無く、--format や permission の「rm」でも止まった（traps/pre-tool-block-delete_xargs-false-positive.md）
+INDIRECT_DELETE='(find.+[[:space:]]-delete([[:space:];&|)]|$)|xargs([[:space:]]+-[^[:space:]]*([[:space:]]+[^-[:space:]][^[:space:]]*)?)*[[:space:]]+(rm|rmdir|unlink)([[:space:];&|)]|$))'
 
 if echo "$CMD" | grep -qiE "$DIRECT_DELETE" || echo "$CMD" | grep -qiE "$INDIRECT_DELETE"; then
     echo "ERROR: 削除系コマンドはブロックされました（pre-tool-block-delete.sh）" >&2
