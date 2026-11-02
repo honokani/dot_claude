@@ -14,3 +14,4 @@
 
 ## 観測
 2026-10-11 pj_loratrain（feat/05 を develop へ merge するとき。commit の `-F -` と同じ書き方をした）
+2026-11-03 pj_traincolor（feat/24 を develop へ merge するとき。同じ会話で直前に `git commit -F -` を2回使い、同じ書き方をした。`git switch develop && git merge ... -F -` で switch は済んでいた。後ろに `git log` をつないでいて終了コードが 0 になり、[traps-hint] は出なかった）

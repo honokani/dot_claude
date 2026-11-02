@@ -596,3 +596,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.78.traps: grep で CR を数えると黙って違う数になる罠を追加 (2026-11-02) — 層1（issue なし）
 - [x] traps/grep_cr-count-wrong_windows.md を新設: MSYS2 の grep 3.0 では `grep -c $'\r' f` が CRLF の行があっても 0（exit 1）、コマンド置換の中に置くと全部の行の数になる（長いコマンドでは構文エラーも）。CR の数は `tr -cd '\r' < f | wc -c`、行なら `rg -c $'\r'` か `grep -U -c $'\r'`
 - 発端: pj_traincolor で PROGRESS.md・DECISIONS.md が LF のままかを `echo "CR: $(grep -c $'\r' …)"` で確かめたら、構文エラーと「128」（DECISIONS.md の行の数）が出た。scratchpad の3行のファイルで8通り試して確かめた
+
+## Phase: 0.2.79.traps: git merge -F - の罠に観測を追記 (2026-11-03) — 層1（issue なし）
+- [x] traps/git_merge-file-stdin.md の観測に 1 行足した（2回目。直前の `git commit -F -` と同じ書き方で踏んだ。後ろにつないだコマンドで終了コードが 0 になり、[traps-hint] は出なかった）
+- 発端: pj_traincolor で feat/24 を develop へ merge するとき
