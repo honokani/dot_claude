@@ -587,3 +587,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] scripts/test/hooks/test_block_delete_hook.sh: 止める例 6 件（`xargs -0 rm -f`・`xargs -I{} rm {}`・`xargs -n 1 rm`・`xargs rmdir`・`xargs sh -c 'rm {}'`・`-delete;`）と通す例 6 件（上の誤検知 4 種・`xargs -n 1 stat`・`docker run --rm`）を追加。27 件すべて PASS
 - [x] traps/pre-tool-block-delete_xargs-false-positive.md を新設: 症状・原因・回避（引用符直後の alias 名はパターンを変える、xargs を使わない）・判定だけ試す方法（試すコマンドを Bash ツールに直接書くと、その呼び出し自体が止まる）
 - 発端: ユーザーが別セッションの「確認のコマンドが削除系と誤って判定されたので、xargs を使わない形に分けて確認します」を見つけて質問（2026-10-30）。pj_this_pc のセッションで実物に 15 例を流して確かめた
+
+## Phase: 0.2.77.traps: git rev-parse --short に ref を2つ渡すと失敗する罠を追加し、tail・write_text の罠に観測を追記 (2026-11-02) — 層1（issue なし）
+- [x] traps/git_rev-parse-short-single-revision.md を新設: `git rev-parse --short develop master` は `fatal: Needed a single revision` で失敗する（`--short` は `--verify` と同じく ref を1つしか受け付けない）。1つずつ渡すか、`--short` を外す
+- [x] traps/tail_obsolete-option-multiple-files.md・traps/git_needs-update-crlf-python-write-text_windows.md の観測に 1 行ずつ足した（tail の罠は裏の処理で踏んだので [traps-hint] が出なかった）
+- 発端: pj_traincolor で同じ会話の中で3つとも踏んだ（rev-parse は 11-01 と 11-02 の2回）

@@ -12,3 +12,4 @@
 
 ## 観測
 - 2026-10-25 pj_kite（シミュレーションを裏で 2 本回し、最後に確認として `tail -2 main.txt extra.txt` を付けた。計算は 2 本とも終わっていたが、知らせは failed になった）
+- 2026-11-02 pj_traincolor（同じ形。29 点を 8 色・10 色で裏で 2 本回し、最後の `tail -2 run8.log run10.log` で知らせが failed になった。裏の処理の失敗なので hook の [traps-hint] が出ず、書いてあるのに引けなかった）
