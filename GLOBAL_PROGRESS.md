@@ -592,3 +592,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] traps/git_rev-parse-short-single-revision.md を新設: `git rev-parse --short develop master` は `fatal: Needed a single revision` で失敗する（`--short` は `--verify` と同じく ref を1つしか受け付けない）。1つずつ渡すか、`--short` を外す
 - [x] traps/tail_obsolete-option-multiple-files.md・traps/git_needs-update-crlf-python-write-text_windows.md の観測に 1 行ずつ足した（tail の罠は裏の処理で踏んだので [traps-hint] が出なかった）
 - 発端: pj_traincolor で同じ会話の中で3つとも踏んだ（rev-parse は 11-01 と 11-02 の2回）
+
+## Phase: 0.2.78.traps: grep で CR を数えると黙って違う数になる罠を追加 (2026-11-02) — 層1（issue なし）
+- [x] traps/grep_cr-count-wrong_windows.md を新設: MSYS2 の grep 3.0 では `grep -c $'\r' f` が CRLF の行があっても 0（exit 1）、コマンド置換の中に置くと全部の行の数になる（長いコマンドでは構文エラーも）。CR の数は `tr -cd '\r' < f | wc -c`、行なら `rg -c $'\r'` か `grep -U -c $'\r'`
+- 発端: pj_traincolor で PROGRESS.md・DECISIONS.md が LF のままかを `echo "CR: $(grep -c $'\r' …)"` で確かめたら、構文エラーと「128」（DECISIONS.md の行の数）が出た。scratchpad の3行のファイルで8通り試して確かめた
