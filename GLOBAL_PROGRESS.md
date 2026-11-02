@@ -600,3 +600,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.79.traps: git merge -F - の罠に観測を追記 (2026-11-03) — 層1（issue なし）
 - [x] traps/git_merge-file-stdin.md の観測に 1 行足した（2回目。直前の `git commit -F -` と同じ書き方で踏んだ。後ろにつないだコマンドで終了コードが 0 になり、[traps-hint] は出なかった）
 - 発端: pj_traincolor で feat/24 を develop へ merge するとき
+
+## Phase: 0.2.80.traps: 時間切れで裏に回したコマンドを止めても、パイプの中の grep.exe が残る罠を追加 (2026-11-03) — 層1（issue なし）
+- [x] traps/bash_timeout-background-orphan_windows.md を新設: Bash ツールの時間切れはコマンドを裏へ回すだけで、裏の仕事がメモリ不足で止められても（killed）パイプの先頭の grep.exe が残り、12 時間ほど CPU のコアを1つ使い続けた。回避は `timeout N` で包む（`timeout 2 yes | wc -l` で確かめた。後ろの wc も Terminated になる）・大きい .jsonl は Grep の道具か Python で探す・裏に回ったら TaskStop して子が残っていないかを見る・止めるのを断られたらすぐユーザーに伝える
+- 発端: pj_traincolor で、会話の記録ファイル（536MB）に grep -o をかけたまま置き去りにした。気づいてから伝えるまで 12 分かかり、ユーザーに「もっと早く言え」と言われた（2026-11-03）
