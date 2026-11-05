@@ -604,3 +604,8 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 ## Phase: 0.2.80.traps: 時間切れで裏に回したコマンドを止めても、パイプの中の grep.exe が残る罠を追加 (2026-11-03) — 層1（issue なし）
 - [x] traps/bash_timeout-background-orphan_windows.md を新設: Bash ツールの時間切れはコマンドを裏へ回すだけで、裏の仕事がメモリ不足で止められても（killed）パイプの先頭の grep.exe が残り、12 時間ほど CPU のコアを1つ使い続けた。回避は `timeout N` で包む（`timeout 2 yes | wc -l` で確かめた。後ろの wc も Terminated になる）・大きい .jsonl は Grep の道具か Python で探す・裏に回ったら TaskStop して子が残っていないかを見る・止めるのを断られたらすぐユーザーに伝える
 - 発端: pj_traincolor で、会話の記録ファイル（536MB）に grep -o をかけたまま置き去りにした。気づいてから伝えるまで 12 分かかり、ユーザーに「もっと早く言え」と言われた（2026-11-03）
+
+## Phase: 0.2.81.traps: ECR への docker login が資格情報マネージャーで失敗する罠と、WSL が固まり docker-desktop が Uninstalling で残る罠を追加 (2026-11-05) — 層1（issue なし）
+- [x] traps/docker_ecr-login-stub-bad-data_windows.md を新設: `credsStore=desktop` だと ECR の `docker login` が `The stub received bad data.` で失敗する。`auths` が空の一時の設定では wincred に戻るので直らず、ダミーを 1 つ入れた一時の `DOCKER_CONFIG` と `DOCKER_HOST`（Docker Desktop のエンジンの pipe）で通した。push 後は `docker logout`。Lambda 向けのマニフェストの形式の確かめ方も添えた
+- [x] traps/wsl_shutdown-hang-docker-desktop-uninstalling_windows.md を新設: `wsl --shutdown` も返らないときは UAC 経由で `wslservice.exe` を taskkill、`docker-desktop` が Uninstalling（State=0x4・RegisterDistro/0x8000000d）で残ったら `wsl --unregister docker-desktop` で済ませてから Docker Desktop を起動する（データの docker_data.vhdx には触らない）。起動待ちに `docker info` の終了コードを使うと誤判定することも書いた
+- 発端: pj_rat で API のイメージを先方の ECR へ push するとき（2026-11-05）。C: の空きが減って Docker のエンジンが 500 になり、`docker desktop restart` で WSL ごと固まった
