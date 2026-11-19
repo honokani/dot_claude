@@ -609,3 +609,7 @@ CLAUDE.md および ~/.claude 配下の設定変更ログ。
 - [x] traps/docker_ecr-login-stub-bad-data_windows.md を新設: `credsStore=desktop` だと ECR の `docker login` が `The stub received bad data.` で失敗する。`auths` が空の一時の設定では wincred に戻るので直らず、ダミーを 1 つ入れた一時の `DOCKER_CONFIG` と `DOCKER_HOST`（Docker Desktop のエンジンの pipe）で通した。push 後は `docker logout`。Lambda 向けのマニフェストの形式の確かめ方も添えた
 - [x] traps/wsl_shutdown-hang-docker-desktop-uninstalling_windows.md を新設: `wsl --shutdown` も返らないときは UAC 経由で `wslservice.exe` を taskkill、`docker-desktop` が Uninstalling（State=0x4・RegisterDistro/0x8000000d）で残ったら `wsl --unregister docker-desktop` で済ませてから Docker Desktop を起動する（データの docker_data.vhdx には触らない）。起動待ちに `docker info` の終了コードを使うと誤判定することも書いた
 - 発端: pj_rat で API のイメージを先方の ECR へ push するとき（2026-11-05）。C: の空きが減って Docker のエンジンが 500 になり、`docker desktop restart` で WSL ごと固まった
+
+## Phase: 0.2.82.CLAUDE.md: 数字・見積もりの提示を「全体→詳細・並列は同じ形・外した項目は末尾に・概算は丸める」に (2026-11-19) — 層2（issue #34）
+- [x] CLAUDE.md「報告と検証」に 1 項目追加。合計→内訳→根拠の順、並列項目は同じ形で金額から、全体の数 % 以下の項目は本文から外して末尾に「除いたもの」として列挙、概算は 5・10 の倍数、前提が固定できれば 1 点
+- 発端: pj_building の上司向けランニングコスト文書（2026-11-19）で、合計無し・10〜20 件の範囲・1 桁までの計算・小さな節約案の羅列を順に直され、pj のメモリに保存したら「この会話だけではありえない」と全 pj 共通にするよう指示された
