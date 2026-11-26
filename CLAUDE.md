@@ -35,6 +35,8 @@
 - Bash失敗時にhookが注入する [traps-hint] は、修正前に該当 `~/.claude/traps/*.md` をRead
 - セッション冒頭の「=== Previous session context (latest_cache) ===」ブロックは前セッションからの引き継ぎとして扱う
 - `~/.claude/workspace_for_claude/` はClaudeの作業用。自由に使ってよい
+- WSLで使う大きいファイル（モデル・データセット等）はWSLの中に置かず、C:の決まった場所で管理してWSLからsymlinkする。決まった場所が無い・分からないときはユーザーに聞く
+  - Why: WSLの仮想ディスク（vhdx）は中のファイルを消しても縮まず、WSLで使った容量を空けるのが面倒すぎる（ユーザー、2026-11-26）
 
 ## コーディングスタイル
 - 言語問わず関数型スタイル。Monadicに合成、副作用は境界へ
